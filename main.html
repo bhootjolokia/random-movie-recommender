@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random Movie Picker</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Pick a random movie from your watchlist. Fun scale animation, no login required!" />
+  <meta name="keywords" content="movie randomizer, film picker, random movie, watchlist tool, dark theme" />
+  <link rel="canonical" href="https://yourdomain.com/" />
+
+  <!-- Tailwind & Styles -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes scaleFlip {
+      0% { transform: scale(0.8); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .slot-flip { animation: scaleFlip 0.15s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center justify-center p-4">
+  <div class="relative w-full max-w-md p-4 mx-auto">
+    <h1 class="text-4xl font-bold mb-4 text-center whitespace-nowrap">Random Movie Picker</h1>
+    <div id="randomizer" class="space-y-4 p-4">
+      <!-- Poster Placeholder: fixed square, grey background -->
+      <div id="posterWrapper" class="w-full flex items-center justify-center bg-gray-700 rounded overflow-hidden" style="aspect-ratio:1/1;">
+        <img id="moviePoster" src="" alt="" class="hidden w-full h-full object-contain rounded" />
+      </div>
+
+      <!-- Randomize Button -->
+      <button id="randomizeBtn" class="w-full bg-gray-700 hover:bg-gray-600 text-white rounded py-2 font-medium">Randomize Movie</button>
+
+      <!-- Result Display -->
+      <div id="result" class="mt-2 p-4 bg-gray-700 rounded hidden text-center">
+        <p id="movieResult" class="font-semibold text-white"></p>
+      </div>
+    
+  </div>
+  </div>
+
+  <!-- Randomizer Logic -->
+  <script>
+    // Please replace 'YOUR_TMDB_API_KEY' with your actual TMDb API key
+    const TMDB_API_KEY = 'YOUR_TMDB_API_KEY';
+    const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+    let movies = [];
+    // Disable button until movies are loaded
+    randomizeBtn.disabled = true;
+
+    const moviePoster = document.getElementById("moviePoster");
+    const randomizeBtn = document.getElementById("randomizeBtn");
+    const resultDiv = document.getElementById("result");
+    const movieResult = document.getElementById("movieResult");
+
+    // On load, fetch popular movies list
+    fetch(`${TMDB_BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`)
+      .then(response => response.json())
+      .then(data => {
+        if (data && Array.isArray(data.results)) {
+          movies = data.results;
+          randomizeBtn.disabled = false; // enable when loaded
+        } else {
+          console.error('No results in data:', data);
+        }
+      })
+      .catch(err => console.error('Error fetching movies:', err));
+
+    function pickRandomMovie() {
+      if (movies.length === 0) return null;
+      return movies[Math.floor(Math.random() * movies.length)];
+    }
+
+    const animationCount = 20;
+    const animationSpeed = 100;
+
+    randomizeBtn.addEventListener("click", () => {
+      const wrapper = document.getElementById("posterWrapper");
+      moviePoster.classList.remove('hidden');
+      randomizeBtn.disabled = true;
+      resultDiv.classList.add("hidden");
+      moviePoster.classList.add('slot-flip');
+
+      let flips = 0;
+      const interval = setInterval(() => {
+        const interim = pickRandomMovie();
+        if (!interim) return;
+        const posterURL = interim.poster_path ? `https://image.tmdb.org/t/p/w500${interim.poster_path}` : '';
+        moviePoster.src = posterURL;
+        moviePoster.alt = interim.title;
+        movieResult.textContent = interim.title;
+
+        flips++;
+        if (flips >= animationCount) {
+          clearInterval(interval);
+          moviePoster.classList.remove('slot-flip');
+          const finalMovie = pickRandomMovie();
+          if (finalMovie) {
+            const finalURL = finalMovie.poster_path ? `https://image.tmdb.org/t/p/w500${finalMovie.poster_path}` : '';
+            moviePoster.src = finalURL;
+            moviePoster.alt = finalMovie.title;
+            movieResult.textContent = finalMovie.title;
+            resultDiv.classList.remove("hidden");
+            randomizeBtn.disabled = false;
+          }
+        }
+      }, animationSpeed);
+    });
+  </script>
+  <!-- Attribution (fixed position) -->
+  <div class="absolute bottom-2 right-2 text-xs text-gray-500">
+    Data provided by <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a>
+  </div>
+</body>
+</html>
