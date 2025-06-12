@@ -18,7 +18,7 @@ jobs:
         run: |
           mkdir -p data
           # Fetch each page and extract the results array
-          for page in {1..10}; do
+          for page in {1..40}; do
             curl -s "https://api.themoviedb.org/3/movie/top_rated?api_key=${{ secrets.TMDB_API_KEY }}&language=en-US&page=$page" \
               | jq '.results' > data/page${page}.json
           done
