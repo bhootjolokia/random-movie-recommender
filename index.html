@@ -54,10 +54,6 @@
     const resultDiv = document.getElementById('result');
     const movieResult = document.getElementById('movieResult');
 
-    // TMDb V3 API key
-    const TMDB_API_KEY = 'a5bcb6d0954832ff317835d1658f5ba0';
-    const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
-
     let preloaded = [];
     const animationCount = 30;
     const animationSpeed = 20;
@@ -69,34 +65,27 @@
       randomizeBtn.disabled = true;
     }
 
-    // Fetch top-rated movies pages 1–5 (up to ~100 movies) concurrently
-    Promise.all(
-      [1,2,3,4,5].map(page =>
-        fetch(`${TMDB_BASE_URL}/movie/top_rated?api_key=${TMDB_API_KEY}&language=en-US&page=${page}`)
-          .then(res => res.json())
-          .then(data => Array.isArray(data.results) ? data.results : [])
-          .catch(err => { console.error('Error loading page', page, err); return []; })
-      )
-    )
-    .then(pages => {
-      // Flatten and take first 100
-      const all = pages.flat();
-      const selected = all.slice(0, 100);
-      // Preload posters
-      preloaded = selected.map(m => {
-        const url = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : '';
-        const img = new Image(); img.src = url;
-        const year = m.release_date ? m.release_date.slice(0,4) : '';
-        return { title: m.title, year, src: url, img };
+    // Load pre-cached movies.json
+    fetch('/data/movies.json')
+      .then(res => {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(data => {
+        preloaded = data.map(m => {
+          const url = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : '';
+          const img = new Image(); img.src = url;
+          const year = m.release_date ? m.release_date.slice(0,4) : '';
+          return { title: m.title, year, src: url };
+        });
+        randomizeBtn.textContent = 'Randomize Movie';
+        randomizeBtn.disabled = false;
+        console.log(`Loaded ${preloaded.length} cached movies.`);
+      })
+      .catch(err => {
+        console.error('Error loading cached movies', err);
+        showError('Failed to load movie list.');
       });
-      randomizeBtn.textContent = 'Randomize Movie';
-      randomizeBtn.disabled = false;
-      console.log(`Preloaded ${preloaded.length} movies.`);
-    })
-    .catch(err => {
-      console.error('Network error loading movies', err);
-      showError('Network error loading movies.');
-    });
 
     function pickRandomMovie() {
       return preloaded.length
@@ -111,20 +100,13 @@
       moviePoster.classList.add('slot-flip');
       randomizeBtn.disabled = true;
 
-      // Prepare unique picks for this shuffle
-      let picks;
-      if (preloaded.length >= animationCount) {
-        const candidates = preloaded.slice();
-        // Fisher–Yates shuffle
-        for (let i = candidates.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
-        }
-        picks = candidates.slice(0, animationCount);
-      } else {
-        // fallback: allow repeats if not enough movies
-        picks = Array.from({ length: animationCount }, () => Math.floor(Math.random() * preloaded.length));
+      // Unique picks via Fisher-Yates shuffle on a copy
+      const candidates = preloaded.slice();
+      for (let i = candidates.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
       }
+      const picks = candidates.slice(0, animationCount);
 
       let flips = 0;
       const flip = () => {
@@ -138,8 +120,7 @@
           setTimeout(flip, animationSpeed);
         } else {
           moviePoster.classList.remove('slot-flip');
-          // final random pick
-          const final = preloaded[Math.floor(Math.random() * preloaded.length)];
+          const final = pickRandomMovie();
           moviePoster.src = final.src;
           moviePoster.alt = final.title;
           movieResult.textContent = `${final.title} (${final.year})`;
