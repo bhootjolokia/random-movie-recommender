@@ -72,36 +72,45 @@
         return res.json();
       })
       .then(data => {
-        preloaded = data.map(m => {
-          const url = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : '';
-          const year = m.release_date ? m.release_date.slice(0,4) : '';
-          return { title: m.title, year, src: url };
-        });
+        // Filter out entries missing a poster_path then map
+        preloaded = data
+          .filter(m => m.poster_path) 
+          .map(m => {
+            return {
+              title: m.title,
+              year:  m.release_date ? m.release_date.slice(0,4) : '',
+              src:   `https://image.tmdb.org/t/p/w500${m.poster_path}`
+            };
+          });
+
+        if (!preloaded.length) {
+          throw new Error('No valid posters in cache');
+        }
+
         randomizeBtn.textContent = 'Randomize Movie';
         randomizeBtn.disabled = false;
-        console.log(`Loaded ${preloaded.length} cached movies.`);
+        console.log(`Loaded ${preloaded.length} valid cached movies.`);
       })
       .catch(err => {
         console.error('Error loading cached movies', err);
-        showError('Failed to load movie list.');
+        showError('Failed to load valid movie posters.');
       });
 
+    // Helper to pick a movie at random
     function pickRandomMovie() {
-      return preloaded.length
-        ? preloaded[Math.floor(Math.random() * preloaded.length)]
-        : null;
+      return preloaded[Math.floor(Math.random() * preloaded.length)];
     }
 
     randomizeBtn.addEventListener('click', () => {
       if (!preloaded.length) return;
 
-      // Hide previous result, show poster area and start animation
+      // Prepare animation
       resultDiv.classList.add('hidden');
       moviePoster.classList.remove('hidden');
       moviePoster.classList.add('slot-flip');
       randomizeBtn.disabled = true;
 
-      // 1) Create a shuffled copy and take the first N unique picks
+      // 1) Shuffle copy & take unique picks
       const candidates = preloaded.slice();
       for (let i = candidates.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -109,7 +118,7 @@
       }
       const picks = candidates.slice(0, animationCount);
 
-      // 2) Animate through those unique picks
+      // 2) Animate through unique picks
       let flips = 0;
       const flip = () => {
         const m = picks[flips];
