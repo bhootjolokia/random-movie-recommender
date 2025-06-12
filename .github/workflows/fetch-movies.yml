@@ -23,9 +23,9 @@ jobs:
               | jq '.results' > data/page${page}.json
           done
 
-      - name: Combine, shuffle, slice to 800
+      - name: Combine & slice to 800
         run: |
-          jq -s 'flatten | shuffle | .[0:800]' data/page*.json > data/movies.json
+          jq -s 'flatten | .[0:800]' data/page*.json > data/movies.json
 
       - name: Commit updated movies.json
         env:
