@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta¯http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Random Movie Picker</title>
   <!-- SEO Meta Tags -->
@@ -21,24 +21,28 @@
     .slot-flip { animation: scaleFlip 0.15s ease-in-out infinite; }
   </style>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center justify-center p-4">
-  <div class="relative w-full max-w-md p-4 mx-auto">
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center justify-center p-4 relative">
+  <div class="w-full max-w-md">
     <h1 class="text-4xl font-bold mb-4 text-center whitespace-nowrap">Random Movie Picker</h1>
-    <div id="randomizer" class="space-y-4 p-4">
-      <!-- Poster Placeholder: fixed square, grey background -->
+    <div id="randomizer" class="space-y-4 p-4 bg-gray-900">
+      <!-- Poster Placeholder: fixed ratio, grey background -->
       <div id="posterWrapper" class="w-72 mx-auto flex items-center justify-center bg-gray-700 rounded overflow-hidden" style="aspect-ratio:2/3;">
         <img id="moviePoster" src="" alt="" class="hidden w-full h-full object-contain rounded" />
       </div>
 
       <!-- Randomize Button -->
-      <button id="randomizeBtn" class="w-full bg-gray-700 hover:bg-gray-600 text-white rounded py-2 font-medium">Randomize Movie</button>
+      <button id="randomizeBtn" class="w-full bg-gray-700 hover:bg-gray-600 text-white rounded py-2 font-medium" disabled>Loading Movies...</button>
 
-      <!-- Result Display -->
+      <!-- Result / Error Display -->
       <div id="result" class="mt-2 p-4 bg-gray-700 rounded hidden text-center">
         <p id="movieResult" class="font-semibold text-white"></p>
       </div>
-    
+    </div>
   </div>
+
+  <!-- Attribution (fixed position) -->
+  <div class="absolute bottom-2 right-2 text-xs text-gray-500">
+    Data provided by <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a>
   </div>
 
   <!-- Randomizer Logic -->
@@ -49,71 +53,87 @@
     const resultDiv = document.getElementById("result");
     const movieResult = document.getElementById("movieResult");
 
-    // TMDb access
-    // TMDb V3 API key (use your API key here)
+    // TMDb V3 API key: replace with your valid key
     const TMDB_API_KEY = 'a5bcb6d0954832ff317835d1658f5ba0';
     const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
     let movies = [];
 
-    // Disable button until movies load
-    randomizeBtn.disabled = true;
-
-        // Fetch popular movies using API key
+    // Fetch popular movies
     fetch(`${TMDB_BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`)
-      .then(r => r.json())
+      .then(response => response.json())
       .then(data => {
         if (data && Array.isArray(data.results)) {
           movies = data.results;
+          // Enable button now that movies are loaded
+          randomizeBtn.textContent = 'Randomize Movie';
+          randomizeBtn.disabled = false;
         } else {
-          console.error('Invalid TMDb response', data);
+          showError("Failed to load movies. Check your API key.");
         }
       })
-      .catch(err => console.error('Error fetching TMDb', err))
-      .finally(() => {
-        // Enable button after attempt
-        randomizeBtn.disabled = false;
-      })
+      .catch(err => {
+        console.error('Error fetching TMDb', err);
+        showError('Network error while loading movies.');
+      });
+
+    // Display error in resultDiv
+    function showError(message) {
+      movieResult.textContent = message;
+      resultDiv.classList.remove('hidden');
+      randomizeBtn.disabled = true;
+      randomizeBtn.textContent = 'Error';
+    }
 
     // Helper to pick random movie
     function pickRandomMovie() {
       return movies.length ? movies[Math.floor(Math.random() * movies.length)] : null;
     }
 
-    const animationCount = 20;
-    const animationSpeed = 100;
+    // Number of interim frames during shuffle (higher for longer animation)
+    // More frames for longer animation
+    const animationCount = 30;
+    // Time in ms between flips (lower for faster animation)
+    // Faster interval for snappier frames
+    const animationSpeed = 20;
 
     randomizeBtn.addEventListener("click", () => {
-      const interimImage = () => {
-        const m = pickRandomMovie();
-        if (!m) return;
-        moviePoster.src = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : '';
-        moviePoster.alt = m.title;
-        movieResult.textContent = m.title;
-      };
+      // Reset any error
+      resultDiv.classList.add('hidden');
 
       // Reveal poster
       moviePoster.classList.remove('hidden');
       randomizeBtn.disabled = true;
-      resultDiv.classList.add('hidden');
       moviePoster.classList.add('slot-flip');
 
       let flips = 0;
       const interval = setInterval(() => {
-        interimImage();
+        const m = pickRandomMovie();
+        if (!m) return;
+        const url = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : '';
+        moviePoster.src = url;
+        moviePoster.alt = m.title;
+        // Display title with release year
+        const interimYear = m.release_date ? `(${m.release_date.slice(0,4)})` : '';
+        movieResult.textContent = `${m.title} ${interimYear}`;
+
         flips++;
         if (flips >= animationCount) {
           clearInterval(interval);
           moviePoster.classList.remove('slot-flip');
-          interimImage();
-          resultDiv.classList.remove('hidden');
-          randomizeBtn.disabled = false;
+          // final pick
+          const fm = pickRandomMovie();
+          if (fm) {
+            moviePoster.src = fm.poster_path ? `https://image.tmdb.org/t/p/w500${fm.poster_path}` : '';
+            moviePoster.alt = fm.title;
+            // Display final pick with release year
+            const finalYear = fm.release_date ? `(${fm.release_date.slice(0,4)})` : '';
+            movieResult.textContent = `${fm.title} ${finalYear}`;
+            resultDiv.classList.remove('hidden');
+            randomizeBtn.disabled = false;
+          }
         }
       }, animationSpeed);
     });
   </script>
-  <!-- Attribution (fixed position) -->
-  <div class="absolute bottom-2 right-2 text-xs text-gray-500">
-    Data provided by <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a>
-  </div>
 </body>
 </html>
