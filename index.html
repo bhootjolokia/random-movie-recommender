@@ -6,9 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Random Movie Picker</title>
   <!-- SEO Meta Tags -->
-  <meta name="description" content="Pick a random movie from your watchlist. Fun scale animation, no login required!" />
-  <meta name="keywords" content="movie randomizer, film picker, random movie, watchlist tool, dark theme" />
-  <link rel="canonical" href="https://yourdomain.com/" />
+  <meta name="description" content="Pick a random movie with our fast and fun picker—no login required!" />
+  <meta name="keywords" content="movie picker, random movie, TMDb, dark theme" />
 
   <!-- Tailwind & Styles -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -18,121 +17,137 @@
       50% { transform: scale(1.2); opacity: 1; }
       100% { transform: scale(1); opacity: 1; }
     }
-    .slot-flip { animation: scaleFlip 0.15s ease-in-out infinite; }
+    .slot-flip { animation: scaleFlip 0.1s ease-in-out infinite; }
   </style>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center justify-center p-4 relative">
+<body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen p-4 relative">
   <div class="w-full max-w-md">
     <h1 class="text-4xl font-bold mb-4 text-center whitespace-nowrap">Random Movie Picker</h1>
     <div id="randomizer" class="space-y-4 p-4 bg-gray-900 rounded">
-      <!-- Poster Placeholder: fixed ratio, grey background -->
-      <div id="posterWrapper" class="w-72 mx-auto flex items-center justify-center bg-gray-700 rounded overflow-hidden" style="aspect-ratio:2/3;">
-        <img id="moviePoster" src="" alt="" class="hidden w-full h-full object-contain rounded" />
+      <!-- Poster Placeholder -->
+      <div id="posterWrapper" class="w-72 mx-auto bg-gray-700 rounded overflow-hidden" style="aspect-ratio:2/3;">
+        <img id="moviePoster" src="" alt="" class="hidden w-full h-full object-contain" />
       </div>
 
       <!-- Randomize Button -->
-      <button id="randomizeBtn" class="w-full bg-gray-700 hover:bg-gray-600 text-white rounded py-2 font-medium" disabled>Loading Movies...</button>
+      <button id="randomizeBtn" class="w-full bg-gray-700 hover:bg-gray-600 text-white rounded py-2 font-medium" disabled>
+        Loading...
+      </button>
 
-      <!-- Result / Error Display -->
+      <!-- Result Display -->
       <div id="result" class="mt-2 p-4 bg-gray-700 rounded hidden text-center">
         <p id="movieResult" class="font-semibold text-white"></p>
       </div>
     </div>
   </div>
 
-  <!-- Attribution (fixed position) -->
+  <!-- Attribution -->
   <div class="absolute bottom-2 right-2 text-xs text-gray-500">
     Data provided by <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a>
   </div>
 
-  <!-- Randomizer Logic -->
+  <!-- Script -->
   <script>
-    // DOM references
-    const moviePoster = document.getElementById("moviePoster");
-    const randomizeBtn = document.getElementById("randomizeBtn");
-    const resultDiv = document.getElementById("result");
-    const movieResult = document.getElementById("movieResult");
+    // DOM refs
+    const moviePoster = document.getElementById('moviePoster');
+    const randomizeBtn = document.getElementById('randomizeBtn');
+    const resultDiv = document.getElementById('result');
+    const movieResult = document.getElementById('movieResult');
 
-    // TMDb V3 API key: replace with your valid key
+    // TMDb V3 API key
     const TMDB_API_KEY = 'a5bcb6d0954832ff317835d1658f5ba0';
     const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
-    let movies = [];
 
-    // Fetch popular movies
-    fetch(`${TMDB_BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`)
-      .then(response => response.json())
-      .then(data => {
-        if (data && Array.isArray(data.results)) {
-          movies = data.results;
-          // Preload poster images into browser cache for smoother animation
-          movies.forEach(m => {
-            if (m.poster_path) {
-              const imgPreload = new Image();
-              imgPreload.src = `https://image.tmdb.org/t/p/w500${m.poster_path}`;
-            }
-          });
-          randomizeBtn.textContent = 'Randomize Movie';
-          randomizeBtn.disabled = false;
-        } else {
-          showError("Failed to load movies. Check your API key.");
-        }
-      })
-      .catch(err => {
-        console.error('Error fetching TMDb', err);
-        showError('Network error while loading movies.');
-      });
-
-    // Display error in resultDiv
-    function showError(message) {
-      movieResult.textContent = message;
-      resultDiv.classList.remove('hidden');
-      randomizeBtn.disabled = true;
-      randomizeBtn.textContent = 'Error';
-    }
-
-    // Helper to pick random movie
-    function pickRandomMovie() {
-      return movies.length ? movies[Math.floor(Math.random() * movies.length)] : null;
-    }
-
-    // Animation settings
+    let preloaded = [];
     const animationCount = 30;
     const animationSpeed = 20;
 
-    randomizeBtn.addEventListener("click", () => {
+    function showError(msg) {
+      resultDiv.classList.remove('hidden');
+      movieResult.textContent = msg;
+      randomizeBtn.textContent = 'Error';
+      randomizeBtn.disabled = true;
+    }
+
+    // Fetch top-rated movies pages 1–5 (up to ~100 movies) concurrently
+    Promise.all(
+      [1,2,3,4,5].map(page =>
+        fetch(`${TMDB_BASE_URL}/movie/top_rated?api_key=${TMDB_API_KEY}&language=en-US&page=${page}`)
+          .then(res => res.json())
+          .then(data => Array.isArray(data.results) ? data.results : [])
+          .catch(err => { console.error('Error loading page', page, err); return []; })
+      )
+    )
+    .then(pages => {
+      // Flatten and take first 100
+      const all = pages.flat();
+      const selected = all.slice(0, 100);
+      // Preload posters
+      preloaded = selected.map(m => {
+        const url = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : '';
+        const img = new Image(); img.src = url;
+        const year = m.release_date ? m.release_date.slice(0,4) : '';
+        return { title: m.title, year, src: url, img };
+      });
+      randomizeBtn.textContent = 'Randomize Movie';
+      randomizeBtn.disabled = false;
+      console.log(`Preloaded ${preloaded.length} movies.`);
+    })
+    .catch(err => {
+      console.error('Network error loading movies', err);
+      showError('Network error loading movies.');
+    });
+
+    function pickRandomMovie() {
+      return preloaded.length
+        ? preloaded[Math.floor(Math.random() * preloaded.length)]
+        : null;
+    }
+
+    randomizeBtn.addEventListener('click', () => {
+      if (!preloaded.length) return;
       resultDiv.classList.add('hidden');
       moviePoster.classList.remove('hidden');
       moviePoster.classList.add('slot-flip');
       randomizeBtn.disabled = true;
 
+      // Prepare unique picks for this shuffle
+      let picks;
+      if (preloaded.length >= animationCount) {
+        const candidates = preloaded.slice();
+        // Fisher–Yates shuffle
+        for (let i = candidates.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+        }
+        picks = candidates.slice(0, animationCount);
+      } else {
+        // fallback: allow repeats if not enough movies
+        picks = Array.from({ length: animationCount }, () => Math.floor(Math.random() * preloaded.length));
+      }
+
       let flips = 0;
-      const interval = setInterval(() => {
-        const m = pickRandomMovie();
-        if (!m) return;
-        const url = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : '';
-        console.log('Attempting to load poster:', url);
-        moviePoster.src = url;
+      const flip = () => {
+        const m = picks[flips];
+        moviePoster.src = m.src;
         moviePoster.alt = m.title;
-        const year = m.release_date ? `(${m.release_date.slice(0,4)})` : '';
-        movieResult.textContent = `${m.title} ${year}`;
+        movieResult.textContent = `${m.title} (${m.year})`;
 
         flips++;
-        if (flips >= animationCount) {
-          clearInterval(interval);
+        if (flips < animationCount) {
+          setTimeout(flip, animationSpeed);
+        } else {
           moviePoster.classList.remove('slot-flip');
-          const fm = pickRandomMovie();
-          if (fm) {
-            const finalUrl = fm.poster_path ? `https://image.tmdb.org/t/p/w500${fm.poster_path}` : '';
-            console.log('Final poster URL:', finalUrl);
-            moviePoster.src = finalUrl;
-            moviePoster.alt = fm.title;
-            const finalYear = fm.release_date ? `(${fm.release_date.slice(0,4)})` : '';
-            movieResult.textContent = `${fm.title} ${finalYear}`;
-            resultDiv.classList.remove('hidden');
-            randomizeBtn.disabled = false;
-          }
+          // final random pick
+          const final = preloaded[Math.floor(Math.random() * preloaded.length)];
+          moviePoster.src = final.src;
+          moviePoster.alt = final.title;
+          movieResult.textContent = `${final.title} (${final.year})`;
+          resultDiv.classList.remove('hidden');
+          randomizeBtn.disabled = false;
         }
-      }, animationSpeed);
+      };
+      flip();
     });
   </script>
 </body>
