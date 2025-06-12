@@ -1,5 +1,9 @@
 name: Fetch TMDb Top Rated
 
+# Grant write access so the GITHUB_TOKEN can push commits
+permissions:
+  contents: write
+
 on:
   schedule:
     - cron: '0 4 * * *'      # daily at 4 AM UTC
@@ -12,7 +16,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Install jq
-        run: sudo apt-get install -y jq
+        run: sudo apt-get update && sudo apt-get install -y jq
 
       - name: Fetch top-rated movies (pages 1–40)
         run: |
