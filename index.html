@@ -5,6 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Random Movie Picker</title>
+
   <!-- SEO Meta Tags -->
   <meta name="description" content="Pick a random movie with our fast and fun picker—no login required!" />
   <meta name="keywords" content="movie picker, random movie, TMDb, dark theme" />
@@ -13,29 +14,40 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @keyframes scaleFlip {
-      0% { transform: scale(0.8); opacity: 0.5; }
-      50% { transform: scale(1.2); opacity: 1; }
-      100% { transform: scale(1); opacity: 1; }
+      0%   { transform: scale(0.8); opacity: 0.5; }
+      50%  { transform: scale(1.2); opacity: 1;   }
+      100% { transform: scale(1);   opacity: 1;   }
     }
-    .slot-flip { animation: scaleFlip 0.1s ease-in-out infinite; }
+    .slot-flip { animation: scaleFlip 0.12s ease-in-out infinite; }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen p-4 relative">
   <div class="w-full max-w-md">
-    <h1 class="text-4xl font-bold mb-4 text-center whitespace-nowrap">Random Movie Picker</h1>
+    <h1 class="text-4xl font-bold mb-4 text-center whitespace-nowrap">
+      Random Movie Picker
+    </h1>
+
     <div id="randomizer" class="space-y-4 p-4 bg-gray-900 rounded">
       <!-- Poster Placeholder -->
-      <div id="posterWrapper" class="w-72 mx-auto bg-gray-700 rounded overflow-hidden" style="aspect-ratio:2/3;">
-        <img id="moviePoster" src="" alt="" class="hidden w-full h-full object-contain" />
+      <div id="posterWrapper"
+           class="w-72 mx-auto bg-gray-700 rounded overflow-hidden"
+           style="aspect-ratio:2/3;">
+        <img id="moviePoster"
+             src=""
+             alt=""
+             class="hidden w-full h-full object-contain" />
       </div>
 
       <!-- Randomize Button -->
-      <button id="randomizeBtn" class="w-full bg-gray-700 hover:bg-gray-600 text-white rounded py-2 font-medium" disabled>
+      <button id="randomizeBtn"
+              class="w-full bg-gray-700 hover:bg-gray-600 text-white rounded py-2 font-medium"
+              disabled>
         Loading...
       </button>
 
       <!-- Result Display -->
-      <div id="result" class="mt-2 p-4 bg-gray-700 rounded hidden text-center">
+      <div id="result"
+           class="mt-2 p-4 bg-gray-700 rounded hidden text-center">
         <p id="movieResult" class="font-semibold text-white"></p>
       </div>
     </div>
@@ -43,7 +55,8 @@
 
   <!-- Attribution -->
   <div class="absolute bottom-2 right-2 text-xs text-gray-500">
-    Data provided by <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a>
+    Data provided by
+    <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a>
   </div>
 
   <!-- Script -->
@@ -51,12 +64,12 @@
     // DOM refs
     const moviePoster = document.getElementById('moviePoster');
     const randomizeBtn = document.getElementById('randomizeBtn');
-    const resultDiv = document.getElementById('result');
+    const resultDiv   = document.getElementById('result');
     const movieResult = document.getElementById('movieResult');
 
     let preloaded = [];
-    const animationCount = 30;
-    const animationSpeed = 20;
+    const animationCount  = 30;   // frames per spin
+    const animationSpeed  = 20;   // ms between frames
 
     function showError(msg) {
       resultDiv.classList.remove('hidden');
@@ -65,78 +78,79 @@
       randomizeBtn.disabled = true;
     }
 
-    // Load pre-cached movies.json
+    /* ------------------------------------------------------------------
+       1.  LOAD LOCAL CACHE ------------------------------------------------
+    ------------------------------------------------------------------- */
     fetch('data/movies.json')
       .then(res => {
         if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.json();
       })
       .then(data => {
-        // Filter out entries missing a poster_path then map
         preloaded = data
-          .filter(m => m.poster_path) 
-          .map(m => {
-            return {
-              title: m.title,
-              year:  m.release_date ? m.release_date.slice(0,4) : '',
-              src:   `https://image.tmdb.org/t/p/w500${m.poster_path}`
-            };
-          });
+          .filter(m => m.poster_path)       // keep only posters
+          .map(m => ({
+            id:    m.id,
+            title: m.title,
+            year:  m.release_date ? m.release_date.slice(0,4) : '',
+            src:   `https://image.tmdb.org/t/p/w500${m.poster_path}`
+          }));
 
-        if (!preloaded.length) {
-          throw new Error('No valid posters in cache');
-        }
+        if (!preloaded.length) throw new Error('No valid posters in cache');
 
         randomizeBtn.textContent = 'Randomize Movie';
         randomizeBtn.disabled = false;
-        console.log(`Loaded ${preloaded.length} valid cached movies.`);
+        console.log(`Loaded ${preloaded.length} cached movies.`);
       })
       .catch(err => {
         console.error('Error loading cached movies', err);
         showError('Failed to load valid movie posters.');
       });
 
-    // Helper to pick a movie at random
-    function pickRandomMovie() {
-      return preloaded[Math.floor(Math.random() * preloaded.length)];
-    }
+    /* ------------------------------------------------------------------
+       2.  QUICK HELPERS --------------------------------------------------
+    ------------------------------------------------------------------- */
+    const randInt = max => Math.floor(Math.random() * max);
+    const pickRandomMovie = () => preloaded[randInt(preloaded.length)];
 
+    /* ------------------------------------------------------------------
+       3.  CLICK HANDLER  (WITH NO-DUPLICATE SPIN) ------------------------
+    ------------------------------------------------------------------- */
     randomizeBtn.addEventListener('click', () => {
       if (!preloaded.length) return;
 
-      // Prepare animation
+      // Hide previous result + prep poster element
       resultDiv.classList.add('hidden');
       moviePoster.classList.remove('hidden');
       moviePoster.classList.add('slot-flip');
       randomizeBtn.disabled = true;
 
-      // 1) Shuffle copy & take unique picks
-      const candidates = preloaded.slice();
-      for (let i = candidates.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+      /* --------- Build a UNIQUE deck for this spin ---------
+         Guarantee no duplicates inside one animation cycle
+      ------------------------------------------------------ */
+      const deck = new Set();
+      while (deck.size < Math.min(animationCount, preloaded.length)) {
+        deck.add(pickRandomMovie());
       }
-      const picks = candidates.slice(0, animationCount);
+      const picks = [...deck];                   // array of unique items
 
-      // 2) Animate through unique picks
-      let flips = 0;
-      const flip = () => {
-        const m = picks[flips];
+      /* --------- Spin through the deck ------------------- */
+      let frame = 0;
+      (function flip() {
+        const m = picks[frame++];
         moviePoster.src = m.src;
         moviePoster.alt = m.title;
         movieResult.textContent = `${m.title} (${m.year})`;
 
-        flips++;
-        if (flips < animationCount) {
+        if (frame < picks.length) {
           setTimeout(flip, animationSpeed);
         } else {
-          // End animation
+          /* --------- End of spin ------------------------ */
           moviePoster.classList.remove('slot-flip');
           resultDiv.classList.remove('hidden');
           randomizeBtn.disabled = false;
         }
-      };
-      flip();
+      })();
     });
   </script>
 </body>
