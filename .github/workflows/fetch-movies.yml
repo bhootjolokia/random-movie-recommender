@@ -1,0 +1,38 @@
+name: Fetch TMDb Top Rated
+
+on:
+  schedule:
+    - cron: '0 4 * * *'      # daily at 4 AM UTC
+  workflow_dispatch: {}      # allows manual runs
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Fetch top-rated movies (pages 1–10)
+        run: |
+          mkdir -p data
+          # Fetch each page and extract the results array
+          for page in {1..10}; do
+            curl -s "https://api.themoviedb.org/3/movie/top_rated?api_key=${{ secrets.TMDB_API_KEY }}&language=en-US&page=$page" \
+              | jq '.results' > data/page${page}.json
+          done
+
+      - name: Combine, shuffle, slice to 200
+        run: |
+          jq -s 'flatten | shuffle | .[0:200]' data/page*.json > data/movies.json
+
+      - name: Commit updated movies.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/movies.json
+          git commit -m "chore: update TMDb cache" || echo "No changes"
+          git push
