@@ -14,7 +14,7 @@ jobs:
       - name: Install jq
         run: sudo apt-get install -y jq
 
-      - name: Fetch top-rated movies (pages 1–10)
+      - name: Fetch top-rated movies (pages 1–40)
         run: |
           mkdir -p data
           # Fetch each page and extract the results array
@@ -23,9 +23,9 @@ jobs:
               | jq '.results' > data/page${page}.json
           done
 
-      - name: Combine, shuffle, slice to 200
+      - name: Combine, shuffle, slice to 800
         run: |
-          jq -s 'flatten | shuffle | .[0:200]' data/page*.json > data/movies.json
+          jq -s 'flatten | shuffle | .[0:800]' data/page*.json > data/movies.json
 
       - name: Commit updated movies.json
         env:
