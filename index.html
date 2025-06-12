@@ -74,7 +74,6 @@
       .then(data => {
         preloaded = data.map(m => {
           const url = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : '';
-          const img = new Image(); img.src = url;
           const year = m.release_date ? m.release_date.slice(0,4) : '';
           return { title: m.title, year, src: url };
         });
@@ -120,6 +119,7 @@
           setTimeout(flip, animationSpeed);
         } else {
           moviePoster.classList.remove('slot-flip');
+          // final random pick
           const final = pickRandomMovie();
           moviePoster.src = final.src;
           moviePoster.alt = final.title;
