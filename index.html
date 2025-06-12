@@ -24,7 +24,7 @@
 <body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center justify-center p-4 relative">
   <div class="w-full max-w-md">
     <h1 class="text-4xl font-bold mb-4 text-center whitespace-nowrap">Random Movie Picker</h1>
-    <div id="randomizer" class="space-y-4 p-4 bg-gray-900">
+    <div id="randomizer" class="space-y-4 p-4 bg-gray-900 rounded">
       <!-- Poster Placeholder: fixed ratio, grey background -->
       <div id="posterWrapper" class="w-72 mx-auto flex items-center justify-center bg-gray-700 rounded overflow-hidden" style="aspect-ratio:2/3;">
         <img id="moviePoster" src="" alt="" class="hidden w-full h-full object-contain rounded" />
@@ -64,7 +64,13 @@
       .then(data => {
         if (data && Array.isArray(data.results)) {
           movies = data.results;
-          // Enable button now that movies are loaded
+          // Preload poster images into browser cache for smoother animation
+          movies.forEach(m => {
+            if (m.poster_path) {
+              const imgPreload = new Image();
+              imgPreload.src = `https://image.tmdb.org/t/p/w500${m.poster_path}`;
+            }
+          });
           randomizeBtn.textContent = 'Randomize Movie';
           randomizeBtn.disabled = false;
         } else {
@@ -89,43 +95,37 @@
       return movies.length ? movies[Math.floor(Math.random() * movies.length)] : null;
     }
 
-    // Number of interim frames during shuffle (higher for longer animation)
-    // More frames for longer animation
+    // Animation settings
     const animationCount = 30;
-    // Time in ms between flips (lower for faster animation)
-    // Faster interval for snappier frames
     const animationSpeed = 20;
 
     randomizeBtn.addEventListener("click", () => {
-      // Reset any error
       resultDiv.classList.add('hidden');
-
-      // Reveal poster
       moviePoster.classList.remove('hidden');
-      randomizeBtn.disabled = true;
       moviePoster.classList.add('slot-flip');
+      randomizeBtn.disabled = true;
 
       let flips = 0;
       const interval = setInterval(() => {
         const m = pickRandomMovie();
         if (!m) return;
         const url = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : '';
+        console.log('Attempting to load poster:', url);
         moviePoster.src = url;
         moviePoster.alt = m.title;
-        // Display title with release year
-        const interimYear = m.release_date ? `(${m.release_date.slice(0,4)})` : '';
-        movieResult.textContent = `${m.title} ${interimYear}`;
+        const year = m.release_date ? `(${m.release_date.slice(0,4)})` : '';
+        movieResult.textContent = `${m.title} ${year}`;
 
         flips++;
         if (flips >= animationCount) {
           clearInterval(interval);
           moviePoster.classList.remove('slot-flip');
-          // final pick
           const fm = pickRandomMovie();
           if (fm) {
-            moviePoster.src = fm.poster_path ? `https://image.tmdb.org/t/p/w500${fm.poster_path}` : '';
+            const finalUrl = fm.poster_path ? `https://image.tmdb.org/t/p/w500${fm.poster_path}` : '';
+            console.log('Final poster URL:', finalUrl);
+            moviePoster.src = finalUrl;
             moviePoster.alt = fm.title;
-            // Display final pick with release year
             const finalYear = fm.release_date ? `(${fm.release_date.slice(0,4)})` : '';
             movieResult.textContent = `${fm.title} ${finalYear}`;
             resultDiv.classList.remove('hidden');
