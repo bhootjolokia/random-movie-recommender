@@ -94,12 +94,14 @@
 
     randomizeBtn.addEventListener('click', () => {
       if (!preloaded.length) return;
+
+      // Hide previous result, show poster area and start animation
       resultDiv.classList.add('hidden');
       moviePoster.classList.remove('hidden');
       moviePoster.classList.add('slot-flip');
       randomizeBtn.disabled = true;
 
-      // Unique picks via Fisher-Yates shuffle on a copy
+      // 1) Create a shuffled copy and take the first N unique picks
       const candidates = preloaded.slice();
       for (let i = candidates.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -107,6 +109,7 @@
       }
       const picks = candidates.slice(0, animationCount);
 
+      // 2) Animate through those unique picks
       let flips = 0;
       const flip = () => {
         const m = picks[flips];
@@ -118,12 +121,8 @@
         if (flips < animationCount) {
           setTimeout(flip, animationSpeed);
         } else {
+          // End animation
           moviePoster.classList.remove('slot-flip');
-          // final random pick
-          const final = pickRandomMovie();
-          moviePoster.src = final.src;
-          moviePoster.alt = final.title;
-          movieResult.textContent = `${final.title} (${final.year})`;
           resultDiv.classList.remove('hidden');
           randomizeBtn.disabled = false;
         }
