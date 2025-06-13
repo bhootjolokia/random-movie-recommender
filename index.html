@@ -17,21 +17,21 @@
     /* Dropdown panel styling */
     #genreMenu { background-color: #4A5568; }   /* bg-gray-700 */
     #genreMenu .item {
-      padding: 0.25rem 1rem;    /* tighter vertical padding */
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;             /* tighter label–check gap */
-      color: #E2E8F0;           /* text-gray-200 */
-      font-size: 0.875rem;      /* text-sm */
-      white-space: nowrap;      /* no wrapping */
+      padding:   0.25rem 1rem;
+      cursor:    pointer;
+      display:   flex;
+      align-items:center;
+      gap:       0.25rem;
+      color:     #E2E8F0;           /* text-gray-200 */
+      font-size: 0.875rem;          /* text-sm */
+      white-space: nowrap;
     }
     #genreMenu .item:hover {
-      background-color: #2D3748; /* bg-gray-800 */
+      background-color: #2D3748;     /* bg-gray-800 */
     }
     #genreMenu .item .check {
       visibility: hidden;
-      color: #38A169;           /* green-500 */
+      color:      #38A169;           /* green-500 */
     }
     #genreMenu .item.selected .check {
       visibility: visible;
@@ -112,86 +112,26 @@
       randomizeBtn.disabled = true;
     }
 
-    // Build the genre dropdown items
-    Object.entries(genreMap).forEach(([id, name]) => {
-      const div = document.createElement('div');
-      div.className = 'item';
-      div.dataset.genre = id;
-      div.innerHTML = `<span>${name}</span><span class="check">✓</span>`;
-      if (id === "0") div.classList.add('selected');
-      genreMenu.appendChild(div);
-
-      div.addEventListener('click', e => {
-        e.stopPropagation();
-        const gid = +div.dataset.genre;
-        if (gid === 0) {
-          // Reset to only “Any Genre”
-          selectedGenres = new Set([0]);
-          genreMenu.querySelectorAll('.item')
-            .forEach(it => it.classList.toggle('selected', it.dataset.genre==="0"));
-        } else {
-          // Toggle this genre
-          if (selectedGenres.has(gid)) selectedGenres.delete(gid);
-          else selectedGenres.add(gid);
-          div.classList.toggle('selected');
-          // Deselect “Any Genre”
-          selectedGenres.delete(0);
-          genreMenu.querySelector('.item[data-genre="0"]').classList.remove('selected');
-        }
-      });
-    });
-
-    // Toggle dropdown open/close
-    genreToggle.addEventListener('click', e => {
-      e.stopPropagation();
-      genreMenu.classList.toggle('hidden');
-    });
-    document.addEventListener('click', () => {
-      genreMenu.classList.add('hidden');
-    });
-
-    // Load the pre-cached movies.json
-    fetch('data/movies.json')
-      .then(r => r.ok ? r.json() : Promise.reject(r.status))
-      .then(arr => {
-        preloaded = arr
-          .filter(m => m.poster_path)
-          .map(m => ({
-            title:     m.title,
-            year:      m.release_date?.slice(0,4) || '',
-            src:       `https://image.tmdb.org/t/p/w500${m.poster_path}`,
-            genre_ids: m.genre_ids || []
-          }));
-        randomizeBtn.textContent = 'Randomize Movie';
-        randomizeBtn.disabled = false;
-      })
-      .catch(err => {
-        console.error(err);
-        showError('Failed to load movie list.');
-      });
-
-    // Randomize button logic
-    randomizeBtn.addEventListener('click', () => {
+    // THE central randomize routine
+    function randomize() {
       if (!preloaded.length) return;
       resultDiv.classList.add('hidden');
       moviePoster.classList.remove('hidden');
       moviePoster.classList.add('slot-flip');
       randomizeBtn.disabled = true;
 
-      // Build filter: must have ALL selected genres
+      // MUST have all selected genres (excluding 0)
       const filters = [...selectedGenres].filter(g => g !== 0);
       let pool = preloaded;
       if (filters.length) {
-        pool = pool.filter(m =>
-          filters.every(id => m.genre_ids.includes(id))
-        );
+        pool = pool.filter(m => filters.every(id => m.genre_ids.includes(id)));
         if (!pool.length) {
           showError('No movies match all selected genres.');
           return;
         }
       }
 
-      // Fisher–Yates shuffle & animate
+      // Fisher–Yates shuffle & take first N
       const candidates = pool.slice();
       for (let i = candidates.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -214,7 +154,68 @@
         }
       };
       flip();
+    }
+
+    // Build genre dropdown
+    Object.entries(genreMap).forEach(([id, name]) => {
+      const div = document.createElement('div');
+      div.className = 'item';
+      div.dataset.genre = id;
+      div.innerHTML = `<span>${name}</span><span class="check">✓</span>`;
+      if (id === "0") div.classList.add('selected');
+      genreMenu.appendChild(div);
+
+      div.addEventListener('click', e => {
+        e.stopPropagation();
+        const gid = +div.dataset.genre;
+        if (gid === 0) {
+          selectedGenres = new Set([0]);
+          genreMenu.querySelectorAll('.item')
+            .forEach(it => it.classList.toggle('selected', it.dataset.genre==="0"));
+        } else {
+          if (selectedGenres.has(gid)) selectedGenres.delete(gid);
+          else selectedGenres.add(gid);
+          div.classList.toggle('selected');
+          selectedGenres.delete(0);
+          genreMenu.querySelector('.item[data-genre="0"]').classList.remove('selected');
+        }
+        // Immediately rerun the randomizer
+        randomize();
+      });
     });
+
+    // Toggle open/close
+    genreToggle.addEventListener('click', e => {
+      e.stopPropagation();
+      genreMenu.classList.toggle('hidden');
+    });
+    document.addEventListener('click', () => {
+      genreMenu.classList.add('hidden');
+    });
+
+    // Load the pre-cached movies.json
+    fetch('data/movies.json')
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(arr => {
+        preloaded = arr
+          .filter(m => m.poster_path)
+          .map(m => ({
+            title:     m.title,
+            year:      m.release_date?.slice(0,4) || '',
+            src:       `https://image.tmdb.org/t/p/w500${m.poster_path}`,
+            genre_ids: m.genre_ids || []
+          }));
+        // enable button (in case user still wants to click)
+        randomizeBtn.textContent = 'Randomize Movie';
+        randomizeBtn.disabled = false;
+      })
+      .catch(err => {
+        console.error(err);
+        showError('Failed to load movie list.');
+      });
+
+    // Also allow manual click
+    randomizeBtn.addEventListener('click', randomize);
   </script>
 </body>
 </html>
