@@ -14,13 +14,15 @@
     }
     .slot-flip { animation: scaleFlip 0.1s ease-in-out infinite; }
 
+
 .provider-btn {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   margin-right: 0.5rem;
-  background-color: rgba(255,255,255,0.08);
-  border: 2px solid transparent;
-  border-radius: 6px;
+  /* remove background & border */
+  background: none;
+  border: none;
+  border-radius: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -28,26 +30,28 @@
   transition:
     transform 0.15s ease,
     opacity   0.15s ease,
-    box-shadow 0.15s ease,
-    border-color 0.15s ease;
+    box-shadow 0.15s ease;
 }
 
 .provider-btn img {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   object-fit: contain;
 }
 
 .provider-btn:hover {
   opacity: 1;
   transform: scale(1.1);
+  /* keep a subtle shadow so they pop */
   box-shadow: 0 2px 8px rgba(0,0,0,0.6);
 }
 
 .provider-btn.selected {
   opacity: 1;
-  border-color: #38A169;
+  /* if you still want a highlight, you can add a ring */
+  box-shadow: 0 0 0 2px #38A169;
 }
+
 
 
 
