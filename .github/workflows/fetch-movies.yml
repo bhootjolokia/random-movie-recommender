@@ -1,13 +1,12 @@
 name: Fetch TMDb Top Rated
 
-# Grant write access so the GITHUB_TOKEN can push commits
 permissions:
   contents: write
 
 on:
   schedule:
     - cron: '0 4 * * *'      # daily at 4 AM UTC
-  workflow_dispatch: {}      # allows manual runs
+  workflow_dispatch: {}
 
 jobs:
   fetch:
@@ -32,27 +31,21 @@ jobs:
         run: |
           jq -s 'flatten' data/page*.json > data/all_movies.json
 
-      - name: Enrich with watch providers & filter
+      - name: Enrich with streaming/free/adSupported providers only
         run: |
           jq -c '.[]' data/all_movies.json | \
           while read -r movie; do
             id=$(jq -r '.id' <<<"$movie")
-            # Fetch raw watch providers JSON
             raw=$(curl -s "https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${{ secrets.TMDB_API_KEY }}")
-            # Extract the watch-link (TMDb page for where to watch)
             link=$(jq -r '.results.US.link // empty' <<<"$raw")
-            # Gather all provider objects (flatrate / adSupported / rent / buy), dedupe by provider_id
             providers=$(jq -c '
-              [ .results.US.flatrate?[]?,
-                .results.US.adSupported?[]?,
-                .results.US.rent?[]?,
-                .results.US.buy?[]? ]
+              [ (.results.US.flatrate?[]?  | . + { provider_type: "flatrate"  }),
+                (.results.US.free?[]?      | . + { provider_type: "free"      }),
+                (.results.US.adSupported?[]?| . + { provider_type: "adSupported" }) ]
               | flatten
               | unique_by(.provider_id)
             ' <<<"$raw")
-            # Only include if at least one provider
             if [[ $(jq 'length' <<<"$providers") -gt 0 ]]; then
-              # Merge watch_link and watch_providers into the movie object
               echo "$movie" \
                 | jq --arg link "$link" --argjson wp "$providers" \
                      '. + { watch_link: $link, watch_providers: $wp }'
@@ -71,5 +64,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/movies.json
-          git commit -m "chore: update TMDb cache with full watch providers data" || echo "No changes"
+          git commit -m "chore: update TMDb cache with streaming providers only" || echo "No changes"
           git push
