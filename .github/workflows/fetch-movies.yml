@@ -37,21 +37,29 @@ jobs:
           jq -c '.[]' data/all_movies.json | \
           while read -r movie; do
             id=$(jq -r '.id' <<<"$movie")
-            # Fetch US watch providers and pick out only the numeric provider_id
-            wp=$(curl -s "https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${{ secrets.TMDB_API_KEY }}" \
-                 | jq '[.results.US.flatrate?[]?.provider_id,
-                        .results.US.adSupported?[]?.provider_id,
-                        .results.US.rent?[]?.provider_id,
-                        .results.US.buy?[]?.provider_id]
-                       | flatten | unique')
-            # Only include if non-empty
-            if [[ $(jq 'length' <<<"$wp") -gt 0 ]]; then
-              # Merge in watch_providers as a plain-number array
-              echo "$movie" | jq --argjson wp "$wp" '. + {watch_providers: $wp}'
+            # Fetch raw watch providers JSON
+            raw=$(curl -s "https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${{ secrets.TMDB_API_KEY }}")
+            # Extract the watch-link (TMDb page for where to watch)
+            link=$(jq -r '.results.US.link // empty' <<<"$raw")
+            # Gather all provider objects (flatrate / adSupported / rent / buy), dedupe by provider_id
+            providers=$(jq -c '
+              [ .results.US.flatrate?[]?,
+                .results.US.adSupported?[]?,
+                .results.US.rent?[]?,
+                .results.US.buy?[]? ]
+              | flatten
+              | unique_by(.provider_id)
+            ' <<<"$raw")
+            # Only include if at least one provider
+            if [[ $(jq 'length' <<<"$providers") -gt 0 ]]; then
+              # Merge watch_link and watch_providers into the movie object
+              echo "$movie" \
+                | jq --arg link "$link" --argjson wp "$providers" \
+                     '. + { watch_link: $link, watch_providers: $wp }'
             fi
           done | jq -s '.' > data/movies.json
 
-      - name: Slice to first 800 (if you still want to cap)
+      - name: Slice to first 800 (optional cap)
         run: |
           jq '.[0:800]' data/movies.json > data/movies.json.tmp
           mv data/movies.json.tmp data/movies.json
@@ -63,5 +71,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/movies.json
-          git commit -m "chore: update TMDb cache with watch providers" || echo "No changes"
+          git commit -m "chore: update TMDb cache with full watch providers data" || echo "No changes"
           git push
