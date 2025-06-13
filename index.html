@@ -20,8 +20,21 @@
       --color-text:   #E5E7EB;
       --radius:       0.5rem;
     }
-    html { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); }
-    body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem; margin:0; }
+    html {
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      padding-bottom: 4rem; /* extra room for footer on phones */
+      margin: 0;
+    }
 
     /* Container */
     .randomizer {
@@ -35,8 +48,8 @@
 
     /* Title */
     h1 {
-      font-size: 1.875rem; /* 30px */
-      line-height: 1.2;
+      font-size: 2.25rem; /* 36px */
+      line-height: 1.1;
       font-weight: 700;
       margin-bottom: 1.5rem;
       white-space: nowrap;
@@ -51,7 +64,11 @@
       aspect-ratio: 2/3;
       margin: 0 auto 1.5rem;
     }
-    #moviePoster { display: none; width: 100%; height: 100%; object-fit: contain; }
+    #moviePoster {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
 
     /* Button */
     .btn {
@@ -67,7 +84,10 @@
       transition: background 0.2s, transform 0.1s;
       cursor: pointer;
     }
-    .btn:disabled { opacity: 0.6; cursor: default; }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
     .btn:hover:not(:disabled),
     .btn:focus:not(:disabled) {
       background: var(--color-accent);
@@ -75,7 +95,9 @@
       transform: translateY(-2px);
       outline: none;
     }
-    .btn:active { transform: translateY(0); }
+    .btn:active {
+      transform: translateY(0);
+    }
 
     /* Providers */
     .provider-btn {
@@ -103,7 +125,10 @@
     }
 
     /* Genre dropdown */
-    #genreMenu { background: var(--color-base); border-radius: var(--radius); }
+    #genreMenu {
+      background: var(--color-base);
+      border-radius: var(--radius);
+    }
     #genreMenu .item {
       padding: 0.25rem 1rem;
       cursor: pointer;
@@ -119,11 +144,18 @@
       background: #2D3748;
       outline: none;
     }
-    #genreMenu .item .check { visibility: hidden; color: #38A169; }
-    #genreMenu .item.selected .check { visibility: visible; }
+    #genreMenu .item .check {
+      visibility: hidden;
+      color: #38A169;
+    }
+    #genreMenu .item.selected .check {
+      visibility: visible;
+    }
 
     /* Focus outline */
-    button:focus { outline: 2px solid var(--color-accent); }
+    button:focus {
+      outline: 2px solid var(--color-accent);
+    }
   </style>
 </head>
 <body>
@@ -132,7 +164,7 @@
 
   <div class="randomizer space-y-4">
     <div id="posterWrapper">
-      <img id="moviePoster" alt="Movie poster"/>
+      <img id="moviePoster" class="hidden" alt="Movie poster"/>
     </div>
     <button id="randomizeBtn" class="btn" disabled>Loading…</button>
     <div id="result" class="hidden text-center mt-4">
@@ -165,11 +197,12 @@
   </div>
 
   <script>
-    // IDs of the platforms you care about
+    // Allowed streaming platforms
     const ALLOWED_PROVIDER_IDS = new Set([8,119,15,337,384,39,531,387,2]);
     const spinCount = 30, spinSpeed = 20;
     let movies = [], selectedGenres = new Set([0]);
 
+    // Show only flatrate/free/adSupported for allowed platforms
     function showProviders(movie) {
       const wrap = document.getElementById('providerFilter');
       wrap.innerHTML = '';
@@ -181,7 +214,7 @@
         .forEach(p => {
           if (!p.logo_path) return;
           const a = document.createElement('a');
-          a.href   = movie.watch_link   || '#';
+          a.href = movie.watch_link || '#';
           a.target = '_blank';
           a.className = 'provider-btn';
           const img = document.createElement('img');
@@ -205,24 +238,27 @@
 
     Object.entries(genreMap).forEach(([id,name]) => {
       const item = document.createElement('div');
-      item.className     = 'item';
+      item.className = 'item';
       item.dataset.genre = id;
-      item.tabIndex      = 0;
-      item.innerHTML     = `<span>${name}</span><span class="check">✓</span>`;
+      item.tabIndex = 0;
+      item.innerHTML = `<span>${name}</span><span class="check">✓</span>`;
       if (id==="0") item.classList.add('selected');
-      item.addEventListener('click',   () => toggleGenre(+id));
-      item.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') toggleGenre(+id); });
+      item.addEventListener('click', () => toggleGenre(+id));
+      item.addEventListener('keydown', e => {
+        if (e.key==='Enter' || e.key===' ') toggleGenre(+id);
+      });
       genreMenu.appendChild(item);
     });
 
     function toggleGenre(id) {
-      if (id === 0) {
+      if (id===0) {
         selectedGenres = new Set([0]);
         genreMenu.querySelectorAll('.item')
-          .forEach(it=>it.classList.toggle('selected', it.dataset.genre==="0"));
+          .forEach(it => it.classList.toggle('selected', it.dataset.genre==="0"));
       } else {
         const el = genreMenu.querySelector(`.item[data-genre="${id}"]`);
-        selectedGenres.has(id) ? selectedGenres.delete(id) : selectedGenres.add(id);
+        if (selectedGenres.has(id)) selectedGenres.delete(id);
+        else selectedGenres.add(id);
         el.classList.toggle('selected');
         selectedGenres.delete(0);
         genreMenu.querySelector('.item[data-genre="0"]').classList.remove('selected');
@@ -236,53 +272,56 @@
       const open = !genreMenu.classList.toggle('hidden');
       genreToggle.setAttribute('aria-expanded', open);
     });
-    document.addEventListener('click', ()=>genreMenu.classList.add('hidden'));
+    document.addEventListener('click', () => genreMenu.classList.add('hidden'));
 
     // Core randomizer
-    const btn   = document.getElementById('randomizeBtn');
+    const btn = document.getElementById('randomizeBtn');
     const imgEl = document.getElementById('moviePoster');
-    const res   = document.getElementById('result');
-    const txt   = document.getElementById('movieResult');
+    const res = document.getElementById('result');
+    const txt = document.getElementById('movieResult');
 
     function showError(msg) {
       res.classList.remove('hidden');
       txt.textContent = msg;
       btn.textContent = 'Error';
-      btn.disabled    = true;
+      btn.disabled = true;
     }
 
     function randomize() {
       if (!movies.length) return;
+      // filter to only movies on your platforms
       let pool = movies.filter(m =>
         Array.isArray(m.watch_providers) &&
-        m.watch_providers.some(p=>ALLOWED_PROVIDER_IDS.has(p.provider_id))
+        m.watch_providers.some(p => ALLOWED_PROVIDER_IDS.has(p.provider_id))
       );
       const gf = [...selectedGenres].filter(g=>g!==0);
       if (gf.length) {
-        pool = pool.filter(m=>gf.every(id=>m.genre_ids.includes(id)));
+        pool = pool.filter(m => gf.every(id=>m.genre_ids.includes(id)));
         if (!pool.length) return showError('No movies match your genres.');
       }
 
+      // pick up to spinCount unique if possible, else allow repeats
       let picks;
       if (pool.length >= spinCount) {
         picks = pool.slice();
         for (let i=picks.length-1; i>0; i--) {
           const j = Math.floor(Math.random()*(i+1));
-          [picks[i],picks[j]]=[picks[j],picks[i]];
+          [picks[i],picks[j]] = [picks[j],picks[i]];
         }
         picks = picks.slice(0, spinCount);
       } else {
         picks = Array.from({length:spinCount}, ()=> pool[Math.floor(Math.random()*pool.length)]);
       }
 
+      // animate
       res.classList.add('hidden');
       imgEl.classList.remove('hidden');
       imgEl.classList.add('slot-flip');
-      btn.disabled=true;
+      btn.disabled = true;
 
-      let i=0;
+      let i = 0;
       (function flip(){
-        const m=picks[i++];
+        const m = picks[i++];
         imgEl.src       = m.src;
         txt.textContent = `${m.title} (${m.year})`;
         if (i<picks.length) {
@@ -290,16 +329,16 @@
         } else {
           imgEl.classList.remove('slot-flip');
           res.classList.remove('hidden');
-          btn.textContent='Randomize Movie';
-          btn.disabled=false;
+          btn.textContent = 'Randomize Movie';
+          btn.disabled = false;
           showProviders(m);
         }
       })();
     }
 
-    // Load data & preload images
+    // load & preload
     fetch('data/movies.json')
-      .then(r=>r.ok? r.json(): Promise.reject(r.status))
+      .then(r=> r.ok ? r.json() : Promise.reject(r.status))
       .then(arr=>{
         movies = arr.filter(m=>m.poster_path).map(m=>{
           const url = `https://image.tmdb.org/t/p/w342${m.poster_path}`;
@@ -313,8 +352,8 @@
             watch_link: m.watch_link||''
           };
         });
-        btn.textContent='Randomize Movie';
-        btn.disabled=false;
+        btn.textContent = 'Randomize Movie';
+        btn.disabled = false;
       })
       .catch(err=>{ console.error(err); showError('Failed to load movie list.'); });
 
