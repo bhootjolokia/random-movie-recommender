@@ -83,6 +83,7 @@
   </div>
 
   <script>
+    // TMDb genres (0 = Any Genre)
     const genreMap = {
       0:  "Any Genre",
       28: "Action", 12: "Adventure", 16: "Animation", 35: "Comedy",
@@ -99,7 +100,7 @@
     const resultDiv    = document.getElementById('result');
     const movieResult  = document.getElementById('movieResult');
 
-    let selectedGenres = new Set([0]);
+    let selectedGenres = new Set([0]);  // “Any Genre” by default
     let preloaded = [];
     const animationCount = 30;
     const animationSpeed = 20;
@@ -113,11 +114,8 @@
 
     function randomize() {
       if (!preloaded.length) return;
-      resultDiv.classList.add('hidden');
-      moviePoster.classList.remove('hidden');
-      moviePoster.classList.add('slot-flip');
-      randomizeBtn.disabled = true;
 
+      // build filtered pool first
       const filters = [...selectedGenres].filter(g => g !== 0);
       let pool = preloaded;
       if (filters.length) {
@@ -128,6 +126,13 @@
         }
       }
 
+      // only now start animation
+      resultDiv.classList.add('hidden');
+      moviePoster.classList.remove('hidden');
+      moviePoster.classList.add('slot-flip');
+      randomizeBtn.disabled = true;
+
+      // shuffle & pick
       const candidates = pool.slice();
       for (let i = candidates.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -152,7 +157,7 @@
       })();
     }
 
-    // Build genres in dropdown
+    // Build dropdown items
     Object.entries(genreMap).forEach(([id, name]) => {
       const div = document.createElement('div');
       div.className = 'item';
@@ -179,6 +184,7 @@
       });
     });
 
+    // Toggle open/close
     genreToggle.addEventListener('click', e => {
       e.stopPropagation();
       genreMenu.classList.toggle('hidden');
@@ -187,16 +193,18 @@
       genreMenu.classList.add('hidden');
     });
 
-    // Fetch the cached data
+    // Load cached data
     fetch('./data/movies.json')
       .then(r => r.ok ? r.json() : Promise.reject(r.status))
       .then(arr => {
-        preloaded = arr.filter(m => m.poster_path).map(m => ({
-          title:     m.title,
-          year:      m.release_date?.slice(0,4) || '',
-          src:       `https://image.tmdb.org/t/p/w500${m.poster_path}`,
-          genre_ids: m.genre_ids || []
-        }));
+        preloaded = arr
+          .filter(m => m.poster_path)
+          .map(m => ({
+            title:     m.title,
+            year:      m.release_date?.slice(0,4) || '',
+            src:       `https://image.tmdb.org/t/p/w500${m.poster_path}`,
+            genre_ids: m.genre_ids || []
+          }));
         randomizeBtn.textContent = 'Randomize Movie';
         randomizeBtn.disabled = false;
       })
@@ -205,7 +213,7 @@
         showError('Failed to load movie list.');
       });
 
-    // Manual trigger still available
+    // Manual click still available
     randomizeBtn.addEventListener('click', randomize);
   </script>
 </body>
