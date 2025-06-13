@@ -24,19 +24,17 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      margin-right: 0.25rem;
     }
     .provider-btn img {
       width: 24px; height: 24px;
       object-fit: contain;
-      filter: none; /* show in native color */
+      filter: none;
     }
     .provider-btn:hover { opacity: 1; }
     .provider-btn.selected {
       opacity: 1;
       border-color: #38A169;
-    }
-    .provider-btn.hidden {
-      display: none !important;
     }
 
     /* Genre Dropdown Styling */
@@ -91,7 +89,7 @@
       <!-- Providers -->
       <div class="ml-auto flex flex-col items-center">
         <div class="text-gray-200 font-semibold text-sm mb-1">Where to watch</div>
-        <div id="providerFilter" class="flex space-x-2"></div>
+        <div id="providerFilter" class="flex"></div>
       </div>
     </div>
   </div>
@@ -102,32 +100,23 @@
   </div>
 
   <script>
-    // ─── PROVIDER SETUP ───
-    const providers = {
-      netflix: { id:  8,  logo: 'https://logo.clearbit.com/netflix.com?size=64' },
-      prime:   { id:119,  logo: 'https://logo.clearbit.com/primevideo.com?size=64' },
-      hulu:    { id: 15,  logo: 'https://logo.clearbit.com/hulu.com?size=64' },
-      disney:  { id:337,  logo: 'https://logo.clearbit.com/disneyplus.com?size=64' },
-      hbomax:  { id:384,  logo: 'https://logo.clearbit.com/hbomax.com?size=64' }
-    };
-    const providerFilterEl = document.getElementById('providerFilter');
-    let selectedProvider   = null;
-
-    // inject buttons
-    Object.entries(providers).forEach(([key, {id, logo}]) => {
-      const btn = document.createElement('button');
-      btn.className = 'provider-btn';
-      btn.dataset.provider = key;
-      btn.dataset.pid      = id;
-      btn.innerHTML = `<img src="${logo}" alt="${key}"/>`;
-      btn.addEventListener('click', () => {
-        selectedProvider = selectedProvider === key ? null : key;
-        document.querySelectorAll('.provider-btn')
-                .forEach(b => b.classList.toggle('selected', b === btn));
-        randomize();
+    // ─── SHOW DYNAMIC PROVIDERS ───
+    function showProviders(movie) {
+      const container = document.getElementById('providerFilter');
+      container.innerHTML = '';
+      if (!movie.watch_providers?.length) return;
+      movie.watch_providers.forEach(p => {
+        const a = document.createElement('a');
+        a.href = movie.watch_link || '#';
+        a.target = '_blank';
+        a.className = 'provider-btn';
+        const img = document.createElement('img');
+        img.src = `https://image.tmdb.org/t/p/w92${p.logo_path}`;
+        img.alt = p.provider_name;
+        a.appendChild(img);
+        container.appendChild(a);
       });
-      providerFilterEl.appendChild(btn);
-    });
+    }
 
     // ─── GENRE LOGIC ───
     const genreMap = {
@@ -146,10 +135,10 @@
       d.className     = 'item';
       d.dataset.genre = id;
       d.innerHTML     = `<span>${name}</span><span class="check">✓</span>`;
-      if(id==="0") d.classList.add('selected');
+      if (id==="0") d.classList.add('selected');
       d.addEventListener('click', e => {
         e.stopPropagation();
-        if(+id===0) {
+        if (+id===0) {
           selectedGenres = new Set([0]);
           genreMenu.querySelectorAll('.item')
                    .forEach(it=>it.classList.toggle('selected', it.dataset.genre==="0"));
@@ -185,75 +174,59 @@
       randomizeBtn.disabled = true;
     }
 
-    function updateProviderVisibility(watchProviders) {
-      document.querySelectorAll('.provider-btn').forEach(btn => {
-        const pid = +btn.dataset.pid;
-        btn.classList.toggle('hidden', !watchProviders.includes(pid));
-      });
-    }
-
     function randomize() {
       if (!preloaded.length) return;
-
-      // apply genre filter
+      // filter by genres
       const gf = [...selectedGenres].filter(g=>g!==0);
       let pool = preloaded;
       if (gf.length) {
-        pool = pool.filter(m => gf.every(id => m.genre_ids.includes(id)));
+        pool = pool.filter(m=>gf.every(id=>m.genre_ids.includes(id)));
         if (!pool.length) return showError('No movies match your genres.');
       }
-
-      // apply provider filter
-      if (selectedProvider) {
-        const pid = providers[selectedProvider].id;
-        pool = pool.filter(m => Array.isArray(m.watch_providers) && m.watch_providers.includes(pid));
-        if (!pool.length) return showError('No movies on that service.');
-      }
-
+      // spin animation
       resultDiv.classList.add('hidden');
       moviePoster.classList.remove('hidden');
       moviePoster.classList.add('slot-flip');
       randomizeBtn.disabled = true;
 
-      const candidates = pool.slice();
-      for (let i = candidates.length-1; i>0; i--) {
+      const cand = pool.slice();
+      for (let i=cand.length-1; i>0; i--) {
         const j = Math.floor(Math.random()*(i+1));
-        [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+        [cand[i],cand[j]] = [cand[j],cand[i]];
       }
-      const picks = candidates.slice(0, animationCount);
-
+      const picks = cand.slice(0, animationCount);
       let i=0;
       (function flip(){
         const m = picks[i++];
         moviePoster.src = m.src;
         movieResult.textContent = `${m.title} (${m.year})`;
-        if (i < picks.length) {
-          setTimeout(flip, animationSpeed);
-        } else {
+        if (i<picks.length) setTimeout(flip,animationSpeed);
+        else {
           moviePoster.classList.remove('slot-flip');
           resultDiv.classList.remove('hidden');
           randomizeBtn.textContent = 'Randomize Movie';
           randomizeBtn.disabled = false;
-          updateProviderVisibility(m.watch_providers || []);
+          showProviders(m);
         }
       })();
     }
 
-    // fetch cached data (includes watch_providers)
-    fetch('./data/movies.json')
-      .then(r => r.ok ? r.json() : Promise.reject(r.status))
-      .then(arr => {
+    // fetch cached data (now includes watch_link & watch_providers)
+    fetch('/data/movies.json')
+      .then(r=>r.ok?r.json():Promise.reject(r.status))
+      .then(arr=>{
         preloaded = arr.filter(m=>m.poster_path).map(m=>({
           title: m.title,
           year:  m.release_date?.slice(0,4)||'',
           src:   `https://image.tmdb.org/t/p/w500${m.poster_path}`,
-          genre_ids:       m.genre_ids||[],
+          genre_ids: m.genre_ids||[],
+          watch_link: m.watch_link||'',
           watch_providers: m.watch_providers||[]
         }));
         randomizeBtn.textContent = 'Randomize Movie';
         randomizeBtn.disabled = false;
       })
-      .catch(err => { console.error(err); showError('Failed to load movie list.'); });
+      .catch(err=>{ console.error(err); showError('Failed to load movie list.') });
 
     randomizeBtn.addEventListener('click', randomize);
   </script>
