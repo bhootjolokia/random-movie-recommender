@@ -32,7 +32,7 @@
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen p-4">
-  <!-- apply scale-90 on mobile, scale-100 on lg+ -->
+  <!-- scale-90 on mobile, scale-100 lg+ -->
   <div class="transform scale-90 lg:scale-100 w-full max-w-md space-y-4">
 
     <!-- Randomizer Box -->
@@ -62,8 +62,9 @@
       </button>
       <div id="genreMenu"
            class="absolute hidden min-w-max rounded shadow-lg z-10
-                  bottom-full right-0 mb-1
-                  lg:bottom-full lg:right-full lg:mr-4 lg:mb-0">
+                  bottom-full mb-1
+                  right-0
+                  lg:right-full lg:mr-4">
         <!-- JS injects items here -->
       </div>
     </div>
@@ -106,7 +107,7 @@
       const filters = [...selectedGenres].filter(g=>g!==0);
       let pool = preloaded;
       if (filters.length) {
-        pool = pool.filter(m => filters.every(id => m.genre_ids.includes(id)));
+        pool = pool.filter(m=>filters.every(id=>m.genre_ids.includes(id)));
         if (!pool.length) return showError('No movies match all selected genres.');
       }
       resultDiv.classList.add('hidden');
@@ -137,7 +138,6 @@
       })();
     }
 
-    // Build dropdown items
     Object.entries(genreMap).forEach(([id,name])=>{
       const d = document.createElement('div');
       d.className = 'item';
@@ -151,7 +151,7 @@
         if(gid===0){
           selectedGenres=new Set([0]);
           genreMenu.querySelectorAll('.item')
-            .forEach(it=>it.classList.toggle('selected', it.dataset.genre==="0"));
+            .forEach(it=>it.classList.toggle('selected',it.dataset.genre==="0"));
         } else {
           if(selectedGenres.has(gid)) selectedGenres.delete(gid);
           else selectedGenres.add(gid);
@@ -167,9 +167,8 @@
       e.stopPropagation();
       genreMenu.classList.toggle('hidden');
     });
-    document.addEventListener('click', ()=> genreMenu.classList.add('hidden'));
+    document.addEventListener('click',()=>genreMenu.classList.add('hidden'));
 
-    // Fetch cached data
     fetch('./data/movies.json')
       .then(r=>r.ok?r.json():Promise.reject(r.status))
       .then(arr=>{
