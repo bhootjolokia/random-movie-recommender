@@ -13,17 +13,18 @@
       100% { transform: scale(1); opacity: 1; }
     }
     .slot-flip { animation: scaleFlip 0.1s ease-in-out infinite; }
+
     /* Dropdown panel styling */
     #genreMenu { background-color: #4A5568; }
     #genreMenu .item {
-      padding:   0.25rem 1rem;
-      cursor:    pointer;
-      display:   flex;
-      align-items:center;
-      gap:       0.25rem;
-      color:     #E2E8F0;
-      font-size: 0.875rem;
-      white-space: nowrap;
+      padding:       0.25rem 1rem;
+      cursor:        pointer;
+      display:       flex;
+      align-items:   center;
+      gap:           0.25rem;
+      color:         #E2E8F0;
+      font-size:     0.875rem;
+      white-space:   nowrap;
     }
     #genreMenu .item:hover { background-color: #2D3748; }
     #genreMenu .item .check { visibility: hidden; color: #38A169; }
@@ -31,6 +32,7 @@
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen p-4 pb-20">
+  <!-- scale-90 on mobile, scale-100 on lg+ -->
   <div class="transform scale-90 lg:scale-100 w-full max-w-md space-y-4">
 
     <!-- Randomizer Box -->
@@ -139,6 +141,7 @@
       })();
     }
 
+    // Build dropdown items
     Object.entries(genreMap).forEach(([id, name]) => {
       const d = document.createElement('div');
       d.className = 'item';
@@ -161,16 +164,20 @@
           selectedGenres.delete(0);
           genreMenu.querySelector('.item[data-genre="0"]').classList.remove('selected');
         }
+
         randomize();
+        genreMenu.classList.add('hidden'); // collapse drop-up on selection
       });
     });
 
+    // Toggle dropup
     genreToggle.addEventListener('click', e => {
       e.stopPropagation();
       genreMenu.classList.toggle('hidden');
     });
     document.addEventListener('click', () => genreMenu.classList.add('hidden'));
 
+    // Fetch cached data
     fetch('./data/movies.json')
       .then(r => r.ok ? r.json() : Promise.reject(r.status))
       .then(arr => {
