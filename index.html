@@ -24,7 +24,7 @@
       gap: 0.25rem;             /* tighter label–check gap */
       color: #E2E8F0;           /* text-gray-200 */
       font-size: 0.875rem;      /* text-sm */
-      white-space: nowrap;
+      white-space: nowrap;      /* no wrapping */
     }
     #genreMenu .item:hover {
       background-color: #2D3748; /* bg-gray-800 */
@@ -62,7 +62,7 @@
       </div>
     </div>
 
-    <!-- Dropup: keep toggle here, panel appears above -->
+    <!-- Dropup: genres control under randomizer, panel pops up -->
     <div class="relative">
       <button id="genreToggle"
               class="bg-transparent text-gray-200 font-semibold text-sm hover:underline flex items-center space-x-1 px-2 py-1"
@@ -71,7 +71,7 @@
       </button>
       <div id="genreMenu"
            class="absolute bottom-full right-full -mb-3 mr-4 min-w-max rounded shadow-lg hidden z-10">
-        <!-- JS injects items here -->
+        <!-- JS will inject items here -->
       </div>
     </div>
 
@@ -100,7 +100,7 @@
     const resultDiv    = document.getElementById('result');
     const movieResult  = document.getElementById('movieResult');
 
-    let selectedGenres = new Set([0]);
+    let selectedGenres = new Set([0]);  // “Any Genre” by default
     let preloaded = [];
     const animationCount = 30;
     const animationSpeed = 20;
@@ -112,7 +112,7 @@
       randomizeBtn.disabled = true;
     }
 
-    // Build dropdown items
+    // Build the genre dropdown items
     Object.entries(genreMap).forEach(([id, name]) => {
       const div = document.createElement('div');
       div.className = 'item';
@@ -125,22 +125,23 @@
         e.stopPropagation();
         const gid = +div.dataset.genre;
         if (gid === 0) {
+          // Reset to only “Any Genre”
           selectedGenres = new Set([0]);
           genreMenu.querySelectorAll('.item')
             .forEach(it => it.classList.toggle('selected', it.dataset.genre==="0"));
         } else {
+          // Toggle this genre
           if (selectedGenres.has(gid)) selectedGenres.delete(gid);
           else selectedGenres.add(gid);
           div.classList.toggle('selected');
+          // Deselect “Any Genre”
           selectedGenres.delete(0);
-          genreMenu
-            .querySelector('.item[data-genre="0"]')
-            .classList.remove('selected');
+          genreMenu.querySelector('.item[data-genre="0"]').classList.remove('selected');
         }
       });
     });
 
-    // Toggle open/close
+    // Toggle dropdown open/close
     genreToggle.addEventListener('click', e => {
       e.stopPropagation();
       genreMenu.classList.toggle('hidden');
@@ -149,7 +150,7 @@
       genreMenu.classList.add('hidden');
     });
 
-    // Fetch cached movies.json
+    // Load the pre-cached movies.json
     fetch('data/movies.json')
       .then(r => r.ok ? r.json() : Promise.reject(r.status))
       .then(arr => {
@@ -169,7 +170,7 @@
         showError('Failed to load movie list.');
       });
 
-    // Randomizer click
+    // Randomize button logic
     randomizeBtn.addEventListener('click', () => {
       if (!preloaded.length) return;
       resultDiv.classList.add('hidden');
@@ -177,16 +178,20 @@
       moviePoster.classList.add('slot-flip');
       randomizeBtn.disabled = true;
 
+      // Build filter: must have ALL selected genres
       const filters = [...selectedGenres].filter(g => g !== 0);
       let pool = preloaded;
       if (filters.length) {
-        pool = pool.filter(m => m.genre_ids.some(id => filters.includes(id)));
+        pool = pool.filter(m =>
+          filters.every(id => m.genre_ids.includes(id))
+        );
         if (!pool.length) {
-          showError('No movies match selected genres.');
+          showError('No movies match all selected genres.');
           return;
         }
       }
 
+      // Fisher–Yates shuffle & animate
       const candidates = pool.slice();
       for (let i = candidates.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -200,8 +205,9 @@
         moviePoster.src = m.src;
         moviePoster.alt = m.title;
         movieResult.textContent = `${m.title} (${m.year})`;
-        if (i < picks.length) setTimeout(flip, animationSpeed);
-        else {
+        if (i < picks.length) {
+          setTimeout(flip, animationSpeed);
+        } else {
           moviePoster.classList.remove('slot-flip');
           resultDiv.classList.remove('hidden');
           randomizeBtn.disabled = false;
