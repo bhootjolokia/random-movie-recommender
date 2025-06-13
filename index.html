@@ -15,15 +15,16 @@
     .slot-flip { animation: scaleFlip 0.1s ease-in-out infinite; }
 
 .provider-btn {
-  width: 36px; height: 36px;
+  width: 40px;
+  height: 40px;
   margin-right: 0.5rem;
-  background-color: rgba(255,255,255,0.05);
+  background-color: rgba(255,255,255,0.08);
   border: 2px solid transparent;
   border-radius: 6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.8;
+  opacity: 0.85;
   transition:
     transform 0.15s ease,
     opacity   0.15s ease,
@@ -32,20 +33,22 @@
 }
 
 .provider-btn img {
-  width: 24px; height: 24px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
 }
 
 .provider-btn:hover {
   opacity: 1;
   transform: scale(1.1);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.6);
 }
 
 .provider-btn.selected {
   opacity: 1;
   border-color: #38A169;
 }
+
 
 
     #genreMenu { background-color: #4A5568; }
