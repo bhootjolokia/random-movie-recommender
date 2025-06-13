@@ -34,16 +34,19 @@ jobs:
 
       - name: Enrich with watch providers & filter
         run: |
-          # For each movie, fetch its US watch/providers, attach provider_ids, keep only those with at least one
           jq -c '.[]' data/all_movies.json | \
           while read -r movie; do
             id=$(jq -r '.id' <<<"$movie")
-            # Get US watch providers (flatrate, rent, buy, ad-supported, etc.)
+            # Fetch US watch providers and pick out only the numeric provider_id
             wp=$(curl -s "https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${{ secrets.TMDB_API_KEY }}" \
-                 | jq '[.results.US.flatrate? // [], .results.US.adSupported? // [], .results.US.rent? // [], .results.US.buy? // []] | flatten | unique')
+                 | jq '[.results.US.flatrate?[]?.provider_id,
+                        .results.US.adSupported?[]?.provider_id,
+                        .results.US.rent?[]?.provider_id,
+                        .results.US.buy?[]?.provider_id]
+                       | flatten | unique')
             # Only include if non-empty
             if [[ $(jq 'length' <<<"$wp") -gt 0 ]]; then
-              # Merge in watch_providers
+              # Merge in watch_providers as a plain-number array
               echo "$movie" | jq --argjson wp "$wp" '. + {watch_providers: $wp}'
             fi
           done | jq -s '.' > data/movies.json
