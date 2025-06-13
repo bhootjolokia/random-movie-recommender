@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Randomly pick a top movie</title>
+  <title>Randomly pick a top rated movie</title>
+
+  <!-- Tailwind (for production, generate a purged build via JIT or PurgeCSS to strip unused classes) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     /* spin animation */
@@ -17,7 +19,7 @@
 
     /* provider logos */
     .provider-btn {
-      width: 44px; height: 44px;
+      width: 48px; height: 48px;
       margin-right: 0.5rem;
       opacity: 0.85;
       display: inline-flex;
@@ -26,7 +28,7 @@
       transition: transform .15s, opacity .15s, box-shadow .15s;
     }
     .provider-btn img {
-      width: 36px; height: 36px;
+      width: 40px; height: 40px;
       object-fit: contain;
     }
     .provider-btn:hover,
@@ -61,7 +63,6 @@
     #genreMenu .item .check { visibility: hidden; color: #38A169; }
     #genreMenu .item.selected .check { visibility: visible; }
 
-    /* focus outline for other buttons */
     button:focus {
       outline: 2px solid #38A169;
     }
@@ -69,8 +70,10 @@
 </head>
 <body class="bg-gray-900 text-gray-100 flex flex-col items-center justify-center min-h-screen p-4 pb-20">
 
-  <!-- Title -->
-  <h1 class="text-4xl font-bold mb-6">Randomly pick a top movie</h1>
+  <!-- Title: force no-wrap on small -->
+  <h1 class="text-3xl sm:text-4xl font-bold mb-6 whitespace-nowrap">
+    Randomly pick a top rated movie
+  </h1>
 
   <div class="w-full max-w-md space-y-4">
     <div id="randomizer" class="bg-gray-800 p-4 rounded space-y-4">
@@ -112,8 +115,8 @@
     </div>
   </div>
 
-  <!-- Attribution -->
-  <div class="absolute bottom-2 right-4 text-xs text-gray-500">
+  <!-- Attribution moved to bottom-left -->
+  <div class="absolute bottom-2 left-4 text-xs text-gray-500">
     Data provided by <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a>
   </div>
 
@@ -127,8 +130,7 @@
     function showProviders(movie) {
       const wrap = document.getElementById('providerFilter');
       wrap.innerHTML = '';
-      if (!Array.isArray(movie.watch_providers)) return;
-      movie.watch_providers
+      (movie.watch_providers||[])
         .filter(p =>
           ALLOWED_PROVIDER_IDS.has(p.provider_id) &&
           ['flatrate','free','adSupported'].includes(p.provider_type)
@@ -136,7 +138,7 @@
         .forEach(p => {
           if (!p.logo_path) return;
           const a = document.createElement('a');
-          a.href   = movie.watch_link || '#';
+          a.href   = movie.watch_link   || '#';
           a.target = '_blank';
           a.className = 'provider-btn';
           const img = document.createElement('img');
@@ -208,21 +210,16 @@
 
     function randomize() {
       if (!movies.length) return;
-
-      // filter to Big-9 availability
       let pool = movies.filter(m =>
         Array.isArray(m.watch_providers) &&
         m.watch_providers.some(p => ALLOWED_PROVIDER_IDS.has(p.provider_id))
       );
-
-      // apply genre filter
       const gf = [...selectedGenres].filter(g=>g!==0);
       if (gf.length) {
         pool = pool.filter(m => gf.every(id=>m.genre_ids.includes(id)));
         if (!pool.length) return showError('No movies match your genres.');
       }
 
-      // build picks
       let picks;
       if (pool.length >= spinCount) {
         picks = pool.slice();
@@ -237,7 +234,6 @@
         );
       }
 
-      // animate
       res.classList.add('hidden');
       imgEl.classList.remove('hidden');
       imgEl.classList.add('slot-flip');
@@ -272,15 +268,15 @@
         movies = arr
           .filter(m=>m.poster_path)
           .map(m => {
-            const url = `https://image.tmdb.org/t/p/w185${m.poster_path}`;
+            const url = `https://image.tmdb.org/t/p/w342${m.poster_path}`;  // ↑ higher-res thumb
             const img = new Image(); img.src = url;
             return {
               title:          m.title,
-              year:           m.release_date?.slice(0,4) || '',
+              year:           m.release_date?.slice(0,4)||'',
               src:            url,
-              genre_ids:      m.genre_ids || [],
-              watch_providers:m.watch_providers || [],
-              watch_link:     m.watch_link || ''
+              genre_ids:      m.genre_ids||[],
+              watch_providers:m.watch_providers||[],
+              watch_link:     m.watch_link||''
             };
           });
         btn.textContent = 'Randomize Movie';
