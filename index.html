@@ -181,7 +181,6 @@
         if (!pool.length) return showError('No movies match your genres.');
       }
 
-      // spin animation
       resultDiv.classList.add('hidden');
       moviePoster.classList.remove('hidden');
       moviePoster.classList.add('slot-flip');
@@ -209,17 +208,19 @@
       })();
     }
 
-    // *** FETCH USING ABSOLUTE PATH ***
-    fetch('/data/movies.json')
+    // *** RELATIVE PATH FOR GH-PAGES ***
+    const moviesPath = './data/movies.json';
+    console.log('Fetching:', moviesPath);
+    fetch(moviesPath)
       .then(r=> r.ok ? r.json() : Promise.reject(r.status))
       .then(arr=>{
         preloaded = arr.filter(m=>m.poster_path).map(m=>({
-          title:       m.title,
-          year:        m.release_date?.slice(0,4)||'',
-          src:         `https://image.tmdb.org/t/p/w500${m.poster_path}`,
-          genre_ids:   m.genre_ids||[],
-          watch_link:  m.watch_link||'',
-          watch_providers: m.watch_providers||[]
+          title:          m.title,
+          year:           m.release_date?.slice(0,4)||'',
+          src:            `https://image.tmdb.org/t/p/w500${m.poster_path}`,
+          genre_ids:      m.genre_ids||[],
+          watch_link:     m.watch_link||'',
+          watch_providers:m.watch_providers||[]
         }));
         randomizeBtn.textContent = 'Randomize Movie';
         randomizeBtn.disabled = false;
