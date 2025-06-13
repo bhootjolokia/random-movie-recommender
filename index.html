@@ -6,167 +6,240 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Randomly pick a top rated movie</title>
 
+  <!-- Inter font & Tailwind (purge unused classes in production) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
     :root {
-      --color-bg:     #1E293B; /* slate-800 */
-      --color-card:   #243449; /* slate-700 */
-      --color-base:   #2E3B52; /* slate-600 */
-      --color-accent: #22D3EE; /* cyan-400 */
-      --color-text:   #F1F5F9; /* slate-100 */
-      --radius:       0.75rem;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --color-bg:     #121212;
+      --color-base:   #1E1E1E;
+      --color-card:   #1F1F1F;
+      --color-accent: #2DD4BF;
+      --color-text:   #E5E7EB;
+      --radius:       0.5rem;
     }
-    html, body {
-      background: var(--color-bg);
-      color: var(--color-text);
-      font-family: 'Inter', system-ui, sans-serif;
-      margin: 0; padding: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 1rem;
-      box-sizing: border-box;
-    }
+    html { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); }
+    body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem; margin:0; }
 
-    h1 {
-      font-size: 2rem;           /* larger */
-      font-weight: 700;
-      margin: 0 0 1.5rem;        /* extra spacing */
-      white-space: nowrap;
-    }
-
+    /* Container */
     .randomizer {
       background: var(--color-card);
       border-radius: var(--radius);
-      padding: 1.25rem;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.6);
-      width: 100%; max-width: 320px;
+      padding: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      width: 100%;
+      max-width: 320px;
     }
+
+    /* Title */
+    h1 {
+      font-size: 1.875rem; /* 30px */
+      line-height: 1.2;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      white-space: nowrap;
+    }
+
+    /* Poster */
     #posterWrapper {
       background: var(--color-base);
       border-radius: var(--radius);
       overflow: hidden;
-      width: 100%; aspect-ratio: 2/3;
-      margin-bottom: 1.25rem;
+      width: 100%;
+      aspect-ratio: 2/3;
+      margin: 0 auto 1.5rem;
     }
-    #moviePoster {
-      width:100%; height:100%; object-fit:contain;
-      display:none; /* hide until loaded */
-    }
+    #moviePoster { display: none; width: 100%; height: 100%; object-fit: contain; }
 
+    /* Button */
     .btn {
-      width:100%;
-      padding:0.75rem;
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
       background: var(--color-base);
       color: var(--color-text);
-      border:none;
+      font-weight: 600;
+      border: none;
       border-radius: var(--radius);
-      font-size:0.9rem;
-      font-weight:600;
-      cursor:pointer;
-      transition: background .2s, transform .1s;
+      font-size: 0.875rem;
+      transition: background 0.2s, transform 0.1s;
+      cursor: pointer;
     }
-    .btn:disabled { opacity:.6; cursor: default; }
-    .btn:not(:disabled):hover,
-    .btn:not(:disabled):focus {
+    .btn:disabled { opacity: 0.6; cursor: default; }
+    .btn:hover:not(:disabled),
+    .btn:focus:not(:disabled) {
       background: var(--color-accent);
-      color: #1E293B;
+      color: #121212;
       transform: translateY(-2px);
       outline: none;
     }
     .btn:active { transform: translateY(0); }
 
-    /* controls row */
-    .controls { display: flex; justify-content: space-between; align-items: flex-start; margin-top:1rem; width:100%; max-width:320px; }
-
-    /* footer attribution */
-    .attribution {
-      position: fixed;
-      bottom: .5rem; left: .75rem;
-      font-size: .75rem;
-      color: #94A3B8; /* slate-400 */
-      pointer-events: none;
+    /* Providers */
+    .provider-btn {
+      width: 48px; height: 48px;
+      margin-right: 0.5rem;
+      opacity: 0.85;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .15s, opacity .15s, box-shadow .15s;
+    }
+    .provider-btn img {
+      width: 40px; height: 40px;
+      object-fit: contain;
+    }
+    .provider-btn:hover,
+    .provider-btn:focus {
+      opacity: 1;
+      transform: scale(1.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      outline: none;
+    }
+    .provider-btn.selected {
+      box-shadow: 0 0 0 2px var(--color-accent);
     }
 
-    /* genre dropdown */
-    #genreMenu {
-      background: var(--color-base);
-      border-radius: var(--radius);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      max-height: 60vh; overflow-y: auto;
-    }
+    /* Genre dropdown */
+    #genreMenu { background: var(--color-base); border-radius: var(--radius); }
     #genreMenu .item {
-      padding:.5rem 1rem;
-      cursor:pointer;
-      display:flex; align-items:center; justify-content:space-between;
+      padding: 0.25rem 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       color: var(--color-text);
-      font-size:.9rem;
+      font-size: 0.875rem;
       transition: background .15s;
     }
     #genreMenu .item:hover,
-    #genreMenu .item:focus { background: #334155; outline:none; }
-    #genreMenu .check { visibility:hidden; color:#4ADE80; }
-    #genreMenu .selected .check { visibility:visible; }
+    #genreMenu .item:focus {
+      background: #2D3748;
+      outline: none;
+    }
+    #genreMenu .item .check { visibility: hidden; color: #38A169; }
+    #genreMenu .item.selected .check { visibility: visible; }
 
-    /* providers */
-    .provider-btn {
-      width:48px; height:48px;
-      margin-right:.5rem;
-      transition:transform .15s, opacity .15s;
-      opacity:.85;
-      display:inline-flex; align-items:center; justify-content:center;
-    }
-    .provider-btn img { width:40px; height:40px; object-fit:contain; }
-    .provider-btn:hover,
-    .provider-btn:focus {
-      transform:scale(1.1); opacity:1; outline:none;
-    }
+    /* Focus outline */
+    button:focus { outline: 2px solid var(--color-accent); }
   </style>
 </head>
 <body>
 
   <h1>Randomly pick a top rated movie</h1>
 
-  <div class="randomizer">
+  <div class="randomizer space-y-4">
     <div id="posterWrapper">
-      <img id="moviePoster" alt="Movie Poster">
+      <img id="moviePoster" alt="Movie poster"/>
     </div>
     <button id="randomizeBtn" class="btn" disabled>Loading…</button>
-    <div id="result" class="text-center mt-4 hidden">
-      <p id="movieResult" class="font-semibold"></p>
+    <div id="result" class="hidden text-center mt-4">
+      <p id="movieResult" class="font-semibold text-sm"></p>
     </div>
   </div>
 
-  <div class="controls">
-    <!-- genre -->
+  <div class="flex w-full max-w-md justify-between items-start mt-4">
+    <!-- Genre -->
     <div class="relative inline-block">
       <button id="genreToggle"
-              class="text-sm font-semibold hover:underline px-2 py-1"
+              class="bg-transparent text-sm font-semibold flex items-center space-x-1 px-2 py-1 hover:underline"
               aria-haspopup="true" aria-expanded="false">
-        ▾ Genres
+        <span>▾</span><span>Genres</span>
       </button>
-      <div id="genreMenu" class="absolute bottom-full mb-1 left-0 hidden z-20">
+      <div id="genreMenu"
+           class="absolute hidden bottom-full mb-1 left-0 max-h-[60vh] overflow-y-auto shadow-lg z-10"
+           role="menu">
       </div>
     </div>
-    <!-- providers -->
+    <!-- Providers -->
     <div class="flex flex-col items-center">
       <div class="text-sm font-semibold mb-1">Where to stream</div>
       <div id="providerFilter" class="flex"></div>
     </div>
   </div>
 
-  <div class="attribution">
+  <div class="absolute bottom-2 left-4 text-xs text-gray-500">
     Data provided by <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a>
   </div>
 
   <script>
-    const ALLOWED = new Set([8,119,15,337,384,39,531,387,2]);
-    let movies = [], selectedGenres = new Set([0]);
+    // IDs of the platforms you care about
+    const ALLOWED_PROVIDER_IDS = new Set([8,119,15,337,384,39,531,387,2]);
     const spinCount = 30, spinSpeed = 20;
-    const btn = document.getElementById('randomizeBtn');
+    let movies = [], selectedGenres = new Set([0]);
+
+    function showProviders(movie) {
+      const wrap = document.getElementById('providerFilter');
+      wrap.innerHTML = '';
+      (movie.watch_providers||[])
+        .filter(p =>
+          ALLOWED_PROVIDER_IDS.has(p.provider_id) &&
+          ['flatrate','free','adSupported'].includes(p.provider_type)
+        )
+        .forEach(p => {
+          if (!p.logo_path) return;
+          const a = document.createElement('a');
+          a.href   = movie.watch_link   || '#';
+          a.target = '_blank';
+          a.className = 'provider-btn';
+          const img = document.createElement('img');
+          img.src = `https://image.tmdb.org/t/p/w92${p.logo_path}`;
+          img.alt = p.provider_name;
+          a.appendChild(img);
+          wrap.appendChild(a);
+        });
+    }
+
+    // Build genre menu
+    const genreMap = {
+      0:"Any Genre",28:"Action",12:"Adventure",16:"Animation",35:"Comedy",
+      80:"Crime",99:"Documentary",18:"Drama",10751:"Family",
+      14:"Fantasy",36:"History",27:"Horror",10402:"Music",
+      9648:"Mystery",10749:"Romance",878:"Sci-Fi",
+      10770:"TV Movie",53:"Thriller",10752:"War",37:"Western"
+    };
+    const genreToggle = document.getElementById('genreToggle');
+    const genreMenu   = document.getElementById('genreMenu');
+
+    Object.entries(genreMap).forEach(([id,name]) => {
+      const item = document.createElement('div');
+      item.className     = 'item';
+      item.dataset.genre = id;
+      item.tabIndex      = 0;
+      item.innerHTML     = `<span>${name}</span><span class="check">✓</span>`;
+      if (id==="0") item.classList.add('selected');
+      item.addEventListener('click',   () => toggleGenre(+id));
+      item.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') toggleGenre(+id); });
+      genreMenu.appendChild(item);
+    });
+
+    function toggleGenre(id) {
+      if (id === 0) {
+        selectedGenres = new Set([0]);
+        genreMenu.querySelectorAll('.item')
+          .forEach(it=>it.classList.toggle('selected', it.dataset.genre==="0"));
+      } else {
+        const el = genreMenu.querySelector(`.item[data-genre="${id}"]`);
+        selectedGenres.has(id) ? selectedGenres.delete(id) : selectedGenres.add(id);
+        el.classList.toggle('selected');
+        selectedGenres.delete(0);
+        genreMenu.querySelector('.item[data-genre="0"]').classList.remove('selected');
+      }
+      genreMenu.classList.add('hidden');
+      randomize();
+    }
+
+    genreToggle.addEventListener('click', e => {
+      e.stopPropagation();
+      const open = !genreMenu.classList.toggle('hidden');
+      genreToggle.setAttribute('aria-expanded', open);
+    });
+    document.addEventListener('click', ()=>genreMenu.classList.add('hidden'));
+
+    // Core randomizer
+    const btn   = document.getElementById('randomizeBtn');
     const imgEl = document.getElementById('moviePoster');
     const res   = document.getElementById('result');
     const txt   = document.getElementById('movieResult');
@@ -178,107 +251,43 @@
       btn.disabled    = true;
     }
 
-    function showProviders(m) {
-      const wrap = document.getElementById('providerFilter');
-      wrap.innerHTML = '';
-      (m.watch_providers||[])
-        .filter(p => ALLOWED.has(p.provider_id) &&
-                     ['flatrate','free','adSupported'].includes(p.provider_type))
-        .forEach(p => {
-          if (!p.logo_path) return;
-          const a = document.createElement('a');
-          a.href   = m.watch_link || '#';
-          a.target = '_blank';
-          a.className = 'provider-btn';
-          const i = document.createElement('img');
-          i.src = `https://image.tmdb.org/t/p/w92${p.logo_path}`;
-          i.alt = p.provider_name;
-          a.appendChild(i);
-          wrap.appendChild(a);
-        });
-    }
-
-    // genre setup
-    const genreMap = {
-      0:"Any",28:"Action",12:"Adventure",16:"Animation",35:"Comedy",
-      80:"Crime",99:"Doc",18:"Drama",10751:"Family",14:"Fantasy",
-      36:"History",27:"Horror",10402:"Music",9648:"Mystery",
-      10749:"Romance",878:"Sci-Fi",10770:"TV Movie",53:"Thriller",
-      10752:"War",37:"Western"
-    };
-    const menu = document.getElementById('genreMenu');
-    Object.entries(genreMap).forEach(([id,name])=>{
-      const d=document.createElement('div');
-      d.className='item'; d.tabIndex=0;
-      d.dataset.genre=id;
-      d.innerHTML=`<span>${name}</span><span class="check">✓</span>`;
-      if(id==='0') d.classList.add('selected');
-      d.addEventListener('click',()=>toggleGenre(+id));
-      d.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ') toggleGenre(+id) });
-      menu.appendChild(d);
-    });
-    function toggleGenre(id){
-      if(id===0){
-        selectedGenres=new Set([0]);
-        menu.querySelectorAll('.item').forEach(it=>
-          it.classList.toggle('selected', it.dataset.genre==='0')
-        );
-      } else {
-        const el=menu.querySelector(`.item[data-genre="${id}"]`);
-        if(selectedGenres.has(id)) selectedGenres.delete(id);
-        else selectedGenres.add(id);
-        el.classList.toggle('selected');
-        selectedGenres.delete(0);
-        menu.querySelector('.item[data-genre="0"]').classList.remove('selected');
-      }
-      menu.classList.add('hidden');
-      randomize();
-    }
-    document.getElementById('genreToggle').addEventListener('click',e=>{
-      e.stopPropagation();
-      const open = !menu.classList.toggle('hidden');
-      e.currentTarget.setAttribute('aria-expanded', open);
-    });
-    document.addEventListener('click',()=>menu.classList.add('hidden'));
-
-    async function randomize(){
-      if(!movies.length) return;
+    function randomize() {
+      if (!movies.length) return;
       let pool = movies.filter(m =>
         Array.isArray(m.watch_providers) &&
-        m.watch_providers.some(p=>ALLOWED.has(p.provider_id))
+        m.watch_providers.some(p=>ALLOWED_PROVIDER_IDS.has(p.provider_id))
       );
-      const gf=[...selectedGenres].filter(g=>g!==0);
-      if(gf.length){
+      const gf = [...selectedGenres].filter(g=>g!==0);
+      if (gf.length) {
         pool = pool.filter(m=>gf.every(id=>m.genre_ids.includes(id)));
-        if(!pool.length) return showError('No movies match.');
+        if (!pool.length) return showError('No movies match your genres.');
       }
-      btn.disabled=true;
-      res.classList.add('hidden');
-      imgEl.style.display='none';
-      imgEl.classList.add('slot-flip');
 
-      // pick spinCount samples (unique if possible)
       let picks;
-      if(pool.length>=spinCount){
+      if (pool.length >= spinCount) {
         picks = pool.slice();
-        for(let i=picks.length-1;i>0;i--){
-          const j=Math.floor(Math.random()*(i+1));
+        for (let i=picks.length-1; i>0; i--) {
+          const j = Math.floor(Math.random()*(i+1));
           [picks[i],picks[j]]=[picks[j],picks[i]];
         }
-        picks = picks.slice(0,spinCount);
+        picks = picks.slice(0, spinCount);
       } else {
-        picks = Array.from({length:spinCount},()=> pool[Math.floor(Math.random()*pool.length)]);
+        picks = Array.from({length:spinCount}, ()=> pool[Math.floor(Math.random()*pool.length)]);
       }
+
+      res.classList.add('hidden');
+      imgEl.classList.remove('hidden');
+      imgEl.classList.add('slot-flip');
+      btn.disabled=true;
 
       let i=0;
       (function flip(){
         const m=picks[i++];
-        imgEl.src = m.src;
-        imgEl.alt = m.title;
-        imgEl.onload = () => { imgEl.style.display='block'; };
+        imgEl.src       = m.src;
         txt.textContent = `${m.title} (${m.year})`;
-        if(i<picks.length) setTimeout(flip, spinSpeed);
-        else {
+        if (i<picks.length) {
+          setTimeout(flip, spinSpeed);
+        } else {
           imgEl.classList.remove('slot-flip');
           res.classList.remove('hidden');
           btn.textContent='Randomize Movie';
@@ -288,25 +297,28 @@
       })();
     }
 
-    // load JSON
+    // Load data & preload images
     fetch('data/movies.json')
-      .then(r=> r.ok? r.json():Promise.reject(r.status))
+      .then(r=>r.ok? r.json(): Promise.reject(r.status))
       .then(arr=>{
-        movies = arr.filter(m=>m.poster_path).map(m=>({
-          title: m.title,
-          year:  m.release_date?.slice(0,4)||'',
-          src:   `https://image.tmdb.org/t/p/w342${m.poster_path}`,
-          genre_ids: m.genre_ids||[],
-          watch_providers: m.watch_providers||[],
-          watch_link: m.watch_link||''
-        }));
+        movies = arr.filter(m=>m.poster_path).map(m=>{
+          const url = `https://image.tmdb.org/t/p/w342${m.poster_path}`;
+          new Image().src = url;
+          return {
+            title: m.title,
+            year:  m.release_date?.slice(0,4)||'',
+            src:   url,
+            genre_ids: m.genre_ids||[],
+            watch_providers: m.watch_providers||[],
+            watch_link: m.watch_link||''
+          };
+        });
         btn.textContent='Randomize Movie';
         btn.disabled=false;
       })
-      .catch(err=> { console.error(err); showError('Failed to load list.'); });
+      .catch(err=>{ console.error(err); showError('Failed to load movie list.'); });
 
     btn.addEventListener('click', randomize);
   </script>
-
 </body>
 </html>
