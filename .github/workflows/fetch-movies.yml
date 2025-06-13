@@ -15,21 +15,43 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq curl
 
       - name: Fetch top-rated movies (pages 1–40)
         run: |
           mkdir -p data
-          # Fetch each page and extract the results array
           for page in {1..40}; do
             curl -s "https://api.themoviedb.org/3/movie/top_rated?api_key=${{ secrets.TMDB_API_KEY }}&language=en-US&page=$page" \
               | jq '.results' > data/page${page}.json
           done
 
-      - name: Combine & slice to 800
+      - name: Combine into single list
         run: |
-          jq -s 'flatten | .[0:800]' data/page*.json > data/movies.json
+          jq -s 'flatten' data/page*.json > data/all_movies.json
+
+      - name: Enrich with watch providers & filter
+        run: |
+          # For each movie, fetch its US watch/providers, attach provider_ids, keep only those with at least one
+          jq -c '.[]' data/all_movies.json | \
+          while read -r movie; do
+            id=$(jq -r '.id' <<<"$movie")
+            # Get US watch providers (flatrate, rent, buy, ad-supported, etc.)
+            wp=$(curl -s "https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${{ secrets.TMDB_API_KEY }}" \
+                 | jq '[.results.US.flatrate? // [], .results.US.adSupported? // [], .results.US.rent? // [], .results.US.buy? // []] | flatten | unique')
+            # Only include if non-empty
+            if [[ $(jq 'length' <<<"$wp") -gt 0 ]]; then
+              # Merge in watch_providers
+              echo "$movie" | jq --argjson wp "$wp" '. + {watch_providers: $wp}'
+            fi
+          done | jq -s '.' > data/movies.json
+
+      - name: Slice to first 800 (if you still want to cap)
+        run: |
+          jq '.[0:800]' data/movies.json > data/movies.json.tmp
+          mv data/movies.json.tmp data/movies.json
 
       - name: Commit updated movies.json
         env:
@@ -38,5 +60,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/movies.json
-          git commit -m "chore: update TMDb cache" || echo "No changes"
+          git commit -m "chore: update TMDb cache with watch providers" || echo "No changes"
           git push
