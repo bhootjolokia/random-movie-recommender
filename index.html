@@ -15,31 +15,25 @@
     .slot-flip { animation: scaleFlip 0.1s ease-in-out infinite; }
 
     /* Dropdown panel styling */
-    #genreMenu { background-color: #4A5568; }   /* bg-gray-700 */
+    #genreMenu { background-color: #4A5568; }
     #genreMenu .item {
       padding:   0.25rem 1rem;
       cursor:    pointer;
       display:   flex;
       align-items:center;
       gap:       0.25rem;
-      color:     #E2E8F0;           /* text-gray-200 */
-      font-size: 0.875rem;          /* text-sm */
+      color:     #E2E8F0;
+      font-size: 0.875rem;
       white-space: nowrap;
     }
-    #genreMenu .item:hover {
-      background-color: #2D3748;     /* bg-gray-800 */
-    }
-    #genreMenu .item .check {
-      visibility: hidden;
-      color:      #38A169;           /* green-500 */
-    }
-    #genreMenu .item.selected .check {
-      visibility: visible;
-    }
+    #genreMenu .item:hover { background-color: #2D3748; }
+    #genreMenu .item .check { visibility: hidden; color: #38A169; }
+    #genreMenu .item.selected .check { visibility: visible; }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen p-4">
-  <div class="w-full max-w-md space-y-4">
+  <!-- apply scale-90 on mobile, scale-100 on lg+ -->
+  <div class="transform scale-90 lg:scale-100 w-full max-w-md space-y-4">
 
     <!-- Randomizer Box -->
     <div id="randomizer" class="bg-gray-800 p-4 rounded space-y-4">
@@ -47,46 +41,42 @@
       <div id="posterWrapper"
            class="bg-gray-700 rounded overflow-hidden mx-auto"
            style="width:288px; aspect-ratio:2/3;">
-        <img id="moviePoster"
-             class="hidden w-full h-full object-contain"
-             alt=""/>
+        <img id="moviePoster" class="hidden w-full h-full object-contain" alt=""/>
       </div>
       <button id="randomizeBtn"
               class="w-full bg-gray-700 hover:bg-gray-600 py-2 rounded font-medium text-sm"
               disabled>
         Loading...
       </button>
-      <div id="result"
-           class="hidden bg-gray-700 p-4 rounded text-center">
+      <div id="result" class="hidden bg-gray-700 p-4 rounded text-center">
         <p id="movieResult" class="font-semibold text-white text-sm"></p>
       </div>
     </div>
 
-    <!-- Dropup: toggle + panel -->
-    <div class="relative">
+    <!-- Dropup / Dropdown Toggle -->
+    <div class="relative inline-block">
       <button id="genreToggle"
               class="bg-transparent text-gray-200 font-semibold text-sm hover:underline flex items-center space-x-1 px-2 py-1"
               type="button">
         <span>▾</span><span>Genres</span>
       </button>
       <div id="genreMenu"
-           class="absolute bottom-full right-full -mb-3 mr-4 min-w-max rounded shadow-lg hidden z-10">
+           class="absolute hidden min-w-max rounded shadow-lg z-10
+                  bottom-full right-0 mb-1
+                  lg:bottom-full lg:right-full lg:mr-4 lg:mb-0">
         <!-- JS injects items here -->
       </div>
     </div>
 
-  </div>
-
-  <div class="absolute bottom-2 right-2 text-xs text-gray-500">
-    Data provided by 
-    <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a>
+    <!-- Attribution -->
+    <div class="text-xs text-gray-500 text-center">
+      Data provided by <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a>
+    </div>
   </div>
 
   <script>
-    // TMDb genres (0 = Any Genre)
     const genreMap = {
-      0:  "Any Genre",
-      28: "Action", 12: "Adventure", 16: "Animation", 35: "Comedy",
+      0: "Any Genre", 28: "Action", 12: "Adventure", 16: "Animation", 35: "Comedy",
       80: "Crime", 99: "Documentary", 18: "Drama", 10751: "Family",
       14: "Fantasy", 36: "History", 27: "Horror", 10402: "Music",
       9648: "Mystery", 10749: "Romance", 878: "Science Fiction",
@@ -100,10 +90,9 @@
     const resultDiv    = document.getElementById('result');
     const movieResult  = document.getElementById('movieResult');
 
-    let selectedGenres = new Set([0]);  // “Any Genre” by default
+    let selectedGenres = new Set([0]);
     let preloaded = [];
-    const animationCount = 30;
-    const animationSpeed = 20;
+    const animationCount = 30, animationSpeed = 20;
 
     function showError(msg) {
       resultDiv.classList.remove('hidden');
@@ -114,41 +103,32 @@
 
     function randomize() {
       if (!preloaded.length) return;
-
-      // build filtered pool first
-      const filters = [...selectedGenres].filter(g => g !== 0);
+      const filters = [...selectedGenres].filter(g=>g!==0);
       let pool = preloaded;
       if (filters.length) {
         pool = pool.filter(m => filters.every(id => m.genre_ids.includes(id)));
-        if (!pool.length) {
-          showError('No movies match all selected genres.');
-          return;
-        }
+        if (!pool.length) return showError('No movies match all selected genres.');
       }
-
-      // only now start animation
       resultDiv.classList.add('hidden');
       moviePoster.classList.remove('hidden');
       moviePoster.classList.add('slot-flip');
       randomizeBtn.disabled = true;
 
-      // shuffle & pick
-      const candidates = pool.slice();
-      for (let i = candidates.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+      const cand = pool.slice();
+      for (let i=cand.length-1; i>0; i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [cand[i],cand[j]] = [cand[j],cand[i]];
       }
-      const picks = candidates.slice(0, animationCount);
+      const picks = cand.slice(0, animationCount);
 
-      let i = 0;
-      (function flip() {
+      let i=0;
+      (function flip(){
         const m = picks[i++];
         moviePoster.src = m.src;
         moviePoster.alt = m.title;
         movieResult.textContent = `${m.title} (${m.year})`;
-        if (i < picks.length) {
-          setTimeout(flip, animationSpeed);
-        } else {
+        if (i<picks.length) setTimeout(flip, animationSpeed);
+        else {
           moviePoster.classList.remove('slot-flip');
           resultDiv.classList.remove('hidden');
           randomizeBtn.textContent = 'Randomize Movie';
@@ -158,25 +138,24 @@
     }
 
     // Build dropdown items
-    Object.entries(genreMap).forEach(([id, name]) => {
-      const div = document.createElement('div');
-      div.className = 'item';
-      div.dataset.genre = id;
-      div.innerHTML = `<span>${name}</span><span class="check">✓</span>`;
-      if (id === "0") div.classList.add('selected');
-      genreMenu.appendChild(div);
-
-      div.addEventListener('click', e => {
+    Object.entries(genreMap).forEach(([id,name])=>{
+      const d = document.createElement('div');
+      d.className = 'item';
+      d.dataset.genre = id;
+      d.innerHTML = `<span>${name}</span><span class="check">✓</span>`;
+      if(id==="0") d.classList.add('selected');
+      genreMenu.appendChild(d);
+      d.addEventListener('click', e=>{
         e.stopPropagation();
-        const gid = +div.dataset.genre;
-        if (gid === 0) {
-          selectedGenres = new Set([0]);
+        const gid=+d.dataset.genre;
+        if(gid===0){
+          selectedGenres=new Set([0]);
           genreMenu.querySelectorAll('.item')
-            .forEach(it => it.classList.toggle('selected', it.dataset.genre==="0"));
+            .forEach(it=>it.classList.toggle('selected', it.dataset.genre==="0"));
         } else {
-          if (selectedGenres.has(gid)) selectedGenres.delete(gid);
+          if(selectedGenres.has(gid)) selectedGenres.delete(gid);
           else selectedGenres.add(gid);
-          div.classList.toggle('selected');
+          d.classList.toggle('selected');
           selectedGenres.delete(0);
           genreMenu.querySelector('.item[data-genre="0"]').classList.remove('selected');
         }
@@ -184,36 +163,30 @@
       });
     });
 
-    // Toggle open/close
-    genreToggle.addEventListener('click', e => {
+    genreToggle.addEventListener('click', e=>{
       e.stopPropagation();
       genreMenu.classList.toggle('hidden');
     });
-    document.addEventListener('click', () => {
-      genreMenu.classList.add('hidden');
-    });
+    document.addEventListener('click', ()=> genreMenu.classList.add('hidden'));
 
-    // Load cached data
+    // Fetch cached data
     fetch('./data/movies.json')
-      .then(r => r.ok ? r.json() : Promise.reject(r.status))
-      .then(arr => {
-        preloaded = arr
-          .filter(m => m.poster_path)
-          .map(m => ({
-            title:     m.title,
-            year:      m.release_date?.slice(0,4) || '',
-            src:       `https://image.tmdb.org/t/p/w500${m.poster_path}`,
-            genre_ids: m.genre_ids || []
-          }));
-        randomizeBtn.textContent = 'Randomize Movie';
-        randomizeBtn.disabled = false;
+      .then(r=>r.ok?r.json():Promise.reject(r.status))
+      .then(arr=>{
+        preloaded = arr.filter(m=>m.poster_path).map(m=>({
+          title: m.title,
+          year: m.release_date?.slice(0,4)||'',
+          src: `https://image.tmdb.org/t/p/w500${m.poster_path}`,
+          genre_ids: m.genre_ids||[]
+        }));
+        randomizeBtn.textContent='Randomize Movie';
+        randomizeBtn.disabled=false;
       })
-      .catch(err => {
-        console.error('Fetch error:', err);
+      .catch(err=>{
+        console.error(err);
         showError('Failed to load movie list.');
       });
 
-    // Manual click still available
     randomizeBtn.addEventListener('click', randomize);
   </script>
 </body>
