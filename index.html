@@ -6,18 +6,76 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Randomly pick a top rated movie</title>
 
-  <!-- Tailwind (for production, generate a purged build via JIT or PurgeCSS to strip unused classes) -->
+  <!-- Inter font & Tailwind (purge unused classes in production) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* spin animation */
-    @keyframes scaleFlip {
-      0%   { transform: scale(0.8); opacity: 0.5; }
-      50%  { transform: scale(1.2); opacity: 1; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    .slot-flip { animation: scaleFlip 0.1s ease-in-out infinite; }
 
-    /* provider logos */
+  <style>
+    :root {
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --color-bg:     #121212;
+      --color-base:   #1E1E1E;
+      --color-card:   #1F1F1F;
+      --color-accent: #2DD4BF;
+      --color-text:   #E5E7EB;
+      --radius:       0.5rem;
+    }
+    html { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); }
+    body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem; }
+
+    /* Container */
+    .randomizer {
+      background: var(--color-card);
+      border-radius: var(--radius);
+      padding: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    /* Title */
+    h1 {
+      font-size: 1.875rem; /* 30px */
+      line-height: 1.2;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      white-space: nowrap;
+    }
+
+    /* Poster */
+    #posterWrapper {
+      background: var(--color-base);
+      border-radius: var(--radius);
+      overflow: hidden;
+      width: 288px;
+      aspect-ratio: 2/3;
+      margin: 0 auto 1.5rem;
+    }
+    #moviePoster { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+    /* Button */
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--color-base);
+      color: var(--color-text);
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      transition: background 0.2s, transform 0.1s;
+      cursor: pointer;
+    }
+    .btn:disabled { opacity: 0.6; cursor: default; }
+    .btn:hover:not(:disabled),
+    .btn:focus:not(:disabled) {
+      background: var(--color-accent);
+      color: #121212;
+      transform: translateY(-2px);
+      outline: none;
+    }
+    .btn:active { transform: translateY(0); }
+
+    /* Providers */
     .provider-btn {
       width: 48px; height: 48px;
       margin-right: 0.5rem;
@@ -39,94 +97,76 @@
       outline: none;
     }
     .provider-btn.selected {
-      box-shadow: 0 0 0 2px #38A169;
+      box-shadow: 0 0 0 2px var(--color-accent);
     }
 
-    /* genre dropdown */
-    #genreMenu { background-color: #4A5568; }
+    /* Genre dropdown */
+    #genreMenu { background: var(--color-base); border-radius: var(--radius); }
     #genreMenu .item {
       padding: 0.25rem 1rem;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.25rem;
-      color: #E2E8F0;
+      gap: 0.5rem;
+      color: var(--color-text);
       font-size: 0.875rem;
-      white-space: nowrap;
       transition: background .15s;
     }
     #genreMenu .item:hover,
     #genreMenu .item:focus {
-      background-color: #2D3748;
+      background: #2D3748;
       outline: none;
     }
     #genreMenu .item .check { visibility: hidden; color: #38A169; }
     #genreMenu .item.selected .check { visibility: visible; }
 
-    button:focus {
-      outline: 2px solid #38A169;
-    }
+    /* Focus outline */
+    button:focus { outline: 2px solid var(--color-accent); }
   </style>
 </head>
-<body class="bg-gray-900 text-gray-100 flex flex-col items-center justify-center min-h-screen p-4 pb-20">
+<body>
 
-  <!-- Title: force no-wrap on small -->
-  <h1 class="text-3xl sm:text-4xl font-bold mb-6 whitespace-nowrap">
-    Randomly pick a top rated movie
-  </h1>
+  <h1>Randomly pick a top rated movie</h1>
 
-  <div class="w-full max-w-md space-y-4">
-    <div id="randomizer" class="bg-gray-800 p-4 rounded space-y-4">
-      <div id="posterWrapper"
-           class="bg-gray-700 rounded overflow-hidden mx-auto mb-6"
-           style="width:288px; aspect-ratio:2/3;">
-        <img id="moviePoster" class="hidden w-full h-full object-contain" alt="Movie poster"/>
-      </div>
-      <button id="randomizeBtn"
-              class="w-full bg-gray-700 hover:bg-gray-600 py-2 rounded font-medium text-sm"
-              disabled>
-        Loading…
-      </button>
-      <div id="result" class="hidden bg-gray-700 p-4 rounded text-center">
-        <p id="movieResult" class="font-semibold text-white text-sm"></p>
-      </div>
+  <div class="randomizer w-full max-w-md space-y-4">
+    <div id="posterWrapper">
+      <img id="moviePoster" class="hidden" alt="Movie poster"/>
     </div>
-
-    <div class="flex items-start">
-      <!-- Genre Filter -->
-      <div class="relative inline-block">
-        <button id="genreToggle"
-                class="bg-transparent text-gray-200 font-semibold text-sm hover:underline flex items-center space-x-1 px-2 py-1"
-                aria-haspopup="true" aria-expanded="false">
-          <span>▾</span><span>Genres</span>
-        </button>
-        <div id="genreMenu"
-             class="absolute hidden min-w-max rounded shadow-lg z-10 bottom-full mb-1 left-0
-                    lg:left-auto lg:right-full lg:mr-4 max-h-[70vh] overflow-y-auto"
-             role="menu">
-        </div>
-      </div>
-
-      <!-- Streaming Providers -->
-      <div class="ml-auto flex flex-col items-center">
-        <div class="text-gray-200 font-semibold text-sm mb-1">Where to stream</div>
-        <div id="providerFilter" class="flex"></div>
-      </div>
+    <button id="randomizeBtn" class="btn" disabled>Loading…</button>
+    <div id="result" class="hidden text-center">
+      <p id="movieResult" class="font-semibold text-sm"></p>
     </div>
   </div>
 
-  <!-- Attribution moved to bottom-left -->
+  <div class="flex w-full max-w-md justify-between items-start mt-4">
+    <!-- Genre -->
+    <div class="relative inline-block">
+      <button id="genreToggle"
+              class="bg-transparent text-sm font-semibold flex items-center space-x-1 px-2 py-1 hover:underline"
+              aria-haspopup="true" aria-expanded="false">
+        <span>▾</span><span>Genres</span>
+      </button>
+      <div id="genreMenu"
+           class="absolute hidden bottom-full mb-1 left-0 max-h-[60vh] overflow-y-auto shadow-lg z-10"
+           role="menu">
+      </div>
+    </div>
+    <!-- Providers -->
+    <div class="flex flex-col items-center">
+      <div class="text-sm font-semibold mb-1">Where to stream</div>
+      <div id="providerFilter" class="flex"></div>
+    </div>
+  </div>
+
   <div class="absolute bottom-2 left-4 text-xs text-gray-500">
     Data provided by <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a>
   </div>
 
   <script>
-    // ─── CONFIG ───────────────────────────────────────────────────────
     const ALLOWED_PROVIDER_IDS = new Set([8,119,15,337,384,39,531,387,2]);
     const spinCount = 30, spinSpeed = 20;
     let movies = [], selectedGenres = new Set([0]);
 
-    // ─── SHOW PROVIDERS ───────────────────────────────────────────────
     function showProviders(movie) {
       const wrap = document.getElementById('providerFilter');
       wrap.innerHTML = '';
@@ -149,7 +189,6 @@
         });
     }
 
-    // ─── GENRE DROPDOWN ──────────────────────────────────────────────
     const genreMap = {
       0:"Any Genre",28:"Action",12:"Adventure",16:"Animation",35:"Comedy",
       80:"Crime",99:"Documentary",18:"Drama",10751:"Family",
@@ -180,9 +219,11 @@
       } else {
         if (selectedGenres.has(id)) selectedGenres.delete(id);
         else selectedGenres.add(id);
-        genreMenu.querySelector(`.item[data-genre="${id}"]`).classList.toggle('selected');
+        genreMenu.querySelector(`.item[data-genre="${id}"]`)
+                 .classList.toggle('selected');
         selectedGenres.delete(0);
-        genreMenu.querySelector('.item[data-genre="0"]').classList.remove('selected');
+        genreMenu.querySelector('.item[data-genre="0"]')
+                 .classList.remove('selected');
       }
       genreMenu.classList.add('hidden');
       randomize();
@@ -195,7 +236,6 @@
     });
     document.addEventListener('click', ()=>genreMenu.classList.add('hidden'));
 
-    // ─── CORE RANDOMIZER ─────────────────────────────────────────────
     const btn   = document.getElementById('randomizeBtn');
     const imgEl = document.getElementById('moviePoster');
     const res   = document.getElementById('result');
@@ -256,7 +296,6 @@
       })();
     }
 
-    // ─── LOAD & PRELOAD ───────────────────────────────────────────────
     const moviesPath = 'data/movies.json';
     console.log('Loading JSON from:', moviesPath);
     fetch(moviesPath)
@@ -268,7 +307,7 @@
         movies = arr
           .filter(m=>m.poster_path)
           .map(m => {
-            const url = `https://image.tmdb.org/t/p/w342${m.poster_path}`;  // ↑ higher-res thumb
+            const url = `https://image.tmdb.org/t/p/w342${m.poster_path}`;
             const img = new Image(); img.src = url;
             return {
               title:          m.title,
