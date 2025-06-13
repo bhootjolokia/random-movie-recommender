@@ -13,8 +13,6 @@
       100% { transform: scale(1); opacity: 1; }
     }
     .slot-flip { animation: scaleFlip 0.1s ease-in-out infinite; }
-
-    /* Dropdown panel styling */
     #genreMenu { background-color: #4A5568; }
     #genreMenu .item {
       padding:       0.25rem 1rem;
@@ -38,8 +36,7 @@
     <!-- Randomizer Box -->
     <div id="randomizer" class="bg-gray-800 p-4 rounded space-y-4">
       <h1 class="text-4xl font-bold text-center">Random Movie Picker</h1>
-      <div id="posterWrapper"
-           class="bg-gray-700 rounded overflow-hidden mx-auto mb-6"
+      <div id="posterWrapper" class="bg-gray-700 rounded overflow-hidden mx-auto mb-6"
            style="width:288px; aspect-ratio:2/3;">
         <img id="moviePoster" class="hidden w-full h-full object-contain" alt=""/>
       </div>
@@ -62,9 +59,7 @@
       </button>
       <div id="genreMenu"
            class="absolute hidden min-w-max rounded shadow-lg z-10
-                  bottom-full mb-1
-                  left-0
-                  lg:left-auto lg:right-full lg:mr-4
+                  bottom-full mb-1 left-0 lg:left-auto lg:right-full lg:mr-4
                   max-h-[70vh] overflow-y-auto">
         <!-- JS injects items here -->
       </div>
@@ -113,26 +108,30 @@
         pool = pool.filter(m => filters.every(id => m.genre_ids.includes(id)));
         if (!pool.length) return showError('No movies match all selected genres.');
       }
+
+      // hide previous, start spin
       resultDiv.classList.add('hidden');
       moviePoster.classList.remove('hidden');
       moviePoster.classList.add('slot-flip');
       randomizeBtn.disabled = true;
 
-      const cand = pool.slice();
-      for (let i = cand.length - 1; i > 0; i--) {
+      // shuffle & take first N
+      const candidates = pool.slice();
+      for (let i = candidates.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [cand[i], cand[j]] = [cand[j], cand[i]];
+        [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
       }
-      const picks = cand.slice(0, animationCount);
+      const picks = candidates.slice(0, animationCount);
 
       let i = 0;
       (function flip() {
         const m = picks[i++];
         moviePoster.src = m.src;
-        moviePoster.alt = m.title;
         movieResult.textContent = `${m.title} (${m.year})`;
-        if (i < picks.length) setTimeout(flip, animationSpeed);
-        else {
+        if (i < picks.length) {
+          setTimeout(flip, animationSpeed);
+        } else {
+          // STOP on the last of picks[]—no extra random pull
           moviePoster.classList.remove('slot-flip');
           resultDiv.classList.remove('hidden');
           randomizeBtn.textContent = 'Randomize Movie';
@@ -164,13 +163,12 @@
           selectedGenres.delete(0);
           genreMenu.querySelector('.item[data-genre="0"]').classList.remove('selected');
         }
-
         randomize();
-        genreMenu.classList.add('hidden'); // collapse drop-up on selection
+        genreMenu.classList.add('hidden');
       });
     });
 
-    // Toggle dropup
+    // Toggle drop-up
     genreToggle.addEventListener('click', e => {
       e.stopPropagation();
       genreMenu.classList.toggle('hidden');
