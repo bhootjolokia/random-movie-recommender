@@ -13,8 +13,6 @@
       100% { transform: scale(1); opacity: 1; }
     }
     .slot-flip { animation: scaleFlip 0.1s ease-in-out infinite; }
-
-    /* Dropdown panel styling */
     #genreMenu { background-color: #4A5568; }
     #genreMenu .item {
       padding:   0.25rem 1rem;
@@ -32,14 +30,14 @@
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen p-4">
-  <!-- scale-90 on mobile, scale-100 lg+ -->
+  <!-- scale-90 on mobile, scale-100 on lg+ -->
   <div class="transform scale-90 lg:scale-100 w-full max-w-md space-y-4">
 
     <!-- Randomizer Box -->
     <div id="randomizer" class="bg-gray-800 p-4 rounded space-y-4">
       <h1 class="text-4xl font-bold text-center">Random Movie Picker</h1>
       <div id="posterWrapper"
-           class="bg-gray-700 rounded overflow-hidden mx-auto"
+           class="bg-gray-700 rounded overflow-hidden mx-auto mb-6"
            style="width:288px; aspect-ratio:2/3;">
         <img id="moviePoster" class="hidden w-full h-full object-contain" alt=""/>
       </div>
@@ -63,17 +61,19 @@
       <div id="genreMenu"
            class="absolute hidden min-w-max rounded shadow-lg z-10
                   bottom-full mb-1
-                  right-0
-                  lg:right-full lg:mr-4
+                  left-0
+                  lg:left-auto lg:right-full lg:mr-4
                   max-h-[70vh] overflow-y-auto">
         <!-- JS injects items here -->
       </div>
     </div>
 
-    <!-- Attribution -->
-    <div class="text-xs text-gray-500 text-center">
-      Data provided by <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a>
-    </div>
+  </div>
+
+  <!-- Attribution pinned bottom-right -->
+  <div class="absolute bottom-2 right-2 text-xs text-gray-500">
+    Data provided by
+    <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a>
   </div>
 
   <script>
@@ -105,10 +105,10 @@
 
     function randomize() {
       if (!preloaded.length) return;
-      const filters = [...selectedGenres].filter(g=>g!==0);
+      const filters = [...selectedGenres].filter(g => g !== 0);
       let pool = preloaded;
       if (filters.length) {
-        pool = pool.filter(m=>filters.every(id=>m.genre_ids.includes(id)));
+        pool = pool.filter(m => filters.every(id => m.genre_ids.includes(id)));
         if (!pool.length) return showError('No movies match all selected genres.');
       }
       resultDiv.classList.add('hidden');
@@ -117,19 +117,19 @@
       randomizeBtn.disabled = true;
 
       const cand = pool.slice();
-      for (let i=cand.length-1; i>0; i--){
-        const j = Math.floor(Math.random()*(i+1));
-        [cand[i],cand[j]] = [cand[j],cand[i]];
+      for (let i = cand.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cand[i], cand[j]] = [cand[j], cand[i]];
       }
       const picks = cand.slice(0, animationCount);
 
-      let i=0;
-      (function flip(){
+      let i = 0;
+      (function flip() {
         const m = picks[i++];
         moviePoster.src = m.src;
         moviePoster.alt = m.title;
         movieResult.textContent = `${m.title} (${m.year})`;
-        if (i<picks.length) setTimeout(flip, animationSpeed);
+        if (i < picks.length) setTimeout(flip, animationSpeed);
         else {
           moviePoster.classList.remove('slot-flip');
           resultDiv.classList.remove('hidden');
@@ -139,22 +139,24 @@
       })();
     }
 
-    Object.entries(genreMap).forEach(([id,name])=>{
+    // Build dropdown items
+    Object.entries(genreMap).forEach(([id, name]) => {
       const d = document.createElement('div');
       d.className = 'item';
       d.dataset.genre = id;
       d.innerHTML = `<span>${name}</span><span class="check">✓</span>`;
-      if(id==="0") d.classList.add('selected');
+      if (id === "0") d.classList.add('selected');
       genreMenu.appendChild(d);
-      d.addEventListener('click', e=>{
+
+      d.addEventListener('click', e => {
         e.stopPropagation();
-        const gid=+d.dataset.genre;
-        if(gid===0){
-          selectedGenres=new Set([0]);
+        const gid = +d.dataset.genre;
+        if (gid === 0) {
+          selectedGenres = new Set([0]);
           genreMenu.querySelectorAll('.item')
-            .forEach(it=>it.classList.toggle('selected',it.dataset.genre==="0"));
+            .forEach(it => it.classList.toggle('selected', it.dataset.genre === "0"));
         } else {
-          if(selectedGenres.has(gid)) selectedGenres.delete(gid);
+          if (selectedGenres.has(gid)) selectedGenres.delete(gid);
           else selectedGenres.add(gid);
           d.classList.toggle('selected');
           selectedGenres.delete(0);
@@ -164,25 +166,27 @@
       });
     });
 
-    genreToggle.addEventListener('click', e=>{
+    // Toggle dropup
+    genreToggle.addEventListener('click', e => {
       e.stopPropagation();
       genreMenu.classList.toggle('hidden');
     });
-    document.addEventListener('click',()=>genreMenu.classList.add('hidden'));
+    document.addEventListener('click', () => genreMenu.classList.add('hidden'));
 
+    // Fetch cached data
     fetch('./data/movies.json')
-      .then(r=>r.ok?r.json():Promise.reject(r.status))
-      .then(arr=>{
-        preloaded = arr.filter(m=>m.poster_path).map(m=>({
-          title: m.title,
-          year: m.release_date?.slice(0,4)||'',
-          src: `https://image.tmdb.org/t/p/w500${m.poster_path}`,
-          genre_ids: m.genre_ids||[]
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(arr => {
+        preloaded = arr.filter(m => m.poster_path).map(m => ({
+          title:     m.title,
+          year:      m.release_date?.slice(0,4) || '',
+          src:       `https://image.tmdb.org/t/p/w500${m.poster_path}`,
+          genre_ids: m.genre_ids || []
         }));
-        randomizeBtn.textContent='Randomize Movie';
-        randomizeBtn.disabled=false;
+        randomizeBtn.textContent = 'Randomize Movie';
+        randomizeBtn.disabled = false;
       })
-      .catch(err=>{
+      .catch(err => {
         console.error(err);
         showError('Failed to load movie list.');
       });
