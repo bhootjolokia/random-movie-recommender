@@ -62,7 +62,7 @@
       </div>
     </div>
 
-    <!-- Dropup: genres control under randomizer, panel pops up -->
+    <!-- Dropup: toggle + panel -->
     <div class="relative">
       <button id="genreToggle"
               class="bg-transparent text-gray-200 font-semibold text-sm hover:underline flex items-center space-x-1 px-2 py-1"
@@ -71,7 +71,7 @@
       </button>
       <div id="genreMenu"
            class="absolute bottom-full right-full -mb-3 mr-4 min-w-max rounded shadow-lg hidden z-10">
-        <!-- JS will inject items here -->
+        <!-- JS injects items here -->
       </div>
     </div>
 
@@ -83,7 +83,6 @@
   </div>
 
   <script>
-    // TMDb genres (0 = Any Genre)
     const genreMap = {
       0:  "Any Genre",
       28: "Action", 12: "Adventure", 16: "Animation", 35: "Comedy",
@@ -100,7 +99,7 @@
     const resultDiv    = document.getElementById('result');
     const movieResult  = document.getElementById('movieResult');
 
-    let selectedGenres = new Set([0]);  // “Any Genre” by default
+    let selectedGenres = new Set([0]);
     let preloaded = [];
     const animationCount = 30;
     const animationSpeed = 20;
@@ -112,7 +111,6 @@
       randomizeBtn.disabled = true;
     }
 
-    // THE central randomize routine
     function randomize() {
       if (!preloaded.length) return;
       resultDiv.classList.add('hidden');
@@ -120,7 +118,6 @@
       moviePoster.classList.add('slot-flip');
       randomizeBtn.disabled = true;
 
-      // MUST have all selected genres (excluding 0)
       const filters = [...selectedGenres].filter(g => g !== 0);
       let pool = preloaded;
       if (filters.length) {
@@ -131,7 +128,6 @@
         }
       }
 
-      // Fisher–Yates shuffle & take first N
       const candidates = pool.slice();
       for (let i = candidates.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -140,7 +136,7 @@
       const picks = candidates.slice(0, animationCount);
 
       let i = 0;
-      const flip = () => {
+      (function flip() {
         const m = picks[i++];
         moviePoster.src = m.src;
         moviePoster.alt = m.title;
@@ -150,13 +146,13 @@
         } else {
           moviePoster.classList.remove('slot-flip');
           resultDiv.classList.remove('hidden');
+          randomizeBtn.textContent = 'Randomize Movie';
           randomizeBtn.disabled = false;
         }
-      };
-      flip();
+      })();
     }
 
-    // Build genre dropdown
+    // Build genres in dropdown
     Object.entries(genreMap).forEach(([id, name]) => {
       const div = document.createElement('div');
       div.className = 'item';
@@ -179,12 +175,10 @@
           selectedGenres.delete(0);
           genreMenu.querySelector('.item[data-genre="0"]').classList.remove('selected');
         }
-        // Immediately rerun the randomizer
         randomize();
       });
     });
 
-    // Toggle open/close
     genreToggle.addEventListener('click', e => {
       e.stopPropagation();
       genreMenu.classList.toggle('hidden');
@@ -193,28 +187,25 @@
       genreMenu.classList.add('hidden');
     });
 
-    // Load the pre-cached movies.json
-    fetch('data/movies.json')
+    // Fetch the cached data
+    fetch('./data/movies.json')
       .then(r => r.ok ? r.json() : Promise.reject(r.status))
       .then(arr => {
-        preloaded = arr
-          .filter(m => m.poster_path)
-          .map(m => ({
-            title:     m.title,
-            year:      m.release_date?.slice(0,4) || '',
-            src:       `https://image.tmdb.org/t/p/w500${m.poster_path}`,
-            genre_ids: m.genre_ids || []
-          }));
-        // enable button (in case user still wants to click)
+        preloaded = arr.filter(m => m.poster_path).map(m => ({
+          title:     m.title,
+          year:      m.release_date?.slice(0,4) || '',
+          src:       `https://image.tmdb.org/t/p/w500${m.poster_path}`,
+          genre_ids: m.genre_ids || []
+        }));
         randomizeBtn.textContent = 'Randomize Movie';
         randomizeBtn.disabled = false;
       })
       .catch(err => {
-        console.error(err);
+        console.error('Fetch error:', err);
         showError('Failed to load movie list.');
       });
 
-    // Also allow manual click
+    // Manual trigger still available
     randomizeBtn.addEventListener('click', randomize);
   </script>
 </body>
