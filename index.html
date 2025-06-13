@@ -32,10 +32,6 @@
       filter: none;
     }
     .provider-btn:hover { opacity: 1; }
-    .provider-btn.selected {
-      opacity: 1;
-      border-color: #38A169;
-    }
 
     /* Genre Dropdown Styling */
     #genreMenu { background-color: #4A5568; }
@@ -106,8 +102,9 @@
       container.innerHTML = '';
       if (!movie.watch_providers?.length) return;
       movie.watch_providers.forEach(p => {
+        if (!p.logo_path) return;
         const a = document.createElement('a');
-        a.href = movie.watch_link || '#';
+        a.href   = movie.watch_link || '#';
         a.target = '_blank';
         a.className = 'provider-btn';
         const img = document.createElement('img');
@@ -183,6 +180,7 @@
         pool = pool.filter(m=>gf.every(id=>m.genre_ids.includes(id)));
         if (!pool.length) return showError('No movies match your genres.');
       }
+
       // spin animation
       resultDiv.classList.add('hidden');
       moviePoster.classList.remove('hidden');
@@ -211,22 +209,25 @@
       })();
     }
 
-    // fetch cached data (now includes watch_link & watch_providers)
-    fetch('data/movies.json')
-      .then(r=>r.ok?r.json():Promise.reject(r.status))
+    // *** FETCH USING ABSOLUTE PATH ***
+    fetch('/data/movies.json')
+      .then(r=> r.ok ? r.json() : Promise.reject(r.status))
       .then(arr=>{
         preloaded = arr.filter(m=>m.poster_path).map(m=>({
-          title: m.title,
-          year:  m.release_date?.slice(0,4)||'',
-          src:   `https://image.tmdb.org/t/p/w500${m.poster_path}`,
-          genre_ids: m.genre_ids||[],
-          watch_link: m.watch_link||'',
+          title:       m.title,
+          year:        m.release_date?.slice(0,4)||'',
+          src:         `https://image.tmdb.org/t/p/w500${m.poster_path}`,
+          genre_ids:   m.genre_ids||[],
+          watch_link:  m.watch_link||'',
           watch_providers: m.watch_providers||[]
         }));
         randomizeBtn.textContent = 'Randomize Movie';
         randomizeBtn.disabled = false;
       })
-      .catch(err=>{ console.error(err); showError('Failed to load movie list.') });
+      .catch(err=> {
+        console.error('Error loading movies.json:', err);
+        showError('Failed to load movie list.');
+      });
 
     randomizeBtn.addEventListener('click', randomize);
   </script>
