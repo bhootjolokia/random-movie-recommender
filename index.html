@@ -13,6 +13,7 @@
       100% { transform: scale(1); opacity: 1; }
     }
     .slot-flip { animation: scaleFlip 0.1s ease-in-out infinite; }
+    /* Dropdown panel styling */
     #genreMenu { background-color: #4A5568; }
     #genreMenu .item {
       padding:   0.25rem 1rem;
@@ -29,8 +30,7 @@
     #genreMenu .item.selected .check { visibility: visible; }
   </style>
 </head>
-<body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen p-4">
-  <!-- scale-90 on mobile, scale-100 on lg+ -->
+<body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen p-4 pb-20">
   <div class="transform scale-90 lg:scale-100 w-full max-w-md space-y-4">
 
     <!-- Randomizer Box -->
@@ -71,7 +71,7 @@
   </div>
 
   <!-- Attribution pinned bottom-right -->
-  <div class="absolute bottom-2 right-2 text-xs text-gray-500">
+  <div class="absolute bottom-2 right-4 text-xs text-gray-500">
     Data provided by
     <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a>
   </div>
@@ -139,7 +139,6 @@
       })();
     }
 
-    // Build dropdown items
     Object.entries(genreMap).forEach(([id, name]) => {
       const d = document.createElement('div');
       d.className = 'item';
@@ -166,14 +165,12 @@
       });
     });
 
-    // Toggle dropup
     genreToggle.addEventListener('click', e => {
       e.stopPropagation();
       genreMenu.classList.toggle('hidden');
     });
     document.addEventListener('click', () => genreMenu.classList.add('hidden'));
 
-    // Fetch cached data
     fetch('./data/movies.json')
       .then(r => r.ok ? r.json() : Promise.reject(r.status))
       .then(arr => {
