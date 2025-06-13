@@ -4,10 +4,9 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Randomly pick a top movie</title>
+  <title>Random Movie Picker</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* spin animation */
     @keyframes scaleFlip {
       0%   { transform: scale(0.8); opacity: 0.5; }
       50%  { transform: scale(1.2); opacity: 1; }
@@ -15,32 +14,30 @@
     }
     .slot-flip { animation: scaleFlip 0.1s ease-in-out infinite; }
 
-    /* provider logos */
+    /* Provider Chip Styling */
     .provider-btn {
-      width: 44px; height: 44px;
-      margin-right: 0.5rem;
-      opacity: 0.85;
+      width: 32px; height: 32px;
+      opacity: 0.6;
+      border: 2px solid transparent;
+      border-radius: 4px;
+      transition: opacity .2s, border-color .2s;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      transition: transform .15s, opacity .15s, box-shadow .15s;
+      margin-right: 0.25rem;
     }
     .provider-btn img {
-      width: 36px; height: 36px;
+      width: 24px; height: 24px;
       object-fit: contain;
+      filter: none;
     }
-    .provider-btn:hover,
-    .provider-btn:focus {
-      opacity: 1;
-      transform: scale(1.1);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
-      outline: none;
-    }
+    .provider-btn:hover { opacity: 1; }
     .provider-btn.selected {
-      box-shadow: 0 0 0 2px #38A169;
+      opacity: 1;
+      border-color: #38A169;
     }
 
-    /* genre dropdown */
+    /* Genre Dropdown Styling */
     #genreMenu { background-color: #4A5568; }
     #genreMenu .item {
       padding: 0.25rem 1rem;
@@ -51,30 +48,18 @@
       color: #E2E8F0;
       font-size: 0.875rem;
       white-space: nowrap;
-      transition: background .15s;
     }
-    #genreMenu .item:hover,
-    #genreMenu .item:focus {
-      background-color: #2D3748;
-      outline: none;
-    }
+    #genreMenu .item:hover { background-color: #2D3748; }
     #genreMenu .item .check { visibility: hidden; color: #38A169; }
     #genreMenu .item.selected .check { visibility: visible; }
-
-    /* focus outline for other buttons */
-    button:focus {
-      outline: 2px solid #38A169;
-    }
   </style>
 </head>
-<body class="bg-gray-900 text-gray-100 flex flex-col items-center justify-center min-h-screen p-4 pb-20">
+<body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen p-4 pb-20">
+  <div class="transform scale-90 lg:scale-100 w-full max-w-md space-y-4">
 
-  <!-- 1) Title moved out -->
-  <h1 class="text-4xl font-bold mb-6">Randomly pick a top movie</h1>
-
-  <div class="w-full max-w-md space-y-4">
-    <!-- spinner placeholder -->
+    <!-- Randomizer Box -->
     <div id="randomizer" class="bg-gray-800 p-4 rounded space-y-4">
+      <h1 class="text-4xl font-bold text-center">Random Movie Picker</h1>
       <div id="posterWrapper"
            class="bg-gray-700 rounded overflow-hidden mx-auto mb-6"
            style="width:288px; aspect-ratio:2/3;">
@@ -82,32 +67,28 @@
       </div>
       <button id="randomizeBtn"
               class="w-full bg-gray-700 hover:bg-gray-600 py-2 rounded font-medium text-sm"
-              disabled>
-        Loading…
-      </button>
+              disabled>Loading...</button>
       <div id="result" class="hidden bg-gray-700 p-4 rounded text-center">
         <p id="movieResult" class="font-semibold text-white text-sm"></p>
       </div>
     </div>
 
+    <!-- Controls: Genres left, Providers right -->
     <div class="flex items-start">
-      <!-- Genre Filter -->
+      <!-- Genres -->
       <div class="relative inline-block">
         <button id="genreToggle"
-                class="bg-transparent text-gray-200 font-semibold text-sm hover:underline flex items-center space-x-1 px-2 py-1"
-                aria-haspopup="true" aria-expanded="false">
+                class="bg-transparent text-gray-200 font-semibold text-sm hover:underline flex items-center space-x-1 px-2 py-1">
           <span>▾</span><span>Genres</span>
         </button>
         <div id="genreMenu"
              class="absolute hidden min-w-max rounded shadow-lg z-10 bottom-full mb-1 left-0
-                    lg:left-auto lg:right-full lg:mr-4 max-h-[70vh] overflow-y-auto"
-             role="menu">
+                    lg:left-auto lg:right-full lg:mr-4 max-h-[70vh] overflow-y-auto">
         </div>
       </div>
-
-      <!-- Streaming Providers -->
+      <!-- Providers -->
       <div class="ml-auto flex flex-col items-center">
-        <div class="text-gray-200 font-semibold text-sm mb-1">Where to stream</div>
+        <div class="text-gray-200 font-semibold text-sm mb-1">Where to watch</div>
         <div id="providerFilter" class="flex"></div>
       </div>
     </div>
@@ -119,36 +100,25 @@
   </div>
 
   <script>
-    // ─── CONFIG ───────────────────────────────────────────────────────
-    const ALLOWED_PROVIDER_IDS = new Set([8,119,15,337,384,39,531,387,2]);
-    const spinCount = 30, spinSpeed = 20;
-    let movies = [], selectedGenres = new Set([0]);
-
-    // ─── SHOW PROVIDERS ───────────────────────────────────────────────
+    // ─── SHOW DYNAMIC PROVIDERS ───
     function showProviders(movie) {
-      const wrap = document.getElementById('providerFilter');
-      wrap.innerHTML = '';
-      if (!Array.isArray(movie.watch_providers)) return;
-      movie.watch_providers
-        .filter(p =>
-          ALLOWED_PROVIDER_IDS.has(p.provider_id) &&
-          ['flatrate','free','adSupported'].includes(p.provider_type)
-        )
-        .forEach(p => {
-          if (!p.logo_path) return;
-          const a = document.createElement('a');
-          a.href   = movie.watch_link || '#';
-          a.target = '_blank';
-          a.className = 'provider-btn';
-          const img = document.createElement('img');
-          img.src = `https://image.tmdb.org/t/p/w92${p.logo_path}`;
-          img.alt = p.provider_name;
-          a.appendChild(img);
-          wrap.appendChild(a);
-        });
+      const container = document.getElementById('providerFilter');
+      container.innerHTML = '';
+      if (!movie.watch_providers?.length) return;
+      movie.watch_providers.forEach(p => {
+        const a = document.createElement('a');
+        a.href = movie.watch_link || '#';
+        a.target = '_blank';
+        a.className = 'provider-btn';
+        const img = document.createElement('img');
+        img.src = `https://image.tmdb.org/t/p/w92${p.logo_path}`;
+        img.alt = p.provider_name;
+        a.appendChild(img);
+        container.appendChild(a);
+      });
     }
 
-    // ─── GENRE DROPDOWN ──────────────────────────────────────────────
+    // ─── GENRE LOGIC ───
     const genreMap = {
       0:"Any Genre",28:"Action",12:"Adventure",16:"Animation",35:"Comedy",
       80:"Crime",99:"Documentary",18:"Drama",10751:"Family",
@@ -156,117 +126,109 @@
       9648:"Mystery",10749:"Romance",878:"Sci-Fi",
       10770:"TV Movie",53:"Thriller",10752:"War",37:"Western"
     };
-    const genreToggle =  document.getElementById('genreToggle');
-    const genreMenu   =  document.getElementById('genreMenu');
-    Object.entries(genreMap).forEach(([id,name])=>{
-      const item = document.createElement('div');
-      item.className     = 'item';
-      item.dataset.genre = id;
-      item.tabIndex      = 0;
-      item.innerHTML     = `<span>${name}</span><span class="check">✓</span>`;
-      if (id==="0") item.classList.add('selected');
-      item.addEventListener('click', e => { toggleGenre(+id); });
-      item.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') toggleGenre(+id);
+    const genreToggle = document.getElementById('genreToggle');
+    const genreMenu   = document.getElementById('genreMenu');
+    let selectedGenres= new Set([0]);
+
+    Object.entries(genreMap).forEach(([id,name]) => {
+      const d = document.createElement('div');
+      d.className     = 'item';
+      d.dataset.genre = id;
+      d.innerHTML     = `<span>${name}</span><span class="check">✓</span>`;
+      if (id==="0") d.classList.add('selected');
+      d.addEventListener('click', e => {
+        e.stopPropagation();
+        if (+id===0) {
+          selectedGenres = new Set([0]);
+          genreMenu.querySelectorAll('.item')
+                   .forEach(it=>it.classList.toggle('selected', it.dataset.genre==="0"));
+        } else {
+          selectedGenres.has(+id) ? selectedGenres.delete(+id) : selectedGenres.add(+id);
+          d.classList.toggle('selected');
+          selectedGenres.delete(0);
+          genreMenu.querySelector('.item[data-genre="0"]').classList.remove('selected');
+        }
+        genreMenu.classList.add('hidden');
+        randomize();
       });
-      genreMenu.appendChild(item);
+      genreMenu.appendChild(d);
     });
-    function toggleGenre(id) {
-      if (id === 0) {
-        selectedGenres = new Set([0]);
-        genreMenu.querySelectorAll('.item')
-          .forEach(it=>it.classList.toggle('selected', it.dataset.genre==="0"));
-      } else {
-        if (selectedGenres.has(id)) selectedGenres.delete(id);
-        else selectedGenres.add(id);
-        genreMenu.querySelector(`.item[data-genre="${id}"]`)
-                 .classList.toggle('selected');
-        selectedGenres.delete(0);
-        genreMenu.querySelector('.item[data-genre="0"]').classList.remove('selected');
-      }
-      genreMenu.classList.add('hidden');
-      randomize();
-    }
-    genreToggle.addEventListener('click', e => {
+    genreToggle.addEventListener('click', e=>{
       e.stopPropagation();
-      const open = !genreMenu.classList.toggle('hidden');
-      genreToggle.setAttribute('aria-expanded', open);
+      genreMenu.classList.toggle('hidden');
     });
     document.addEventListener('click', ()=>genreMenu.classList.add('hidden'));
 
-    // ─── CORE RANDOMIZER ─────────────────────────────────────────────
-    const btn   = document.getElementById('randomizeBtn');
-    const imgEl = document.getElementById('moviePoster');
-    const res   = document.getElementById('result');
-    const txt   = document.getElementById('movieResult');
+    // ─── CORE RANDOMIZER ───
+    const randomizeBtn = document.getElementById('randomizeBtn');
+    const moviePoster  = document.getElementById('moviePoster');
+    const resultDiv    = document.getElementById('result');
+    const movieResult  = document.getElementById('movieResult');
+    let preloaded      = [];
+    const animationCount=30, animationSpeed=20;
 
     function showError(msg) {
-      res.classList.remove('hidden');
-      txt.textContent = msg;
-      btn.textContent = 'Error';
-      btn.disabled = true;
+      resultDiv.classList.remove('hidden');
+      movieResult.textContent = msg;
+      randomizeBtn.textContent = 'Error';
+      randomizeBtn.disabled = true;
     }
 
     function randomize() {
-      if (!movies.length) return;
-      let pool = movies.filter(m =>
-        m.watch_providers?.some(p => ALLOWED_PROVIDER_IDS.has(p.provider_id))
-      );
+      if (!preloaded.length) return;
+      // filter by genres
       const gf = [...selectedGenres].filter(g=>g!==0);
+      let pool = preloaded;
       if (gf.length) {
-        pool = pool.filter(m => gf.every(id=>m.genre_ids.includes(id)));
+        pool = pool.filter(m=>gf.every(id=>m.genre_ids.includes(id)));
         if (!pool.length) return showError('No movies match your genres.');
       }
-      res.classList.add('hidden');
-      imgEl.classList.remove('hidden');
-      imgEl.classList.add('slot-flip');
-      btn.disabled = true;
+      // spin animation
+      resultDiv.classList.add('hidden');
+      moviePoster.classList.remove('hidden');
+      moviePoster.classList.add('slot-flip');
+      randomizeBtn.disabled = true;
 
-      // build a picks array of length = spinCount, allowing repeats if pool is small
-      const picks = [];
-      for (let i=0; i<spinCount; i++) {
-        picks.push(pool[Math.floor(Math.random()*pool.length)]);
+      const cand = pool.slice();
+      for (let i=cand.length-1; i>0; i--) {
+        const j = Math.floor(Math.random()*(i+1));
+        [cand[i],cand[j]] = [cand[j],cand[i]];
       }
-
+      const picks = cand.slice(0, animationCount);
       let i=0;
       (function flip(){
         const m = picks[i++];
-        imgEl.src = m.src;
-        txt.textContent = `${m.title} (${m.year})`;
-        if (i < picks.length) setTimeout(flip, spinSpeed);
+        moviePoster.src = m.src;
+        movieResult.textContent = `${m.title} (${m.year})`;
+        if (i<picks.length) setTimeout(flip,animationSpeed);
         else {
-          imgEl.classList.remove('slot-flip');
-          res.classList.remove('hidden');
-          btn.textContent = 'Randomize Movie';
-          btn.disabled = false;
+          moviePoster.classList.remove('slot-flip');
+          resultDiv.classList.remove('hidden');
+          randomizeBtn.textContent = 'Randomize Movie';
+          randomizeBtn.disabled = false;
           showProviders(m);
         }
       })();
     }
 
-    // ─── LOAD CACHED DATA ────────────────────────────────────────────
-    fetch('./data/movies.json')
-      .then(r=> r.ok ? r.json() : Promise.reject(r.status))
+    // fetch cached data (now includes watch_link & watch_providers)
+    fetch('/data/movies.json')
+      .then(r=>r.ok?r.json():Promise.reject(r.status))
       .then(arr=>{
-        movies = arr
-          .filter(m=>m.poster_path)
-          .map(m=>({
-            title:          m.title,
-            year:           m.release_date?.slice(0,4) || '',
-            src:            `https://image.tmdb.org/t/p/w500${m.poster_path}`,
-            genre_ids:      m.genre_ids || [],
-            watch_providers:m.watch_providers || [],
-            watch_link:     m.watch_link || ''
-          }));
-        btn.textContent = 'Randomize Movie';
-        btn.disabled = false;
+        preloaded = arr.filter(m=>m.poster_path).map(m=>({
+          title: m.title,
+          year:  m.release_date?.slice(0,4)||'',
+          src:   `https://image.tmdb.org/t/p/w500${m.poster_path}`,
+          genre_ids: m.genre_ids||[],
+          watch_link: m.watch_link||'',
+          watch_providers: m.watch_providers||[]
+        }));
+        randomizeBtn.textContent = 'Randomize Movie';
+        randomizeBtn.disabled = false;
       })
-      .catch(err => {
-        console.error('Failed to load movie list:', err);
-        showError('Failed to load movie list.');
-      });
+      .catch(err=>{ console.error(err); showError('Failed to load movie list.') });
 
-    btn.addEventListener('click', randomize);
+    randomizeBtn.addEventListener('click', randomize);
   </script>
 </body>
 </html>
