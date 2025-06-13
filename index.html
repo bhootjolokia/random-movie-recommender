@@ -91,26 +91,47 @@
   </div>
 
   <script>
-    // Show only flatrate/free/adSupported
+    // ─── CONFIG ───────────────────────────────────────────────────────
+    // Only these provider_ids (Big 9)
+    const ALLOWED_PROVIDER_IDS = new Set([
+      8,   // Netflix
+      119, // Prime Video
+      15,  // Hulu
+      337, // Disney+
+      384, // HBO Max
+      39,  // Peacock
+      531, // Paramount+
+      387, // Tubi
+      2    // Apple TV+
+    ]);
+
+    // ─── SHOW PROVIDERS ───────────────────────────────────────────────
+    // Only flatrate/free/adSupported, and only Big 9
     function showProviders(movie) {
       const wrap = document.getElementById('providerFilter');
       wrap.innerHTML = '';
       if (!Array.isArray(movie.watch_providers)) return;
-      movie.watch_providers.forEach(p => {
-        if (!p.logo_path) return;
-        const a = document.createElement('a');
-        a.href   = movie.watch_link || '#';
-        a.target = '_blank';
-        a.className = 'provider-btn';
-        const img = document.createElement('img');
-        img.src = `https://image.tmdb.org/t/p/w92${p.logo_path}`;
-        img.alt = p.provider_name;
-        a.appendChild(img);
-        wrap.appendChild(a);
-      });
+
+      movie.watch_providers
+        .filter(p =>
+          ALLOWED_PROVIDER_IDS.has(p.provider_id) &&
+          ['flatrate','free','adSupported'].includes(p.provider_type)
+        )
+        .forEach(p => {
+          if (!p.logo_path) return;
+          const a = document.createElement('a');
+          a.href   = movie.watch_link || '#';
+          a.target = '_blank';
+          a.className = 'provider-btn';
+          const img = document.createElement('img');
+          img.src = `https://image.tmdb.org/t/p/w92${p.logo_path}`;
+          img.alt = p.provider_name;
+          a.appendChild(img);
+          wrap.appendChild(a);
+        });
     }
 
-    // Genre dropdown (unchanged)…
+    // ─── GENRE DROPDOWN ──────────────────────────────────────────────
     const genreMap = {
       0:"Any Genre",28:"Action",12:"Adventure",16:"Animation",35:"Comedy",
       80:"Crime",99:"Documentary",18:"Drama",10751:"Family",
@@ -122,13 +143,13 @@
     const genreMenu   = document.getElementById('genreMenu');
     let selectedGenres= new Set([0]);
 
-    Object.entries(genreMap).forEach(([id,name])=>{
+    Object.entries(genreMap).forEach(([id,name]) => {
       const div = document.createElement('div');
       div.className     = 'item';
       div.dataset.genre = id;
       div.innerHTML     = `<span>${name}</span><span class="check">✓</span>`;
       if (id==="0") div.classList.add('selected');
-      div.addEventListener('click', e=>{
+      div.addEventListener('click', e => {
         e.stopPropagation();
         if (+id===0) {
           selectedGenres = new Set([0]);
@@ -145,13 +166,13 @@
       });
       genreMenu.appendChild(div);
     });
-    genreToggle.addEventListener('click', e=>{
+    genreToggle.addEventListener('click', e => {
       e.stopPropagation();
       genreMenu.classList.toggle('hidden');
     });
     document.addEventListener('click', ()=>genreMenu.classList.add('hidden'));
 
-    // Core randomizer (unchanged except final showProviders)
+    // ─── CORE RANDOMIZER ─────────────────────────────────────────────
     const btn   = document.getElementById('randomizeBtn');
     const imgEl = document.getElementById('moviePoster');
     const res   = document.getElementById('result');
@@ -167,19 +188,27 @@
 
     function randomize() {
       if (!movies.length) return;
-      let pool = movies;
+
+      // 1) only pick from movies available on Big 9
+      let pool = movies.filter(m =>
+        Array.isArray(m.watch_providers) &&
+        m.watch_providers.some(p => ALLOWED_PROVIDER_IDS.has(p.provider_id))
+      );
+
+      // 2) apply genre filter
       const gf = [...selectedGenres].filter(g=>g!==0);
       if (gf.length) {
-        pool = pool.filter(m=> gf.every(id=>m.genre_ids.includes(id)));
+        pool = pool.filter(m => gf.every(id => m.genre_ids.includes(id)));
         if (!pool.length) return showError('No movies match your genres.');
       }
 
+      // 3) spin animation
       res.classList.add('hidden');
       imgEl.classList.remove('hidden');
       imgEl.classList.add('slot-flip');
       btn.disabled = true;
 
-      // Fisher–Yates shuffle
+      // 4) Fisher–Yates & pick first N
       const copy = pool.slice();
       for (let i=copy.length-1; i>0; i--) {
         const j = Math.floor(Math.random()*(i+1));
@@ -187,12 +216,13 @@
       }
       const picks = copy.slice(0, spinCount);
 
+      // 5) animate through picks
       let i=0;
       (function flip(){
         const m = picks[i++];
         imgEl.src = m.src;
         txt.textContent = `${m.title} (${m.year})`;
-        if (i<picks.length) {
+        if (i < picks.length) {
           setTimeout(flip, spinSpeed);
         } else {
           imgEl.classList.remove('slot-flip');
@@ -204,27 +234,24 @@
       })();
     }
 
-    // Load cached data
+    // ─── LOAD CACHED DATA ────────────────────────────────────────────
     fetch('./data/movies.json')
-      .then(r=>{
-        if (!r.ok) throw new Error(r.status);
-        return r.json();
-      })
-      .then(arr=>{
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(arr => {
         movies = arr
           .filter(m=>m.poster_path)
           .map(m=>({
             title:          m.title,
-            year:           m.release_date?.slice(0,4)||'',
+            year:           m.release_date?.slice(0,4) || '',
             src:            `https://image.tmdb.org/t/p/w500${m.poster_path}`,
-            genre_ids:      m.genre_ids||[],
-            watch_providers:m.watch_providers||[],
-            watch_link:     m.watch_link||''
+            genre_ids:      m.genre_ids || [],
+            watch_providers:m.watch_providers || [],
+            watch_link:     m.watch_link || ''
           }));
         btn.textContent = 'Randomize Movie';
         btn.disabled = false;
       })
-      .catch(err=>{
+      .catch(err => {
         console.error('Failed to load movie list:', err);
         showError('Failed to load movie list.');
       });
