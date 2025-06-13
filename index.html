@@ -14,22 +14,39 @@
     }
     .slot-flip { animation: scaleFlip 0.1s ease-in-out infinite; }
 
-    .provider-btn {
-      width: 32px; height: 32px;
-      opacity: 0.6;
-      border: 2px solid transparent;
-      border-radius: 4px;
-      transition: opacity .2s, border-color .2s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 0.25rem;
-    }
-    .provider-btn img {
-      width: 24px; height: 24px;
-      object-fit: contain;
-    }
-    .provider-btn:hover { opacity: 1; }
+.provider-btn {
+  width: 36px; height: 36px;
+  margin-right: 0.5rem;
+  background-color: rgba(255,255,255,0.05);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+  transition:
+    transform 0.15s ease,
+    opacity   0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.provider-btn img {
+  width: 24px; height: 24px;
+  object-fit: contain;
+}
+
+.provider-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+.provider-btn.selected {
+  opacity: 1;
+  border-color: #38A169;
+}
+
 
     #genreMenu { background-color: #4A5568; }
     #genreMenu .item {
