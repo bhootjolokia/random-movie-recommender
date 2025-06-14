@@ -1,271 +1,162 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset='UTF-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
   <title>Randomly pick a top rated movie</title>
-
-  <!-- Inter font & Tailwind -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-
+  <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'>
+  <script src='https://cdn.tailwindcss.com'></script>
   <style>
-    :root {
-      --font-sans: 'Inter', system-ui, sans-serif;
-      --color-bg:     #121212;
-      --color-base:   #1E1E1E;
-      --color-card:   #1F1F1F;
-      --color-accent: #2DD4BF;
-      --color-text:   #E5E7EB;
-      --radius:       0.5rem;
-    }
-    html {
-      background: var(--color-bg);
-      color: var(--color-text);
-      font-family: var(--font-sans);
-    }
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      padding-bottom: 4rem;
-      margin: 0;
-    }
-
-    .randomizer {
-      background: var(--color-card);
-      border-radius: var(--radius);
-      padding: 1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      width: 100%;
-      max-width: 320px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-    }
-
-    h1 {
-      font-size: 2.25rem;
-      line-height: 1.1;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      white-space: nowrap;
-    }
-
-    #posterWrapper {
-      background: var(--color-base);
-      border-radius: var(--radius);
-      overflow: hidden;
-      width: 100%;
-      aspect-ratio: 2/3;
-      margin-bottom: 1.5rem;
-    }
-    #moviePoster {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: none;
-    }
-
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 0.75rem;
-      background: var(--color-base);
-      color: var(--color-text);
-      font-weight: 600;
-      border: none;
-      border-radius: var(--radius);
-      font-size: 0.875rem;
-      transition: background 0.2s, transform 0.1s;
-      cursor: pointer;
-      margin-bottom: 1rem;
-    }
-    .btn:disabled { opacity: 0.6; cursor: default; }
-    .btn:hover:not(:disabled),
-    .btn:focus:not(:disabled) {
-      background: var(--color-accent);
-      color: #121212;
-      transform: translateY(-2px);
-      outline: none;
-    }
-    .btn:active { transform: translateY(0); }
-
-    #result {
-      text-align: center;
-      margin-bottom: 1rem;
-      display: none;
-    }
-
-    #movieResult {
-      font-weight: 600;
-      font-size: 0.875rem;
-    }
-
+    :root { --font-sans:'Inter', system-ui, sans-serif; --color-bg:#121212; --color-base:#1E1E1E; --color-card:#1F1F1F; --color-accent:#2DD4BF; --color-text:#E5E7EB; --radius:0.5rem; }
+    html { background:var(--color-bg); color:var(--color-text); font-family:var(--font-sans); }
+    body { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1rem 1rem 4rem; margin:0; }
+    .randomizer { background:var(--color-card); border-radius:var(--radius); padding:1rem; box-shadow:0 4px 12px rgba(0,0,0,0.5); width:100%; max-width:320px; display:flex; flex-direction:column; align-items:center; position:relative; }
+    h1 { font-size:2.25rem; line-height:1.1; font-weight:700; margin-bottom:1.5rem; white-space:nowrap; }
+    #posterWrapper { background:var(--color-base); border-radius:var(--radius); overflow:hidden; width:100%; aspect-ratio:2/3; margin-bottom:1.5rem; }
+    #moviePoster { width:100%; height:100%; object-fit:contain; display:none; }
+    .btn { display:block; width:100%; padding:0.75rem; background:var(--color-base); color:var(--color-text); font-weight:600; border:none; border-radius:var(--radius); font-size:0.875rem; transition:background 0.2s, transform 0.1s; cursor:pointer; margin-bottom:1rem; }
+    .btn:disabled { opacity:0.6; cursor:default; }
+    .btn:hover:not(:disabled), .btn:focus:not(:disabled) { background:var(--color-accent); color:#121212; transform:translateY(-2px); outline:none; }
+    .btn:active { transform:translateY(0); }
+    #result { text-align:center; margin-bottom:1rem; display:none; }
+    #movieResult { font-weight:600; font-size:0.875rem; }
     .controls {
-      width: 100%;
-      max-width: 320px;
-      display: flex;
-      justify-content: space-between;
-      margin-top: 0.5rem;
-    }
-    #genreToggle {
-      background: transparent;
-      color: var(--color-text);
-      font-size: 0.875rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    #streamLink {
-      background: transparent;
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+    position: relative;
+  }
+    #genreToggle, #streamLink {
       color: var(--color-accent);
       font-size: 0.875rem;
       font-weight: 600;
-      text-decoration: underline;
-    }
-    button:focus, a:focus { outline: 2px solid var(--color-accent); }
-
-    #genreMenu {
-      background: var(--color-base);
+      text-decoration: none;
+      transition: background 150ms ease, text-decoration 150ms;
+      padding: 0.25rem 0.5rem;
       border-radius: var(--radius);
+    }
+    #streamLink:hover,
+    #streamLink:focus {
+      text-decoration: underline;
+      background: rgba(45, 212, 191, 0.1);
+      outline: none;
+    }
+    #genreToggle { color:var(--color-text); }
+    #streamLink { color:var(--color-accent); text-decoration:underline; }
+    button:focus, a:focus { outline:2px solid var(--color-accent); }
+    /* Dropdown Menu */
+    #genreMenu {
+      /* drop-up above controls, aligned just to the left of the controls bar */
       position: absolute;
-      bottom: 3rem;
-      left: 1rem;
+      bottom: 100%;
+      /* align menu's right edge to controls' left edge with small gap */
+      right: calc(100% + 0.25rem);
+      transform-origin: bottom right;
       max-height: 60vh;
       overflow-y: auto;
+      background: var(--color-base);
+      border-radius: var(--radius);
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      display: none;
-      z-index: 10;
+
+      /* hidden initial state */
+      opacity: 0;
+      transform: translateY(0.5rem) scale(0.95);
+      pointer-events: none;
+      transition: opacity 150ms ease, transform 150ms ease;
+      z-index: 1000;
     }
-    #genreMenu .item {
-      padding: 0.25rem 1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
+    #genreMenu.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    #genreMenu.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    #genreMenu .item { padding:0.5rem 1rem; cursor:pointer; display:flex; align-items:center; gap:0.5rem; font-size:0.875rem; transition:background 100ms; }
+    #genreMenu .item:hover { background:#2D3748; }
+    #genreMenu .check { visibility:hidden; color:#38A169; }
+    #genreMenu .item.selected .check { visibility:visible; }
+    /* Responsive tweaks */
+  @media (max-width: 400px) {
+    .controls {
+      flex-direction: column;
+      align-items: stretch;
       gap: 0.5rem;
-      font-size: 0.875rem;
     }
-    #genreMenu .item:hover { background: #2D3748; }
-    #genreMenu .check { visibility: hidden; color: #38A169; }
-    #genreMenu .item.selected .check { visibility: visible; }
-  </style>
+    #streamLink {
+      text-align: right;
+      margin-top: 0;
+    }
+    #genreToggle {
+      text-align: left;
+    }
+  }
+</style>
 </head>
 <body>
-
   <h1>Randomly pick a top rated movie</h1>
-  <div class="randomizer">
-    <div id="posterWrapper">
-      <img id="moviePoster" alt="Movie poster"/>
-    </div>
-
-    <button id="randomizeBtn" class="btn" disabled>Loading…</button>
-
-    <div id="result">
-      <div id="movieResult"></div>
-    </div>
-
-    <div id="genreMenu"></div>
+  <div class='randomizer'>
+    <div id='posterWrapper'><img id='moviePoster' alt='Movie poster'></div>
+    <button id='randomizeBtn' class='btn' disabled>
+      <!-- Refresh icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A9 9 0 1 1 11 4.915m0 0V9h5" />
+      </svg>
+      <span class="btn-text">Loading…</span>
+    </button>
+    <div id='result'><div id='movieResult'></div></div>
   </div>
-
-  <div class="controls">
-    <button id="genreToggle">▾ Genres</button>
-    <a id="streamLink" href="#" target="_blank">Where to stream</a>
+  <div class='controls'>
+    <button id='genreToggle'>▾ Genres</button>
+    <a id='streamLink' href='#' target='_blank'>Where to stream</a>
+    <div id='genreMenu'></div>
   </div>
-
   <script>
-    const TMDB_BASE = 'https://www.themoviedb.org/movie';
-    const spinCount = 30, spinSpeed = 20;
-    let movies = [], selectedGenres = new Set([0]);
-
-    // Build genre menu
-    const genreMap = {0:"Any Genre",28:"Action",12:"Adventure",16:"Animation",35:"Comedy",80:"Crime",99:"Documentary",18:"Drama",10751:"Family",14:"Fantasy",36:"History",27:"Horror",10402:"Music",9648:"Mystery",10749:"Romance",878:"Sci-Fi",10770:"TV Movie",53:"Thriller",10752:"War",37:"Western"};
-    const genreToggle = document.getElementById('genreToggle');
-    const genreMenu   = document.getElementById('genreMenu');
-    Object.entries(genreMap).forEach(([id,name]) => {
-      const item = document.createElement('div');
-      item.className = 'item';
-      item.dataset.genre = id;
-      item.tabIndex = 0;
-      item.innerHTML = `<span>${name}</span><span class="check">✓</span>`;
-      if (id==='0') item.classList.add('selected');
-      item.addEventListener('click', () => toggleGenre(+id));
+    const TMDB_BASE='https://www.themoviedb.org/movie';
+    const spinCount=30, spinSpeed=20;
+    let movies=[], selectedGenres=new Set([0]);
+    const genreMap={0:'Any Genre',28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',99:'Documentary',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Sci-Fi',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
+    const genreToggle=document.getElementById('genreToggle'), genreMenu=document.getElementById('genreMenu');
+    Object.entries(genreMap).forEach(([id,name])=>{
+      const item=document.createElement('div');
+      item.className='item'; item.dataset.genre=id; item.tabIndex=0;
+      item.innerHTML=`<span>${name}</span><span class='check'>✓</span>`;
+      if(id==='0') item.classList.add('selected');
+      item.addEventListener('click',()=>selectGenre(+id));
       genreMenu.appendChild(item);
     });
-
-    function toggleGenre(id){
-      if(id===0){ selectedGenres = new Set([0]);
+    function selectGenre(id){
+      if(id===0){
+        selectedGenres=new Set([0]);
         genreMenu.querySelectorAll('.item').forEach(i=>i.classList.toggle('selected', i.dataset.genre==='0'));
       } else {
-        const el = genreMenu.querySelector(`.item[data-genre="${id}"]`);
-        if(selectedGenres.has(id)) selectedGenres.delete(id);
-        else selectedGenres.add(id);
+        const el=genreMenu.querySelector('.item[data-genre="'+id+'"]');
+        if(selectedGenres.has(id)) selectedGenres.delete(id); else selectedGenres.add(id);
         el.classList.toggle('selected');
         selectedGenres.delete(0);
         genreMenu.querySelector('.item[data-genre="0"]').classList.remove('selected');
       }
-      genreMenu.style.display='none';
+      genreMenu.classList.remove('open');
       randomize();
     }
-    genreToggle.addEventListener('click', e=>{ e.stopPropagation(); genreMenu.style.display = 'block'; });
-    document.addEventListener('click', ()=> genreMenu.style.display='none');
-
-    // Core randomizer
-    const btn = document.getElementById('randomizeBtn');
-    const imgEl = document.getElementById('moviePoster');
-    const res    = document.getElementById('result');
-    const txt    = document.getElementById('movieResult');
-    const linkEl = document.getElementById('streamLink');
-
-    function randomize(){
-      if(!movies.length) return;
-      let pool = movies;
-      const gf = [...selectedGenres].filter(g=>g!==0);
-      if(gf.length){ pool = pool.filter(m=>gf.every(id=>m.genre_ids.includes(id)));
-        if(!pool.length){ return showError('No movies match your genres.'); }
-      }
-      let picks = pool.length>=spinCount ? pool.sort(()=>0.5-Math.random()).slice(0,spinCount)
-                   : Array.from({length:spinCount}, ()=> pool[Math.floor(Math.random()*pool.length)]);
-
-      res.style.display='none';
-      imgEl.style.display='block'; imgEl.classList.add('slot-flip');
-      btn.disabled = true;
-
-      let i=0;
-      (function flip(){
-        const m = picks[i++];
-        imgEl.src = m.src;
-        txt.textContent = `${m.title} (${m.year})`;
-        if(i<picks.length) setTimeout(flip, spinSpeed);
-        else {
-          imgEl.classList.remove('slot-flip');
-          res.style.display='block'; btn.textContent='Randomize Movie'; btn.disabled=false;
-          linkEl.href = `${TMDB_BASE}/${m.id}/watch?locale=US`;
-        }
-      })();
-    }
+    genreToggle.addEventListener('click',e=>{
+      e.stopPropagation();
+      // toggle menu
+      genreMenu.classList.toggle('open');
+    });
+    document.addEventListener('click',()=>genreMenu.classList.remove('open'));
+    const btn=document.getElementById('randomizeBtn'), imgEl=document.getElementById('moviePoster'), res=document.getElementById('result'), txt=document.getElementById('movieResult'), linkEl=document.getElementById('streamLink');
+    function randomize(){ if(!movies.length) return; let pool=movies; const genres=[...selectedGenres].filter(g=>g!==0); if(genres.length){ pool=pool.filter(m=>genres.every(id=>m.genre_ids.includes(id))); if(!pool.length) return showError('No movies match your genres.'); } const picks=pool.length>=spinCount?pool.sort(()=>0.5-Math.random()).slice(0,spinCount):Array.from({length:spinCount},()=>pool[Math.floor(Math.random()*pool.length)]); res.style.display='none'; imgEl.style.display='block'; imgEl.classList.add('slot-flip'); btn.disabled=true; let i=0; (function flip(){ const m=picks[i++]; imgEl.src=m.src; txt.textContent=`${m.title} (${m.year})`; if(i<picks.length) setTimeout(flip,spinSpeed); else{ imgEl.classList.remove('slot-flip'); res.style.display='block'; btn.textContent='Randomize Movie'; btn.disabled=false; linkEl.href=`${TMDB_BASE}/${m.id}/watch?locale=US`; } })(); }
     function showError(msg){ res.style.display='block'; txt.textContent=msg; btn.textContent='Error'; btn.disabled=true; }
-
-    // Load data
-    fetch('data/movies.json')
-      .then(r=>r.ok?r.json():Promise.reject(r.status))
-      .then(arr=>{
-        movies = arr.filter(m=>m.poster_path).map(m=>({
-          id: m.id,
-          title: m.title,
-          year: m.release_date?.slice(0,4)||'',
-          src: `https://image.tmdb.org/t/p/w342${m.poster_path}`,
-          genre_ids: m.genre_ids||[]
-        }));
-        btn.textContent='Randomize Movie'; btn.disabled=false;
-      })
-      .catch(err=>{ console.error(err); showError('Failed to load movie list.'); });
-
-    btn.addEventListener('click', randomize);
+    fetch('data/movies.json').then(r=>r.ok?r.json():Promise.reject()).then(arr=>{ movies=arr.filter(m=>m.poster_path).map(m=>({ id:m.id, title:m.title, year:m.release_date?.slice(0,4)||'', src:`https://image.tmdb.org/t/p/w342${m.poster_path}`, genre_ids:m.genre_ids||[] })); btn.textContent='Randomize Movie'; btn.disabled=false; }).catch(e=>{ console.error(e); showError('Failed to load movie list.'); });
+    btn.addEventListener('click',randomize);
   </script>
 </body>
 </html>
