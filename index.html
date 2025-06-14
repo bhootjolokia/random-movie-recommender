@@ -52,9 +52,7 @@
     #result { text-align: center; margin-bottom: 1rem; display: none; }
     #movieResult { font-weight: 600; font-size: 0.875rem; }
 
-    .controls {
-      width: 100%; max-width: 320px; display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; position: relative; transition: max-width 0.2s;
-    }
+    .controls { width: 100%; max-width: 320px; display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; position: relative; transition: max-width 0.2s; }
     .controls.shrink { max-width: 240px; }
 
     #genreToggle, #streamLink { font-size: 0.875rem; font-weight: 600; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius); transition: background 150ms, text-decoration 150ms; }
@@ -104,7 +102,6 @@
       }
     }
 
-    // Set up genres
     Object.entries(genreMap).forEach(([id,name]) => {
       const item = document.createElement('div');
       item.className = 'item'; item.dataset.genre = id;
@@ -148,23 +145,60 @@
           year: m.release_date?.slice(0,4) || '',
           src: `https://image.tmdb.org/t/p/w342${m.poster_path}`,
           genre_ids: m.genre_ids || [],
-          watch_link: m.watch_link || ''  // use link from JSON
+          watch_link: m.watch_link || ''
         }));
         document.getElementById('randomizeBtn').textContent = 'Randomize Movie';
         document.getElementById('randomizeBtn').disabled = false;
-        // initial overlap check
         setTimeout(checkOverlap, 100);
       })
-      .catch(()=>{ document.getElementById('movieResult').textContent='Failed to load movie list.'; });
+      .catch(() => { document.getElementById('movieResult').textContent = 'Failed to load movie list.'; });
 
     function randomize() {
-      const btn=document.getElementById('randomizeBtn'), img=document.getElementById('moviePoster'), res=document.getElementById('result'), txt=document.getElementById('movieResult');
+      const card = document.querySelector('.randomizer');
+      // Lock card height to prevent jitter
+      card.style.height = `${card.offsetHeight}px`;
+      const btn = document.getElementById('randomizeBtn');
+      const img = document.getElementById('moviePoster');
+      const res = document.getElementById('result');
+      const txt = document.getElementById('movieResult');
+      img.style.display = 'block';
+      res.style.display = 'none';
+      const btn = document.getElementById('randomizeBtn');
+      const img = document.getElementById('moviePoster');
+      const res = document.getElementById('result');
+      const txt = document.getElementById('movieResult');
+      // Ensure poster is visible and previous text hidden
+      img.style.display = 'block';
+      res.style.display = 'none';
       if (!movies.length) return;
-      let pool=movies; const filters=[...selectedGenres].filter(g=>g!==0);
-      if(filters.length) { pool=pool.filter(m=>filters.every(id=>m.genre_ids.includes(id))); if(!pool.length){ txt.textContent='No movies match your genres.'; res.style.display='block'; return; }}
-      const picks=pool.length>=spinCount?pool.sort(()=>0.5-Math.random()).slice(0,spinCount):Array.from({length:spinCount},()=>pool[Math.floor(Math.random()*pool.length)]);
-      btn.disabled=true; let i=0; (function flip(){ const m=picks[i++]; img.src=m.src; txt.textContent=`${m.title} (${m.year})`; if(i<picks.length) setTimeout(flip,spinSpeed); else{ res.style.display='block'; btn.disabled=false; const slug = m.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-          document.getElementById('streamLink').href = `${TMDB_BASE}/${m.id}-${slug}/watch?locale=US`; }} )();
+      const btn = document.getElementById('randomizeBtn');
+      const img = document.getElementById('moviePoster');
+      const res = document.getElementById('result');
+      const txt = document.getElementById('movieResult');
+      if (!movies.length) return;
+      let pool = movies;
+      const filters = [...selectedGenres].filter(g => g !== 0);
+      if (filters.length) {
+        pool = pool.filter(m => filters.every(id => m.genre_ids.includes(id)));
+        if (!pool.length) { txt.textContent = 'No movies match your genres.'; res.style.display = 'block'; return; }
+      }
+      const picks = pool.length >= spinCount
+        ? pool.sort(() => 0.5 - Math.random()).slice(0, spinCount)
+        : Array.from({ length: spinCount }, () => pool[Math.floor(Math.random() * pool.length)]);
+      btn.disabled = true;
+      let i = 0;
+      (function flip() {
+        const m = picks[i++];
+        img.src = m.src;
+        txt.textContent = `${m.title} (${m.year})`;
+        if (i < picks.length) setTimeout(flip, spinSpeed);
+        else {
+          res.style.display = 'block';
+          btn.disabled = false;
+          const slug = m.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+          document.getElementById('streamLink').href = m.watch_link || `${TMDB_BASE}/${m.id}-${slug}/watch?locale=US`;
+        }
+      })();
     }
   </script>
 </body>
