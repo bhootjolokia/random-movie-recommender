@@ -48,6 +48,16 @@
 
     /* Footer elements hidden behind safe area */
     @media (max-width:450px) { #genreMenu { display:none!important; } }
+
+    /* Shrink card on small phones to avoid clipping */
+    @media (max-width:375px) {
+      .randomizer {
+        max-width:280px;
+      }
+      .controls {
+        max-width:280px;
+      }
+    } }
   </style>
 </head>
 <body>
