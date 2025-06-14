@@ -68,7 +68,17 @@
     .btn:hover:not(:disabled), .btn:focus:not(:disabled) { background: var(--color-accent); color: #121212; transform: translateY(-2px); outline: none; }
     .btn:active { transform: translateY(0); }
 
-    #result { text-align: center; margin-bottom: 1rem; display: none; }
+    #result {
+      text-align: center;
+      margin-bottom: 1rem;
+      /* Reserve space even when hidden to prevent card height shifts */
+      min-height: 1.25rem;
+      display: block;
+    }
+    /* Hide content using visibility instead of display to reserve layout space */
+    #result.hidden {
+      visibility: hidden;
+    }
     #movieResult { font-weight: 600; font-size: 0.875rem; }
 
     .controls {
@@ -193,7 +203,7 @@
     const res = document.getElementById('result');
     const txt = document.getElementById('movieResult');
     if (!movies.length) return;
-    res.style.display = 'none';
+    res.classList.add('hidden');
     img.style.display = 'block';
     let pool = movies;
     const filters = [...selectedGenres].filter(g => g !== 0);
