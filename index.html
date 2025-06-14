@@ -72,7 +72,7 @@
   <h1>Randomly pick a top rated movie</h1>
   <div class='randomizer'>
     <div id='posterWrapper'><img id='moviePoster' alt='Movie poster'></div>
-    <button id='randomizeBtn' class='btn' disabled><span class='btn-text'>Loading…</span></button>
+    <button id='randomizeBtn' class='btn'><span class='btn-text'>Randomize Movie</span></button>
     <div id='result' aria-live='polite'><div id='movieResult'></div></div>
   </div>
   <div class='controls'>
@@ -136,7 +136,7 @@
     }
 
     const btnEl = document.getElementById('randomizeBtn');
-    btnEl.querySelector('.btn-text').textContent = 'Loading…'; // initial label
+    // disable until data loads
     btnEl.disabled = true;
 
     document.getElementById('randomizeBtn').addEventListener('click', randomize);
