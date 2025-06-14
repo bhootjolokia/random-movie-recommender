@@ -1,15 +1,15 @@
-name: Enrich Movies with Streaming Links
+name: Fetch TMDb Top Rated + Streaming Availability
 
 on:
   schedule:
-    - cron: '0 2 * * *'      # daily at 2 AM UTC
+    - cron: '0 4 * * *'      # daily at 4 AM UTC
   workflow_dispatch: {}
 
 permissions:
   contents: write
 
 jobs:
-  enrich-streaming:
+  fetch:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -20,32 +20,72 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y jq curl
 
+      - name: Fetch top-rated movies (pages 1–40)
+        run: |
+          mkdir -p data
+          for page in {1..40}; do
+            curl -s "https://api.themoviedb.org/3/movie/top_rated?api_key=${{ secrets.TMDB_API_KEY }}&language=en-US&page=$page" \
+              | jq '.results' > data/page${page}.json
+          done
+
+      - name: Combine into single list
+        run: |
+          jq -s 'flatten' data/page*.json > data/all_movies.json
+
+      - name: Enrich with TMDb watch providers & link
+        run: |
+          jq -c '.[]' data/all_movies.json | \
+          while read -r movie; do
+            id=$(jq -r '.id' <<<"$movie")
+            raw=$(curl -s "https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${{ secrets.TMDB_API_KEY }}")
+            link=$(jq -r '.results.US.link // empty' <<<"$raw")
+            wp=$(jq -c '
+              [ .results.US.flatrate?[]?,
+                .results.US.adSupported?[]? ]
+              | flatten
+              | unique_by(.provider_id)
+            ' <<<"$raw")
+            if [[ $(jq 'length' <<<"$wp") -gt 0 ]]; then
+              echo "$movie" \
+                | jq --arg link "$link" --argjson wp "$wp" \
+                     '. + { watch_link: $link, watch_providers: $wp }'
+            fi
+          done | jq -s '.' > data/movies.json
+
+      - name: Split into individual records for rate-limiting
+        run: |
+          mkdir -p data/records
+          jq -c '.[]' data/movies.json | split -l 1 - data/records/movie_
+
       - name: Enrich with RapidAPI streaming-availability
         env:
           RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
         run: |
-          mkdir -p data
-          jq -c '.[]' data/movies.json | \
-          head -n 1000 | \
-          while read -r movie; do
+          rm -f data/movies.enriched.json
+          for f in data/records/movie_*; do
+            movie=$(cat "$f")
             id=$(jq -r '.id' <<<"$movie")
-            has=$(jq 'has("streaming_info")' <<<"$movie")
-            if [[ "$has" == "true" ]]; then
-              echo "$movie"
-              continue
-            fi
+            # call RapidAPI (all countries)
             resp=$(curl -s \
               -H "X-RapidAPI-Key: $RAPIDAPI_KEY" \
               -H "X-RapidAPI-Host: streaming-availability.p.rapidapi.com" \
               "https://streaming-availability.p.rapidapi.com/get/basic?tmdb_id=$id&country=all")
-            echo "$movie" | jq --argjson info "$resp" '. + { streaming_info: $info }'
-          done > data/movies_enriched.json
+            results=$(jq '.results' <<<"$resp")
+            echo "$movie" | jq --argjson si "$results" '. + { streaming_info: $si }' \
+              >> data/movies.enriched.json
+            sleep 0.2
+          done
 
-      - name: Replace movies.json and commit
+      - name: Finalize movies.json (cap at 800)
         run: |
-          mv data/movies_enriched.json data/movies.json
+          jq '.[0:800]' data/movies.enriched.json > data/movies.json
+
+      - name: Commit updated movies.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/movies.json
-          git commit -m "chore: enrich movies.json with streaming_info" || echo "No changes"
+          git commit -m "chore: update TMDb cache + streaming availability" || echo "No changes"
           git push
