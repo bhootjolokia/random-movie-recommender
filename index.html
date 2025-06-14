@@ -217,7 +217,7 @@
   </div>
 
   <script>
-  (function(){
+  document.addEventListener('DOMContentLoaded', () => {
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
     const spinCount = 30, spinSpeed = 20;
     let movies = [];
@@ -233,75 +233,76 @@
 
     const genreMap = {0:'Any Genre',28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Sci-Fi',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
 
-    // populate genres
+    // Populate genre menu
     Object.entries(genreMap).forEach(([id,name]) => {
       const el = document.createElement('div');
       el.className = 'item'; el.dataset.genre = id;
       el.textContent = name;
-      el.addEventListener('click', ()=> selectGenre(+id));
+      el.addEventListener('click', () => {
+        if (+id === 0) selectedGenres = new Set([0]);
+        else {
+          selectedGenres.has(+id) ? selectedGenres.delete(+id) : selectedGenres.add(+id);
+          selectedGenres.delete(0);
+        }
+        document.querySelectorAll('#genreMenu .item').forEach(i => {
+          i.classList.toggle('selected', selectedGenres.has(+i.dataset.genre));
+        });
+        randomize();
+      });
       genreMenu.appendChild(el);
     });
 
-    // toggle dropup
-    genreToggle.addEventListener('click', e=>{
+    // Toggle genre menu
+    genreToggle.addEventListener('click', e => {
       e.stopPropagation();
       genreMenu.classList.toggle('open');
     });
-    document.addEventListener('click', ()=> genreMenu.classList.remove('open'));
+    document.addEventListener('click', () => {
+      genreMenu.classList.remove('open');
+    });
 
-    function selectGenre(id){
-      if(id===0) selectedGenres=new Set([0]);
-      else {
-        selectedGenres.has(id)?selectedGenres.delete(id):selectedGenres.add(id);
-        selectedGenres.delete(0);
-      }
-      genreMenu.querySelectorAll('.item').forEach(el=>{
-        el.classList.toggle('selected', selectedGenres.has(+el.dataset.genre));
-      });
-      randomize();
-    }
-
-    // initial load
-    fetch('data/page1.json').then(r=>r.ok?r.json():Promise.reject())
-      .then(arr=>{
-        return arr.filter(m=>m.poster_path);
-      }).then(rawPage=>{
-        const init = rawPage[ Math.floor(Math.random()*rawPage.length) ];
-        img.src = `https://image.tmdb.org/t/p/w342${init.poster_path}`;
-        txt.textContent = `${init.title} (${init.release_date.slice(0,4)})`;
-        streamLink.href = init.watch_link||`${TMDB_BASE}/${init.id}/watch?locale=US`;
-        res.style.visibility='visible';
+    // Fetch full movie list
+    fetch('data/movies.json')
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(arr => {
+        movies = arr.filter(m => m.poster_path).map(m => ({
+          id: m.id,
+          title: m.title,
+          year: m.release_date.slice(0,4),
+          src: `https://image.tmdb.org/t/p/w342${m.poster_path}`,
+          genre_ids: m.genre_ids,
+          watch_link: m.watch_link
+        }));
+        btn.disabled = false;
+        // show initial
+        const m = movies[Math.floor(Math.random()*movies.length)];
+        img.src = m.src;
+        txt.textContent = `${m.title} (${m.year})`;
+        streamLink.href = m.watch_link || `${TMDB_BASE}/${m.id}/watch?locale=US`;
+        res.style.visibility = 'visible';
       })
-    // load full list
-    .then(()=>fetch('data/movies.json')).then(r=>r.ok?r.json():Promise.reject())
-    .then(arr=>{
-      movies=arr.filter(m=>m.poster_path).map(m=>({
-        id:m.id,title:m.title,year:m.release_date.slice(0,4)||'',
-        src:`https://image.tmdb.org/t/p/w342${m.poster_path}`,
-        genre_ids:m.genre_ids||[],watch_link:m.watch_link||''
-      }));
-      btn.disabled=false;
-    }).catch(console.error);
+      .catch(console.error);
 
     btn.addEventListener('click', randomize);
 
-    function randomize(){
-      if(!movies.length) return;
+    function randomize() {
+      if (!movies.length) return;
       let pool = movies;
-      const fl = [...selectedGenres].filter(g=>g!==0);
-      if(fl.length) pool=pool.filter(m=>fl.every(id=>m.genre_ids.includes(id)));
-      btn.disabled=true;
-      let i=0;
-      (function flip(){
-        const m = pool[ Math.floor(Math.random()*pool.length) ];
-        img.src=m.src; txt.textContent=`${m.title} (${m.year})`;
-        streamLink.href=m.watch_link||`${TMDB_BASE}/${m.id}/watch?locale=US`;
-        res.style.visibility='visible';
-        if(++i<spinCount) setTimeout(flip,spinSpeed);
-        else btn.disabled=false;
+      const fs = [...selectedGenres].filter(g => g !== 0);
+      if (fs.length) pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
+      btn.disabled = true;
+      let i = 0;
+      (function spin() {
+        const m = pool[Math.floor(Math.random()*pool.length)];
+        img.src = m.src;
+        txt.textContent = `${m.title} (${m.year})`;
+        streamLink.href = m.watch_link || `${TMDB_BASE}/${m.id}/watch?locale=US`;
+        res.style.visibility = 'visible';
+        if (++i < spinCount) setTimeout(spin, spinSpeed);
+        else btn.disabled = false;
       })();
     }
-  })();
+  });
 </script>
 </body>
 </html>
