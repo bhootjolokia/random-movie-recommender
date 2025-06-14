@@ -60,7 +60,21 @@
       margin-bottom: 1.25rem;
     }
 
-    #posterWrapper { background: var(--color-base); border-radius: var(--radius); overflow: hidden; width: 100%; aspect-ratio: 2/3; margin-bottom: 1rem; }
+    #posterWrapper {
+      background: var(--color-base);
+      border-radius: var(--radius);
+      overflow: hidden;
+      width: 100%;
+      aspect-ratio: 2/3;
+      margin-bottom: 1rem;
+    }
+    /* Hide poster until src is set */
+    #moviePoster {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: none;
+    } background: var(--color-base); border-radius: var(--radius); overflow: hidden; width: 100%; aspect-ratio: 2/3; margin-bottom: 1rem; }
     #moviePoster { width: 100%; height: 100%; object-fit: contain;  }
 
     .btn {
@@ -101,12 +115,14 @@
 
     .controls {
       width: 100%;
-      max-width: 320px;
+      max-width: clamp(240px, 90vw, 320px);
       display: flex;
       justify-content: space-between;
-      /* reduce top gap to align under reserved title space */
-      margin-top: 0.25rem;
-      position: relative; /* ensure drop-up positions relative to controls */
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      /* always position directly below the title/result */
+      position: static;
+      margin: 0.5rem 0 1rem;
     }
       position: relative; /* ensure drop-up positions relative to controls */
     }
