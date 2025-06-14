@@ -2,7 +2,7 @@ name: Fetch TMDb Top Rated + Streaming Availability
 
 on:
   schedule:
-    - cron: '0 4 * * *'      # daily at 4 AM UTC
+    - cron: '0 4 1 * *'      # monthly at 4 AM UTC on the 1st
   workflow_dispatch: {}
 
 permissions:
@@ -11,6 +11,7 @@ permissions:
 jobs:
   fetch:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -52,16 +53,32 @@ jobs:
             fi
           done | jq -s '.' > data/movies.json
 
-      - name: Split into individual records for rate-limiting
+      - name: Split into records needing (re)enrichment
         run: |
           mkdir -p data/records
-          jq -c '.[]' data/movies.json | split -l 1 - data/records/movie_
+          today=$(date -u +%Y-%m-%d)
+          window=$((30 * 86400))   # 30 days in seconds
+          jq -c --arg today "$today" --argjson window "$window" '
+            map(
+              select(
+                (.streaming_info == null)
+                or
+                (
+                  (.last_checked? | strptime("%Y-%m-%d")? | mktime)
+                  <
+                  ($today | strptime("%Y-%m-%d") | mktime) - $window
+                )
+              )
+            )[]
+          ' data/movies.json \
+            | split -l 1 - data/records/movie_
 
       - name: Enrich with RapidAPI streaming-availability
         env:
           RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
         run: |
-          rm -f data/movies.enriched.json
+          rm -f data/new_enriched.json
+          today=$(date -u +%Y-%m-%d)
           for f in data/records/movie_*; do
             movie=$(cat "$f")
             id=$(jq -r '.id' <<<"$movie")
@@ -70,15 +87,20 @@ jobs:
               -H "X-RapidAPI-Host: streaming-availability.p.rapidapi.com" \
               "https://streaming-availability.p.rapidapi.com/get/basic?tmdb_id=$id&country=all")
             results=$(jq '.results' <<<"$resp")
-            echo "$movie" | jq --argjson si "$results" '. + { streaming_info: $si }' \
-              >> data/movies.enriched.json
+            echo "$movie" \
+              | jq --argjson si "$results" --arg today "$today" \
+                   '. + { streaming_info: $si, last_checked: $today }' \
+              >> data/new_enriched.json
             sleep 0.2
           done
 
-      - name: Finalize movies.json (cap at 5)
+      - name: Finalize movies.json (merge & cap at 800)
         run: |
-          # for testing—only keep the first 5 enriched movies
-          jq -s '.[0:5]' data/movies.enriched.json > data/movies.json
+          jq -s '
+            (.[0] + .[1])
+            | unique_by(.id)
+            | .[0:800]
+          ' data/movies.json data/new_enriched.json > data/movies.json
 
       - name: Commit updated movies.json
         env:
