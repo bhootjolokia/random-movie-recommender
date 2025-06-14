@@ -135,6 +135,10 @@
       randomize();
     }
 
+    const btnEl = document.getElementById('randomizeBtn');
+    btnEl.querySelector('.btn-text').textContent = 'Loading…'; // initial label
+    btnEl.disabled = true;
+
     document.getElementById('randomizeBtn').addEventListener('click', randomize);
     fetch('data/movies.json')
       .then(r => r.ok ? r.json() : Promise.reject())
@@ -147,34 +151,21 @@
           genre_ids: m.genre_ids || [],
           watch_link: m.watch_link || ''
         }));
-        document.getElementById('randomizeBtn').textContent = 'Randomize Movie';
-        document.getElementById('randomizeBtn').disabled = false;
+        btnEl.querySelector('.btn-text').textContent = 'Randomize Movie';
+        btnEl.disabled = false;
         setTimeout(checkOverlap, 100);
       })
       .catch(() => { document.getElementById('movieResult').textContent = 'Failed to load movie list.'; });
 
     function randomize() {
-      const card = document.querySelector('.randomizer');
-      // Lock card height to prevent jitter
-      card.style.height = `${card.offsetHeight}px`;
       const btn = document.getElementById('randomizeBtn');
+      const span = btn.querySelector('.btn-text');
       const img = document.getElementById('moviePoster');
       const res = document.getElementById('result');
       const txt = document.getElementById('movieResult');
+      span.textContent = 'Loading…';
       img.style.display = 'block';
       res.style.display = 'none';
-      const btn = document.getElementById('randomizeBtn');
-      const img = document.getElementById('moviePoster');
-      const res = document.getElementById('result');
-      const txt = document.getElementById('movieResult');
-      // Ensure poster is visible and previous text hidden
-      img.style.display = 'block';
-      res.style.display = 'none';
-      if (!movies.length) return;
-      const btn = document.getElementById('randomizeBtn');
-      const img = document.getElementById('moviePoster');
-      const res = document.getElementById('result');
-      const txt = document.getElementById('movieResult');
       if (!movies.length) return;
       let pool = movies;
       const filters = [...selectedGenres].filter(g => g !== 0);
@@ -194,8 +185,9 @@
         if (i < picks.length) setTimeout(flip, spinSpeed);
         else {
           res.style.display = 'block';
+          span.textContent = 'Randomize Movie';
           btn.disabled = false;
-          const slug = m.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+          const slug = m.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g,'');
           document.getElementById('streamLink').href = m.watch_link || `${TMDB_BASE}/${m.id}-${slug}/watch?locale=US`;
         }
       })();
