@@ -56,7 +56,6 @@ jobs:
       - name: Split into records needing (re)enrichment
         run: |
           mkdir -p data/records
-          # only enrich those missing streaming_info or older than 30 days
           jq -c --arg today "$(date -u +%Y-%m-%d)" --argjson window $((30*86400)) '
             map(
               select(
@@ -70,7 +69,7 @@ jobs:
               )
             )[]
           ' data/movies.json \
-          | split -l 1 - data/records/movie_
+            | split -l 1 - data/records/movie_
 
       - name: Enrich with RapidAPI streaming-availability
         env:
@@ -92,15 +91,20 @@ jobs:
             sleep 0.2
           done
 
-      - name: Finalize movies.json (merge & cap at 800)
+      - name: Finalize movies.json (merge & cap at 800, fallback to original if none new)
         run: |
-          jq -s '
-            # flatten both arrays, keep only objects, dedupe, then slice
-            [ .[0][] , .[1][] ]
-            | map(select(type=="object"))
-            | unique_by(.id)
-            | .[0:5]
-          ' data/movies.json data/new_enriched.json > data/movies.json
+          # If we got any enriched entries, merge & dedupe; otherwise just cap the original
+          if [ -s data/new_enriched.json ]; then
+            jq -s '
+              [ .[0][] , .[1][] ]
+              | map(select(type=="object"))
+              | unique_by(.id)
+              | .[0:5]
+            ' data/movies.json data/new_enriched.json > data/movies.tmp.json
+          else
+            jq '.[0:800]' data/movies.json > data/movies.tmp.json
+          fi
+          mv data/movies.tmp.json data/movies.json
 
       - name: Commit updated movies.json
         env:
