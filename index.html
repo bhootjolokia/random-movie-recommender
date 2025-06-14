@@ -275,6 +275,13 @@
       let pool = movies;
       const fs = [...selectedGenres].filter(g => g !== 0);
       if (fs.length) pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
+      if (!pool.length) {
+        img.removeAttribute('src');
+        txt.textContent = 'No movies found for selected genres';
+        streamLink.removeAttribute('href');
+        res.style.visibility = 'visible';
+        return;
+      }
       btn.disabled = true;
       let i = 0;
       (function spin() {
