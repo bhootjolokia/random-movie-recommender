@@ -72,19 +72,12 @@
       width: 100%;
       aspect-ratio: 2/3;
       margin-bottom: 1.5rem;
-      perspective: 800px;
     }
     #moviePoster {
       width: 100%;
       height: 100%;
       object-fit: contain;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-      transform-style: preserve-3d;
-      backface-visibility: hidden;
-    }
-    #moviePoster.visible {
-      opacity: 1;
+      display: none;
     }
 
     .btn {
@@ -138,8 +131,140 @@
       margin-top: 0.5rem;
       position: relative;
     }
-    /* Pin controls on very short viewports */
+    #genreToggle, #streamLink {
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius);
+      transition: background 150ms, text-decoration 150ms;
+    }
+    #genreToggle {
+      color: var(--color-text);
+      background: transparent;
+      text-decoration: none;
+    }
+    #streamLink {
+      color: var(--color-accent);
+      background: transparent;
+      text-decoration: none;
+    }
+    #streamLink:hover,
+    #streamLink:focus {
+      text-decoration: underline;
+      background: rgba(45,212,191,0.1);
+      outline: none;
+    }
+
+    /* Desktop dropdown */
+    #genreMenu {
+      position: absolute;
+      bottom: 100%;
+      right: calc(100% + 0.25rem);
+      transform-origin: bottom right;
+      max-height: 60vh;
+      overflow-y: auto;
+      background: var(--color-base);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      opacity: 0;
+      transform: translateY(0.5rem) scale(0.95);
+      pointer-events: none;
+      transition: opacity 150ms ease, transform 150ms ease;
+      z-index: 1000;
+    }
+    #genreMenu.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    #genreMenu .item {
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background 100ms;
+    }
+    #genreMenu .item:hover {
+      background: #2D3748;
+    }
+    #genreMenu .check {
+      visibility: hidden;
+      color: #38A169;
+    }
+    #genreMenu .item.selected .check {
+      visibility: visible;
+    }
+
+    /* Mobile bottom sheet */
+    #genreSheet {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: -100%;
+      height: 50%;
+      max-height: calc(50% - env(safe-area-inset-bottom));
+      padding-bottom: env(safe-area-inset-bottom);
+      background: var(--color-card);
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.5);
+      transition: bottom 200ms ease;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+    }
+    #genreSheet.active {
+      bottom: 0;
+    }
+    #genreSheet .sheet-header {
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #2E2E2E;
+    }
+    #genreSheet .sheet-header h2 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    #genreSheet .sheet-body {
+      overflow-y: auto;
+      flex: 1;
+    }
+    #genreSheet .sheet-body .item {
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #2E2E2E;
+      cursor: pointer;
+    }
+    #genreSheet .sheet-body .item.selected .check {
+      visibility: visible;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 450px) {
+      #genreMenu {
+        display: none !important;
+      }
+    }
+    @media (max-width: 375px) {
+      .randomizer, .controls {
+        max-width: 280px;
+      }
+    }
     @media (max-height: 600px) {
+      body {
+        justify-content: flex-start;
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+      }
+      /* pin controls to bottom so always visible without scrolling */
       .controls {
         position: fixed;
         bottom: env(safe-area-inset-bottom, 1rem);
@@ -147,9 +272,10 @@
         transform: translateX(-50%);
         width: 100%;
         max-width: 320px;
-        margin-top: 0;
         background: transparent;
+        padding-bottom: 0.5rem;
       }
+    }
     }
   </style>
 </head>
@@ -237,9 +363,8 @@
       const gf=[...selectedGenres].filter(g=>g!==0);
       if(gf.length){ pool=pool.filter(m=>gf.every(id=>m.genre_ids.includes(id))); if(!pool.length) return showError('No movies match your genres.'); }
       const picks=pool.length>=spinCount?pool.sort(()=>0.5-Math.random()).slice(0,spinCount):Array.from({length:spinCount},()=>pool[Math.floor(Math.random()*pool.length)]);
-      res.style.display='none'; imgEl.classList.add('visible'); imgEl.classList.add('slot-flip'); btn.disabled=true;
-      let i=0; (function flip(){ const m=picks[i++]; imgEl.src=m.src; txt.textContent=`${m.title} (${m.year})`; if(i<picks.length) setTimeout(flip,spinSpeed); else { imgEl.classList.remove('slot-flip');
-          imgEl.classList.add('visible'); res.style.display='block'; btn.textContent='Randomize Movie'; btn.disabled=false; linkEl.href=`${TMDB_BASE}/${m.id}/watch?locale=US`; } })();
+      res.style.display='none'; imgEl.style.display='block'; imgEl.classList.add('slot-flip'); btn.disabled=true;
+      let i=0; (function flip(){ const m=picks[i++]; imgEl.src=m.src; txt.textContent=`${m.title} (${m.year})`; if(i<picks.length) setTimeout(flip,spinSpeed); else { imgEl.classList.remove('slot-flip'); res.style.display='block'; btn.textContent='Randomize Movie'; btn.disabled=false; linkEl.href=`${TMDB_BASE}/${m.id}/watch?locale=US`; } })();
     }
     function showError(msg){ res.style.display='block'; txt.textContent=msg; btn.textContent='Error'; btn.disabled=true; }
     fetch('data/movies.json').then(r=>r.ok?r.json():Promise.reject()).then(arr=>{ movies=arr.filter(m=>m.poster_path).map(m=>({ id:m.id, title:m.title, year:m.release_date?.slice(0,4)||'', src:`https://image.tmdb.org/t/p/w342${m.poster_path}`, genre_ids:m.genre_ids||[] })); btn.textContent='Randomize Movie'; btn.disabled=false; }).catch(e=>{ console.error(e); showError('Failed to load movie list.'); });
