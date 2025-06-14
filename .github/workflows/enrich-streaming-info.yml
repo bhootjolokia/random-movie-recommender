@@ -65,7 +65,6 @@ jobs:
           for f in data/records/movie_*; do
             movie=$(cat "$f")
             id=$(jq -r '.id' <<<"$movie")
-            # call RapidAPI (all countries)
             resp=$(curl -s \
               -H "X-RapidAPI-Key: $RAPIDAPI_KEY" \
               -H "X-RapidAPI-Host: streaming-availability.p.rapidapi.com" \
@@ -78,7 +77,8 @@ jobs:
 
       - name: Finalize movies.json (cap at 800)
         run: |
-          jq '.[0:800]' data/movies.enriched.json > data/movies.json
+          # first slurp all enriched objects into an array, then slice [0:800]
+          jq -s '.[0:800]' data/movies.enriched.json > data/movies.json
 
       - name: Commit updated movies.json
         env:
