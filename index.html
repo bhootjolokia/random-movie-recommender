@@ -120,9 +120,10 @@
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 0.5rem;
-      /* always position directly below the title/result */
+      /* sit immediately beneath the movie title/result */
       position: static;
-      margin: 0.5rem 0 1rem;
+      margin-top: 0;  /* no extra gap */
+      margin-bottom: 1rem; /* add breathing room before footer */
     }
       position: relative; /* ensure drop-up positions relative to controls */
     }
