@@ -56,9 +56,8 @@ jobs:
       - name: Split into records needing (re)enrichment
         run: |
           mkdir -p data/records
-          today=$(date -u +%Y-%m-%d)
-          window=$((30 * 86400))   # 30 days in seconds
-          jq -c --arg today "$today" --argjson window "$window" '
+          # only enrich those missing streaming_info or older than 30 days
+          jq -c --arg today "$(date -u +%Y-%m-%d)" --argjson window $((30*86400)) '
             map(
               select(
                 (.streaming_info == null)
@@ -71,14 +70,13 @@ jobs:
               )
             )[]
           ' data/movies.json \
-            | split -l 1 - data/records/movie_
+          | split -l 1 - data/records/movie_
 
       - name: Enrich with RapidAPI streaming-availability
         env:
           RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
         run: |
           rm -f data/new_enriched.json
-          today=$(date -u +%Y-%m-%d)
           for f in data/records/movie_*; do
             movie=$(cat "$f")
             id=$(jq -r '.id' <<<"$movie")
@@ -88,7 +86,7 @@ jobs:
               "https://streaming-availability.p.rapidapi.com/get/basic?tmdb_id=$id&country=all")
             results=$(jq '.results' <<<"$resp")
             echo "$movie" \
-              | jq --argjson si "$results" --arg today "$today" \
+              | jq --argjson si "$results" --arg today "$(date -u +%Y-%m-%d)" \
                    '. + { streaming_info: $si, last_checked: $today }' \
               >> data/new_enriched.json
             sleep 0.2
@@ -97,9 +95,11 @@ jobs:
       - name: Finalize movies.json (merge & cap at 800)
         run: |
           jq -s '
-            (.[0] + .[1])
+            # flatten both arrays, keep only objects, dedupe, then slice
+            [ .[0][] , .[1][] ]
+            | map(select(type=="object"))
             | unique_by(.id)
-            | .[0:5]
+            | .[0:800]
           ' data/movies.json data/new_enriched.json > data/movies.json
 
       - name: Commit updated movies.json
