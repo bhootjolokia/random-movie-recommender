@@ -129,17 +129,15 @@
 
     .controls {
       width: 100%;
-      max-width: clamp(240px, 90vw, 320px);
+      max-width: clamp(200px, 90vw, 280px);
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 0.5rem;
-      /* sit immediately beneath the movie title/result */
+      /* Always sit immediately after the title block */
       position: static;
-      margin-top: 0;  /* no extra gap */
-      margin-bottom: 1rem; /* add breathing room before footer */
-    
-      position: relative; /* enable genre drop-up placement */
+      margin-top: 0;  /* no extra gap above */
+      margin-bottom: 1rem; /* minimal breathing room before footer */
     }
       position: relative; /* ensure drop-up positions relative to controls */
     }
