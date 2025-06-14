@@ -134,12 +134,10 @@
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 0.5rem;
-      /* Always sit immediately after the title block */
-      position: static;
+      /* Ensure dropdown menu is positioned relative to this block */
+      position: relative;
       margin-top: 0;  /* no extra gap above */
       margin-bottom: 1rem; /* minimal breathing room before footer */
-    }
-      position: relative; /* ensure drop-up positions relative to controls */
     }
     #genreToggle, #streamLink { font-size: 0.875rem; font-weight: 600; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius); }
 
@@ -157,7 +155,7 @@
       border-radius: var(--radius);
       outline: none;
     }
-    #genreMenu .check { visibility: hidden; color: #38A169; } { visibility: hidden; color: #38A169; }
+    #genreMenu .check { visibility: hidden; color: #38A169; }
     #genreMenu .item.selected .check { visibility: visible; }
       /* Handle tall card on small vertical screens */
     @media (max-height: 700px) {
@@ -176,18 +174,7 @@
         padding-top: 0.5rem;
         padding-bottom: 3rem;
       }
-      /* Pin controls to bottom for easy access */
-      .controls {
-        position: fixed;
-        bottom: 1rem;
-        left: 50%;
-        transform: translateX(-50%);
-        margin-top: 0;
-      }
-    }
-      #posterWrapper {
-        margin-bottom: 1rem;
-      }
+      /* Controls remain below the title even on small screens */
     }
   </style>
 </head>
