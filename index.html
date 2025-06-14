@@ -111,12 +111,26 @@
     #genreMenu .item.selected .check { visibility: visible; }
       /* Handle tall card on small vertical screens */
     @media (max-height: 700px) {
+      /* Reduce card height and allow internal scrolling */
       .randomizer {
-        /* Ensure card fits in viewport with room for controls */
-        max-height: calc(100vh - 120px);
+        max-height: 60vh;
         overflow-y: auto;
         padding: 0.5rem;
       }
+      /* Ensure body has room for controls at bottom */
+      body {
+        padding-top: 0.5rem;
+        padding-bottom: 3rem;
+      }
+      /* Pin controls to bottom for easy access */
+      .controls {
+        position: fixed;
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 0;
+      }
+    }
       #posterWrapper {
         margin-bottom: 1rem;
       }
