@@ -24,7 +24,7 @@
 
     html { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); }
     body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem; margin: 0; }
-    h1 { font-size: 2.25rem; line-height: 1.1; font-weight: 700; margin-bottom: 1.5rem; letter-spacing: 0.025em; white-space: nowrap; }
+    h1 { font-size: 2.25rem; line-height: 1.1; font-weight: 700; margin-bottom: 1rem; letter-spacing: 0.025em; white-space: nowrap; }
 
     .randomizer {
       background: var(--color-card);
@@ -42,7 +42,20 @@
     #posterWrapper { background: var(--color-base); border-radius: var(--radius); overflow: hidden; width: 100%; aspect-ratio: 2/3; margin-bottom: 1.5rem; }
     #moviePoster { width: 100%; height: 100%; object-fit: contain;  }
 
-    .btn { display: block; width: 100%; padding: 0.75rem; background: var(--color-base); color: var(--color-text); font-weight: 600; border: none; border-radius: var(--radius); font-size: 0.875rem; transition: background 0.2s, transform 0.1s; cursor: pointer; margin-bottom: 1rem; }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--color-base);
+      color: var(--color-text);
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      transition: background 0.2s, transform 0.1s;
+      cursor: pointer;
+      /* Match space above and below button */
+      margin-bottom: 1.5rem; }
     .btn:disabled { opacity: 0.6; cursor: default; }
     .btn:hover:not(:disabled), .btn:focus:not(:disabled) { background: var(--color-accent); color: #121212; transform: translateY(-2px); outline: none; }
     .btn:active { transform: translateY(0); }
@@ -85,6 +98,18 @@
     }
     #genreMenu .check { visibility: hidden; color: #38A169; } { visibility: hidden; color: #38A169; }
     #genreMenu .item.selected .check { visibility: visible; }
+      /* Handle tall card on small vertical screens */
+    @media (max-height: 700px) {
+      .randomizer {
+        /* Ensure card fits in viewport with room for controls */
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+        padding: 0.5rem;
+      }
+      #posterWrapper {
+        margin-bottom: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
