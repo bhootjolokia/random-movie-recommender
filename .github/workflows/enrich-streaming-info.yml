@@ -99,7 +99,7 @@ jobs:
           jq -s '
             (.[0] + .[1])
             | unique_by(.id)
-            | .[0:800]
+            | .[0:5]
           ' data/movies.json data/new_enriched.json > data/movies.json
 
       - name: Commit updated movies.json
