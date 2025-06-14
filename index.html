@@ -219,6 +219,7 @@
     });
 
   function randomize() {
+      
       const controls = document.querySelector('.controls');
       // Hide controls during shuffling to prevent jitter
       controls.classList.add('hidden');
@@ -250,6 +251,7 @@
       txt.textContent = `${m.title} (${m.year})`;
       if (i < picks.length) setTimeout(flip, spinSpeed);
       else {
+        
         res.style.display = 'block';
         btn.disabled = false;
         document.getElementById('streamLink').href = m.watch_link || `${TMDB_BASE}/${m.id}/watch?locale=US`;
