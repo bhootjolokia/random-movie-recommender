@@ -22,9 +22,7 @@
     .btn:hover:not(:disabled), .btn:focus:not(:disabled) { background:var(--color-accent); color:#121212; transform:translateY(-2px); outline:none; }
     .btn:active { transform:translateY(0); }
 
-    #result { text-align:center; margin-bottom:1rem; display:none; }
-    #movieResult { font-weight:600; font-size:0.875rem; }
-
+    /* Controls */
     .controls { width:100%; max-width:320px; display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem; position:relative; }
     #genreToggle, #streamLink { font-size:0.875rem; font-weight:600; cursor:pointer; padding:0.25rem 0.5rem; border-radius:var(--radius); transition:background 150ms, text-decoration 150ms; }
     #genreToggle { color:var(--color-text); background:transparent; text-decoration:none; }
@@ -40,24 +38,7 @@
     #genreMenu .item.selected .check { visibility:visible; }
 
     /* Mobile bottom sheet */
-    #genreSheet {
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:-100%;
-      /* ensure sheet doesn't overlap home indicator */
-      height:50%;
-      max-height:calc(50% - env(safe-area-inset-bottom));
-      padding-bottom:env(safe-area-inset-bottom);
-      background:var(--color-card);
-      border-top-left-radius:var(--radius);
-      border-top-right-radius:var(--radius);
-      box-shadow:0 -4px 12px rgba(0,0,0,0.5);
-      transition:bottom 200ms ease;
-      z-index:2000;
-      display:flex;
-      flex-direction:column;
-    }
+    #genreSheet { position:fixed; left:0; right:0; bottom:-100%; height:50%; max-height:calc(50% - env(safe-area-inset-bottom)); padding-bottom:env(safe-area-inset-bottom); background:var(--color-card); border-top-left-radius:var(--radius); border-top-right-radius:var(--radius); box-shadow:0 -4px 12px rgba(0,0,0,0.5); transition:bottom 200ms ease; z-index:2000; display:flex; flex-direction:column; }
     #genreSheet.active { bottom:0; }
     #genreSheet .sheet-header { padding:0.75rem 1rem; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #2E2E2E; }
     #genreSheet .sheet-header h2 { margin:0; font-size:1rem; font-weight:600; }
@@ -65,38 +46,44 @@
     #genreSheet .sheet-body .item { padding:0.75rem 1rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #2E2E2E; cursor:pointer; }
     #genreSheet .sheet-body .item.selected .check { visibility:visible; }
 
-    /* Hide desktop menu on mobile */
+    /* Footer elements hidden behind safe area */
     @media (max-width:450px) { #genreMenu { display:none!important; } }
   </style>
 </head>
 <body>
   <h1>Randomly pick a top rated movie</h1>
+
   <div class='randomizer'>
-    <div id='posterWrapper'><img id='moviePoster' alt='Movie poster'></div>
+    <div id='posterWrapper'>
+      <img id='moviePoster' alt='Movie poster'>
+    </div>
+
     <button id='randomizeBtn' class='btn' disabled>
       <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A9 9 0 1 1 11 4.915m0 0V9h5" />
       </svg>
       <span class="btn-text">Loading…</span>
     </button>
-    <div id='result'><div id='movieResult'></div></div>
+
+    <div id='result' aria-live="polite">
+      <div id='movieResult'></div>
+    </div>
   </div>
 
   <div class='controls'>
-    <button id='genreToggle'>▾ Genres</button>
-    <a id='streamLink' href='#' target='_blank'>Where to stream</a>
-    <div id='genreMenu'></div>
+    <button id='genreToggle' aria-haspopup="menu" aria-expanded="false">▾ Genres</button>
+    <a id='streamLink' href='#' target='_blank' rel="noopener noreferrer">Where to stream</a>
+    <div id='genreMenu' role="menu"></div>
   </div>
 
-    <!-- Privacy Policy -->
-  <a href="#" class="privacy-policy text-xs text-gray-400" style="position:absolute; bottom:1.5rem; right:0.5rem;">
-    Privacy Policy
-  </a>
+  <!-- Privacy Policy -->
+  <a href="#" class="privacy-policy text-xs text-gray-400" style="position:absolute; bottom:1.5rem; right:0.5rem;">Privacy Policy</a>
 
   <!-- Attribution -->
-  <div class="attribution text-xs text-gray-500" style="position:absolute; bottom:0.5rem; right:0.5rem;">
-    Data provided by <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a>
-  </div>
+  <div class="attribution text-xs text-gray-500" style="position:absolute; bottom:0.5rem; right:0.5rem;">Data provided by <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a></div>
+
+  <!-- Contact Us -->
+  <a href="mailto:movierandomizertool@gmail.com" class="contact-us text-xs text-gray-400" style="position:absolute; bottom:0.5rem; left:0.5rem;">Contact Us</a>
 
   <!-- Mobile Genre Bottom Sheet -->
   <div id='genreSheet'>
@@ -118,12 +105,11 @@
 
     // Build both desktop and mobile lists
     Object.entries(genreMap).forEach(([id,name])=>{
-      ['#genreMenu .item', '.sheet-body .item'].forEach((sel,index)=>{});
-      // Desktop
       const dItem=document.createElement('div'); dItem.className='item'; dItem.dataset.genre=id; dItem.tabIndex=0;
+      dItem.setAttribute('role','menuitemcheckbox');
       dItem.innerHTML=`<span>${name}</span><span class='check'>✓</span>`;
       dItem.addEventListener('click',()=>selectGenre(+id)); genreMenu.appendChild(dItem);
-      // Mobile
+
       const mItem=document.createElement('div'); mItem.className='item'; mItem.dataset.genre=id;
       mItem.innerHTML=`<span>${name}</span><span class='check'>✓</span>`;
       mItem.addEventListener('click',()=>selectGenre(+id)); sheetBody.appendChild(mItem);
@@ -135,34 +121,27 @@
         else selectedGenres.add(id);
         selectedGenres.delete(0);
       }
-      // Update visuals
       document.querySelectorAll('#genreMenu .item, #genreSheet .item').forEach(el=>{
         const gid=+el.dataset.genre;
         el.classList.toggle('selected', selectedGenres.has(gid) || (gid===0 && selectedGenres.has(0)));
       });
-      sheet.classList.remove('active'); genreMenu.classList.remove('open'); randomize();
+      sheet.classList.remove('active'); genreMenu.classList.remove('open');
+      genreToggle.setAttribute('aria-expanded', genreMenu.classList.contains('open'));
+      randomize();
     }
 
-    // Toggle
     genreToggle.addEventListener('click', e=>{
       if(window.innerWidth<=450) sheet.classList.add('active');
-      else { e.stopPropagation(); genreMenu.classList.toggle('open'); }
+      else { e.stopPropagation(); const expanded=!genreMenu.classList.toggle('open'); genreToggle.setAttribute('aria-expanded', expanded); }
     });
     sheetClose.addEventListener('click',()=>sheet.classList.remove('active'));
-    document.addEventListener('click',()=>genreMenu.classList.remove('open'));
+    document.addEventListener('click',()=>{ genreMenu.classList.remove('open'); genreToggle.setAttribute('aria-expanded', 'false'); });
 
-    // Randomizer core
     const btn=document.getElementById('randomizeBtn'), imgEl=document.getElementById('moviePoster'), res=document.getElementById('result'), txt=document.getElementById('movieResult'), linkEl=document.getElementById('streamLink');
     function randomize(){ if(!movies.length) return; let pool=movies; const gf=[...selectedGenres].filter(g=>g!==0); if(gf.length){ pool=pool.filter(m=>gf.every(id=>m.genre_ids.includes(id))); if(!pool.length) return showError('No movies match your genres.'); } const picks=pool.length>=spinCount?pool.sort(()=>0.5-Math.random()).slice(0,spinCount):Array.from({length:spinCount},()=>pool[Math.floor(Math.random()*pool.length)]); res.style.display='none'; imgEl.style.display='block'; imgEl.classList.add('slot-flip'); btn.disabled=true; let i=0; (function flip(){ const m=picks[i++]; imgEl.src=m.src; txt.textContent=`${m.title} (${m.year})`; if(i<picks.length) setTimeout(flip,spinSpeed); else { imgEl.classList.remove('slot-flip'); res.style.display='block'; btn.textContent='Randomize Movie'; btn.disabled=false; linkEl.href=`${TMDB_BASE}/${m.id}/watch?locale=US`; } })(); }
     function showError(msg){ res.style.display='block'; txt.textContent=msg; btn.textContent='Error'; btn.disabled=true; }
     fetch('data/movies.json').then(r=>r.ok?r.json():Promise.reject()).then(arr=>{ movies=arr.filter(m=>m.poster_path).map(m=>({ id:m.id, title:m.title, year:m.release_date?.slice(0,4)||'', src:`https://image.tmdb.org/t/p/w342${m.poster_path}`, genre_ids:m.genre_ids||[] })); btn.textContent='Randomize Movie'; btn.disabled=false; }).catch(e=>{ console.error(e); showError('Failed to load movie list.'); });
     btn.addEventListener('click',randomize);
   </script>
-  <!-- Contact Us -->
-  <a href="mailto:movierandomizertool@gmail.com"
-     class="contact-us text-xs text-gray-400"
-     style="position:absolute; bottom:0.5rem; left:0.5rem;">
-    Contact Us
-  </a>
 </body>
 </html>
