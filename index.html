@@ -8,6 +8,14 @@
   <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'>
   <script src='https://cdn.tailwindcss.com'></script>
   <style>
+    /* Skeleton placeholder */
+    .skeleton {
+      background: rgba(255,255,255,0.1);
+      border-radius: 0.25rem;
+      width: 60%;
+      height: 1em;
+      margin: 0.25rem auto;
+    }
     /* Poster flip animation */
     @keyframes slotFlip { 0% { transform: rotateX(0deg); } 50% { transform: rotateX(90deg); } 100% { transform: rotateX(0deg); } }
     #moviePoster.slot-flip { animation: slotFlip 0.6s ease-in-out; backface-visibility: hidden; }
@@ -49,7 +57,13 @@
     .btn:hover:not(:disabled), .btn:focus:not(:disabled) { background: var(--color-accent); color: #121212; transform: translateY(-2px); outline: none; }
     .btn:active { transform: translateY(0); }
 
-    #result { text-align: center; margin-bottom: 1rem; display: none; }
+    #result {
+      text-align: center;
+      margin-bottom: 1rem;
+      display: none;
+      /* Reserve space to prevent card height shifts during shuffle */
+      min-height: 1.25rem;
+    }
     #movieResult { font-weight: 600; font-size: 0.875rem; }
 
     .controls { width: 100%; max-width: 320px; display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; position: relative; transition: max-width 0.2s; }
