@@ -23,7 +23,17 @@
     }
 
     html { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); }
-    body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem; margin: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      margin: 0;
+      /* Always leave space at bottom so content isn't flush against edge */
+      padding-bottom: 2rem;
+    }
     h1 { font-size: 2.25rem; line-height: 1.1; font-weight: 700; margin-bottom: 1rem; letter-spacing: 0.025em; white-space: nowrap; }
 
     .randomizer {
@@ -32,7 +42,7 @@
       padding: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
       width: 100%;
-      max-width: 320px;
+      max-width: clamp(240px, 90vw, 320px);
       /* Limit card height to viewport for small screens */
       max-height: 80vh;
       overflow-y: auto;
@@ -120,6 +130,10 @@
     #genreMenu .item.selected .check { visibility: visible; }
       /* Handle tall card on small vertical screens */
     @media (max-height: 700px) {
+      /* Increase bottom padding on very short viewports */
+      body {
+        padding-bottom: 4rem;
+      }
       /* Reduce card height and allow internal scrolling */
       .randomizer {
         max-height: 60vh;
@@ -147,6 +161,8 @@
   </style>
 </head>
 <body>
+  <div class="page-wrapper">
+
   <h1>Randomly pick a top rated movie</h1>
   <div class='randomizer'>
     <div id='posterWrapper'><img id='moviePoster' alt='Movie poster'></div>
