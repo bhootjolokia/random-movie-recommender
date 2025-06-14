@@ -61,6 +61,7 @@
       text-align: center;
       margin-bottom: 1rem;
       display: none;
+    }
       /* Reserve space to prevent card height shifts during shuffle */
       min-height: 1.25rem;
     }
@@ -179,7 +180,8 @@
       const txt = document.getElementById('movieResult');
       span.textContent = 'Loading…';
       img.style.display = 'block';
-      res.style.display = 'none';
+      // show result container for text updates during shuffle
+      res.style.display = 'block';
       if (!movies.length) return;
       let pool = movies;
       const filters = [...selectedGenres].filter(g => g !== 0);
