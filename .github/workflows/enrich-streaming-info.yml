@@ -75,10 +75,10 @@ jobs:
             sleep 0.2
           done
 
-      - name: Finalize movies.json (cap at 800)
+      - name: Finalize movies.json (cap at 5)
         run: |
-          # first slurp all enriched objects into an array, then slice [0:800]
-          jq -s '.[0:800]' data/movies.enriched.json > data/movies.json
+          # for testing—only keep the first 5 enriched movies
+          jq -s '.[0:5]' data/movies.enriched.json > data/movies.json
 
       - name: Commit updated movies.json
         env:
