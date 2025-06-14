@@ -8,14 +8,6 @@
   <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'>
   <script src='https://cdn.tailwindcss.com'></script>
   <style>
-    /* Skeleton placeholder */
-    .skeleton {
-      background: rgba(255,255,255,0.1);
-      border-radius: 0.25rem;
-      width: 60%;
-      height: 1em;
-      margin: 0.25rem auto;
-    }
     /* Poster flip animation */
     @keyframes slotFlip { 0% { transform: rotateX(0deg); } 50% { transform: rotateX(90deg); } 100% { transform: rotateX(0deg); } }
     #moviePoster.slot-flip { animation: slotFlip 0.6s ease-in-out; backface-visibility: hidden; }
@@ -31,7 +23,7 @@
     }
 
     html { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); }
-    body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem 1rem 4rem; margin: 0; }
+    body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem; margin: 0; }
     h1 { font-size: 2.25rem; line-height: 1.1; font-weight: 700; margin-bottom: 1.5rem; letter-spacing: 0.025em; white-space: nowrap; }
 
     .randomizer {
@@ -44,117 +36,46 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      position: relative;
       transition: max-width 0.2s;
     }
-    .randomizer.shrink { max-width: 240px; }
 
-    #posterWrapper { background: var(--color-base); border-radius: var(--radius); overflow: hidden; width: 100%; aspect-ratio: 2/3; margin-bottom: 1.5rem; }
-    #moviePoster { width: 100%; height: 100%; object-fit: contain; display: none; }
+    #posterWrapper { background: var(--color-base); border-radius: var(--radius); overflow: hidden; width: 100%; aspect-ratio: 2/3; margin-bottom: 1rem; }
+    #moviePoster { display: none;  width: 100%; height: 100%; object-fit: contain; }
 
-    .btn { display: block; width: 100%; padding: 0.75rem; background: var(--color-base); color: var(--color-text); font-weight: 600; border: none; border-radius: var(--radius); font-size: 0.875rem; transition: background 0.2s, transform 0.1s; cursor: pointer; margin-bottom: 1rem; }
+    .btn { width: 100%; padding: 0.75rem; background: var(--color-base); color: var(--color-text); font-weight: 600; border: none; border-radius: var(--radius); font-size: 0.875rem; transition: background 0.2s; cursor: pointer; margin-bottom: 1rem; }
     .btn:disabled { opacity: 0.6; cursor: default; }
-    .btn:hover:not(:disabled), .btn:focus:not(:disabled) { background: var(--color-accent); color: #121212; transform: translateY(-2px); outline: none; }
-    .btn:active { transform: translateY(0); }
 
-    #result {
-      text-align: center;
-      margin-bottom: 1rem;
-      display: none;
-    }
-      /* Reserve space to prevent card height shifts during shuffle */
-      min-height: 1.25rem;
-    }
+    #result { display: none;  text-align: center; margin: 1rem 0; }
     #movieResult { font-weight: 600; font-size: 0.875rem; }
 
-    .controls { width: 100%; max-width: 320px; display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; position: relative; transition: max-width 0.2s; }
-    .controls.shrink { max-width: 240px; }
+    .controls { width: 100%; max-width: 320px; display: flex; justify-content: space-between; margin-top: 1rem; }
 
-    #genreToggle, #streamLink { font-size: 0.875rem; font-weight: 600; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius); transition: background 150ms, text-decoration 150ms; }
-    #genreToggle { color: var(--color-text); background: transparent; text-decoration: none; }
-    #streamLink { color: var(--color-accent); background: transparent; text-decoration: none; }
-    #streamLink:hover, #streamLink:focus { text-decoration: underline; background: rgba(45,212,191,0.1); outline: none; }
-
-    /* Dropdown */
-    #genreMenu { position: absolute; bottom: 100%; right: calc(100% + 0.25rem); transform-origin: bottom right; max-height: 60vh; overflow-y: auto; background: var(--color-base); border-radius: var(--radius); box-shadow: 0 4px 12px rgba(0,0,0,0.5); opacity: 0; transform: translateY(0.5rem) scale(0.95); pointer-events: none; transition: opacity 150ms ease, transform 150ms ease; z-index: 1000; }
-    #genreMenu.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-    #genreMenu .item { padding: 0.2rem 0.4rem; display: flex; align-items: center; gap: 0.3rem; font-size: 0.8125rem; white-space: nowrap; cursor: pointer; }
-    #genreMenu .check { visibility: hidden; color: #38A169; }
-    #genreMenu .item.selected .check { visibility: visible; }
+    #genreToggle, #streamLink { font-size: 0.875rem; font-weight: 600; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius); }
   </style>
 </head>
 <body>
   <h1>Randomly pick a top rated movie</h1>
   <div class='randomizer'>
     <div id='posterWrapper'><img id='moviePoster' alt='Movie poster'></div>
-    <button id='randomizeBtn' class='btn'><span class='btn-text'>Randomize Movie</span></button>
-    <div id='result' aria-live='polite'><div id='movieResult'></div></div>
+    <button id='randomizeBtn' class='btn' disabled>Loading…</button>
   </div>
+
+  <!-- Movie title appears below card -->
+  <div id='result'><div id='movieResult'></div></div>
+
+  <!-- Controls now just below the movie title -->
   <div class='controls'>
-    <button id='genreToggle' aria-haspopup='menu' aria-expanded='false'>▾ Genres</button>
-    <a id='streamLink' href='#' target='_blank' rel='noopener noreferrer'>Where to stream</a>
-    <div id='genreMenu' role='menu'></div>
+    <button id='genreToggle'>▾ Genres</button>
+    <a id='streamLink' href='#' target='_blank'>Where to stream</a>
   </div>
+
   <script>
-    const TMDB_BASE = 'https://www.themoviedb.org/movie';
+        const TMDB_BASE = 'https://www.themoviedb.org/movie';
     const spinCount = 30, spinSpeed = 20;
     let movies = [], selectedGenres = new Set([0]);
-    const genreMap = {0:'Any Genre',28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Sci-Fi',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
 
-    const randomizerEl = document.querySelector('.randomizer');
-    const controlsEl = document.querySelector('.controls');
-    const genreToggle = document.getElementById('genreToggle'), genreMenu = document.getElementById('genreMenu');
-
-    function checkOverlap() {
-      const rRect = randomizerEl.getBoundingClientRect();
-      const cRect = controlsEl.getBoundingClientRect();
-      if (rRect.bottom > cRect.top) {
-        randomizerEl.classList.add('shrink');
-        controlsEl.classList.add('shrink');
-      } else {
-        randomizerEl.classList.remove('shrink');
-        controlsEl.classList.remove('shrink');
-      }
-    }
-
-    Object.entries(genreMap).forEach(([id,name]) => {
-      const item = document.createElement('div');
-      item.className = 'item'; item.dataset.genre = id;
-      item.innerHTML = `<span>${name}</span><span class='check'>✓</span>`;
-      item.addEventListener('click', () => selectGenre(+id));
-      genreMenu.appendChild(item);
-    });
-
-    genreToggle.addEventListener('click', e => {
-      e.stopPropagation();
-      const open = !genreMenu.classList.toggle('open');
-      genreToggle.setAttribute('aria-expanded', open);
-      checkOverlap();
-    });
-
-    window.addEventListener('resize', checkOverlap);
-    document.addEventListener('click', () => {
-      if (genreMenu.classList.contains('open')) {
-        genreMenu.classList.remove('open');
-        genreToggle.setAttribute('aria-expanded', 'false');
-        checkOverlap();
-      }
-    });
-
-    function selectGenre(id) {
-      if (id === 0) selectedGenres = new Set([0]); else {
-        selectedGenres.has(id) ? selectedGenres.delete(id) : selectedGenres.add(id);
-        selectedGenres.delete(0);
-      }
-      document.querySelectorAll('#genreMenu .item').forEach(el => el.classList.toggle('selected', selectedGenres.has(+el.dataset.genre)));
-      randomize();
-    }
-
-    const btnEl = document.getElementById('randomizeBtn');
-    // disable until data loads
-    btnEl.disabled = true;
-
-    document.getElementById('randomizeBtn').addEventListener('click', randomize);
+    // Fetch movies and enable button
+    const btn = document.getElementById('randomizeBtn');
     fetch('data/movies.json')
       .then(r => r.ok ? r.json() : Promise.reject())
       .then(arr => {
@@ -162,52 +83,35 @@
           id: m.id,
           title: m.title,
           year: m.release_date?.slice(0,4) || '',
-          src: `https://image.tmdb.org/t/p/w342${m.poster_path}`,
-          genre_ids: m.genre_ids || [],
-          watch_link: m.watch_link || ''
+          src: `https://image.tmdb.org/t/p/w342${m.poster_path}`
         }));
-        btnEl.querySelector('.btn-text').textContent = 'Randomize Movie';
-        btnEl.disabled = false;
-        setTimeout(checkOverlap, 100);
+        btn.textContent = 'Randomize Movie';
+        btn.disabled = false;
       })
-      .catch(() => { document.getElementById('movieResult').textContent = 'Failed to load movie list.'; });
+      .catch(() => { console.error('Failed to load movies'); });
 
-    function randomize() {
-      const btn = document.getElementById('randomizeBtn');
-      const span = btn.querySelector('.btn-text');
+    document.getElementById('randomizeBtn').addEventListener('click', () => {
       const img = document.getElementById('moviePoster');
       const res = document.getElementById('result');
       const txt = document.getElementById('movieResult');
-      span.textContent = 'Loading…';
       img.style.display = 'block';
-      // show result container for text updates during shuffle
-      res.style.display = 'block';
+      res.style.display = 'none';
       if (!movies.length) return;
-      let pool = movies;
-      const filters = [...selectedGenres].filter(g => g !== 0);
-      if (filters.length) {
-        pool = pool.filter(m => filters.every(id => m.genre_ids.includes(id)));
-        if (!pool.length) { txt.textContent = 'No movies match your genres.'; res.style.display = 'block'; return; }
-      }
-      const picks = pool.length >= spinCount
-        ? pool.sort(() => 0.5 - Math.random()).slice(0, spinCount)
-        : Array.from({ length: spinCount }, () => pool[Math.floor(Math.random() * pool.length)]);
+      let picks = [...movies];
+      const spins = Math.min(spinCount, picks.length);
       btn.disabled = true;
       let i = 0;
       (function flip() {
-        const m = picks[i++];
+        const m = picks[Math.floor(Math.random()*picks.length)];
         img.src = m.src;
         txt.textContent = `${m.title} (${m.year})`;
-        if (i < picks.length) setTimeout(flip, spinSpeed);
+        if (++i < spins) setTimeout(flip, spinSpeed);
         else {
           res.style.display = 'block';
-          span.textContent = 'Randomize Movie';
           btn.disabled = false;
-          const slug = m.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g,'');
-          document.getElementById('streamLink').href = m.watch_link || `${TMDB_BASE}/${m.id}-${slug}/watch?locale=US`;
         }
       })();
-    }
+    });
   </script>
 </body>
 </html>
