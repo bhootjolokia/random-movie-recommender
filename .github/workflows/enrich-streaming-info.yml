@@ -1,0 +1,51 @@
+name: Enrich Movies with Streaming Links
+
+on:
+  schedule:
+    - cron: '0 2 * * *'      # daily at 2 AM UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  enrich-streaming:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq curl
+
+      - name: Enrich with RapidAPI streaming-availability
+        env:
+          RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
+        run: |
+          mkdir -p data
+          jq -c '.[]' data/movies.json | \
+          head -n 1000 | \
+          while read -r movie; do
+            id=$(jq -r '.id' <<<"$movie")
+            has=$(jq 'has("streaming_info")' <<<"$movie")
+            if [[ "$has" == "true" ]]; then
+              echo "$movie"
+              continue
+            fi
+            resp=$(curl -s \
+              -H "X-RapidAPI-Key: $RAPIDAPI_KEY" \
+              -H "X-RapidAPI-Host: streaming-availability.p.rapidapi.com" \
+              "https://streaming-availability.p.rapidapi.com/get/basic?tmdb_id=$id&country=all")
+            echo "$movie" | jq --argjson info "$resp" '. + { streaming_info: $info }'
+          done > data/movies_enriched.json
+
+      - name: Replace movies.json and commit
+        run: |
+          mv data/movies_enriched.json data/movies.json
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/movies.json
+          git commit -m "chore: enrich movies.json with streaming_info" || echo "No changes"
+          git push
