@@ -14,6 +14,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      # === THIS IS THE TEMPORARY DIAGNOSTIC STEP ===
+      - name: Diagnose API Key
+        run: |
+          echo "--- Testing TMDb API Key ---"
+          # This command will either show a list of movies or an error message.
+          curl "https://api.themoviedb.org/3/movie/top_rated?api_key=${{ secrets.TMDB_API_KEY }}&language=en-US&page=1"
+          echo "--- End of Test ---"
+      # === END OF DIAGNOSTIC STEP ===
+
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -54,11 +63,10 @@ jobs:
           jq '[.[] | {id, title, release_date, poster_path, genre_ids, watch_link}]' data/movies.json > data/movies.json.tmp
           mv data/movies.json.tmp data/movies.json
 
-      # === THIS IS THE BULLETPROOF FIX ===
       - name: Create daily pool of 10 random movies using shuf
         run: |
+          # This command will fail if the input file (movies.json) is empty.
           jq -c '.[]' data/movies.json | shuf | head -n 10 | jq -s '.' > data/daily-pool.json
-      # === END OF FIX ===
 
       - name: Commit updated movie files
         env:
