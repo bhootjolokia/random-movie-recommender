@@ -46,16 +46,15 @@
       flex-shrink: 0; 
     }
 
-    /* THE DEFINITIVE LAYOUT: Container has a fixed shape */
     #posterWrapper {
-      background: var(--color-base);
+      /* THE FIX: Match the main page background to hide bars seamlessly */
+      background: var(--color-bg); 
       border-radius: var(--radius);
       width: 100%;
       margin-bottom: 1rem;
       position: relative;
       overflow: hidden; 
       display: flex;
-      /* This forces a standard 2:3 poster shape */
       aspect-ratio: 2 / 3; 
     }
 
@@ -65,11 +64,8 @@
       transition: transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
 
-    /* THE DEFINITIVE IMAGE RULE: No cropping, ever. */
     #filmstrip .filmstrip-image {
       width: 100%; height: 100%;
-      /* 'contain' ensures the whole image is visible. */
-      /* Since the container has the same aspect-ratio, there will be no bars. */
       object-fit: contain; 
       position: absolute;
     }
