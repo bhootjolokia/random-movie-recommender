@@ -14,13 +14,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # === THIS IS THE CORRECTED DEPENDENCY INSTALLATION ===
-      - name: Install curl
-        run: sudo apt-get update && sudo apt-get install -y curl
-
-      - name: Install latest version of jq
-        uses: dcarbone/install-jq-action@v2.1.0
-      # === END OF CORRECTION ===
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq curl
 
       - name: Fetch top-rated movies (pages 1–40)
         run: |
@@ -57,9 +54,11 @@ jobs:
           jq '[.[] | {id, title, release_date, poster_path, genre_ids, watch_link}]' data/movies.json > data/movies.json.tmp
           mv data/movies.json.tmp data/movies.json
 
-      - name: Create daily pool of 10 random movies
+      # === THIS IS THE BULLETPROOF FIX ===
+      - name: Create daily pool of 10 random movies using shuf
         run: |
-          jq 'shuffle | .[0:10]' data/movies.json > data/daily-pool.json
+          jq -c '.[]' data/movies.json | shuf | head -n 10 | jq -s '.' > data/daily-pool.json
+      # === END OF FIX ===
 
       - name: Commit updated movie files
         env:
