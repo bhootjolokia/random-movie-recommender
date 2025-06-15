@@ -38,23 +38,32 @@ jobs:
             id=$(jq -r '.id' <<<"$movie")
             raw=$(curl -s "https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${{ secrets.TMDB_API_KEY }}")
             link=$(jq -r '.results.US.link // empty' <<<"$raw")
+            # This next command still CHECKS for providers, but we won't save them.
             providers=$(jq -c '
-              [ (.results.US.flatrate?[]?  | . + { provider_type: "flatrate"  }),
-                (.results.US.free?[]?      | . + { provider_type: "free"      }),
-                (.results.US.adSupported?[]?| . + { provider_type: "adSupported" }) ]
+              [ (.results.US.flatrate?[]?),
+                (.results.US.free?[]?),
+                (.results.US.adSupported?[]?) ]
               | flatten
-              | unique_by(.provider_id)
             ' <<<"$raw")
+            # Only include movies that have at least one streaming provider.
             if [[ $(jq 'length' <<<"$providers") -gt 0 ]]; then
+              # MODIFIED: This line no longer adds the heavy 'watch_providers' data.
+              # It only adds the essential 'watch_link'.
               echo "$movie" \
-                | jq --arg link "$link" --argjson wp "$providers" \
-                     '. + { watch_link: $link, watch_providers: $wp }'
+                | jq --arg link "$link" \
+                     '. + { watch_link: $link }'
             fi
           done | jq -s '.' > data/movies.json
 
-      - name: Slice to first 800 (optional cap)
+      - name: Slice to a max of 800 movies (optional cap)
         run: |
           jq '.[0:800]' data/movies.json > data/movies.json.tmp
+          mv data/movies.json.tmp data/movies.json
+
+      # NEW STEP: This removes all unnecessary fields from the final file.
+      - name: Prune to only necessary fields for fast loading
+        run: |
+          jq '[.[] | {id, title, release_date, poster_path, genre_ids, watch_link}]' data/movies.json > data/movies.json.tmp
           mv data/movies.json.tmp data/movies.json
 
       - name: Commit updated movies.json
@@ -64,5 +73,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/movies.json
-          git commit -m "chore: update TMDb cache with streaming providers only" || echo "No changes"
-          git push 
+          # MODIFIED: Updated the commit message to be more accurate.
+          git commit -m "chore: update and prune TMDb movie cache" || echo "No changes"
+          git push
