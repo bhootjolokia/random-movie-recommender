@@ -12,7 +12,39 @@
   <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'>
   <style>
     /* Base CSS remains the same */
-    :root{--font-sans:'Inter',system-ui,sans-serif;--color-bg:#121212;--color-base:#1E1E1E;--color-accent:#2DD4BF;--color-text:#E5E7EB;--color-text-muted:#9CA3AF;--radius:0.5rem}html{height:100%}body{height:100%;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans);padding:1rem;margin:0;box-sizing:border-box;overflow:hidden}.page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100%}h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin-top:0;margin-bottom:.75rem;text-align:center;flex-shrink:0}#posterWrapper{background:var(--color-bg);border-radius:var(--radius);width:100%;margin-bottom:1rem;position:relative;overflow:hidden;display:flex;aspect-ratio:2/3}#loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}.btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;flex-shrink:0;margin-bottom:1.5rem}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}#result{text-align:center;min-height:1.25rem;visibility:hidden;flex-shrink:0}#movieResult{font-weight:600;font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;max-width:clamp(240px,90vw,320px);box-sizing:border-box}.controls{width:100%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;position:relative;margin-top:1rem;flex-shrink:0}#genreToggle,#streamLink{font-size:.875rem;font-weight:600;cursor:pointer;padding:.25rem .5rem;border-radius:var(--radius);background:transparent;border:none;color:var(--color-text);text-decoration:none;transition:background .2s}#genreToggle:focus,#genreToggle:hover,#streamLink:focus,#streamLink:hover{background:rgba(45,212,191,.1);outline:none}#genreModalContainer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 200ms ease}#genreModalContainer.open{opacity:1;pointer-events:auto}#genreOverlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);backdrop-filter:blur(4px)}#genreMenu{position:relative;background:var(--color-base);border-radius:var(--radius);width:90%;max-width:340px;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.5);transform:scale(.95);transition:transform 200ms ease}#genreModalContainer.open #genreMenu{transform:scale(1)}.genre-menu-header{padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.1);display:flex;justify-content:center;align-items:center;flex-shrink:0}.genre-menu-header h2{font-size:1rem;font-weight:600}#genreList{overflow-y:auto;padding:.5rem}#genreList .item{padding:.35rem .5rem;display:flex;align-items:center;gap:.5rem;font-size:.9rem;white-space:nowrap;cursor:pointer;position:relative;border-radius:.25rem}#genreMenu .check{visibility:hidden;color:#38a169}#genreMenu .item.selected .check{visibility:visible}.site-footer{width:100%;margin-top:auto;padding-top:1.5rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem 1rem;color:var(--color-text-muted);flex-shrink:0;font-size:clamp(.7rem,2.5vw,.75rem)}.site-footer a{color:var(--color-text-muted);text-decoration:none}.site-footer a:hover{color:var(--color-accent);text-decoration:underline}.footer-center{flex-basis:100%;text-align:center}
+    :root{--font-sans:'Inter',system-ui,sans-serif;--color-bg:#121212;--color-base:#1E1E1E;--color-accent:#2DD4BF;--color-text:#E5E7EB;--color-text-muted:#9CA3AF;--radius:0.5rem}html{height:100%}body{height:100%;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans);padding:1rem;margin:0;box-sizing:border-box;overflow:hidden}.page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100%}h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin-top:0;margin-bottom:.75rem;text-align:center;flex-shrink:0}#posterWrapper{background:var(--color-bg);border-radius:var(--radius);width:100%;margin-bottom:1rem;position:relative;overflow:hidden;display:flex;aspect-ratio:2/3}#loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}.btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;flex-shrink:0;margin-bottom:1.5rem}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}#result{text-align:center;min-height:1.25rem;visibility:hidden;flex-shrink:0}#movieResult{font-weight:600;font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;max-width:clamp(240px,90vw,320px);box-sizing:border-box}.controls{width:100%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;position:relative;margin-top:1rem;flex-shrink:0}
+    
+    /* <<< NEW: STYLES FOR IMPROVED CONTROLS (OPTION 1) >>> */
+    #genreToggle, #streamLink {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.8rem;
+      background: var(--color-base);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.2s ease;
+      font-size:.875rem;
+      font-weight:600;
+      cursor:pointer;
+      border-radius:var(--radius);
+      color:var(--color-text);
+      text-decoration:none;
+    }
+    #genreToggle:hover, #streamLink:hover {
+      background: rgba(45, 212, 191, 0.1);
+      border-color: rgba(45, 212, 191, 0.5);
+      transform: translateY(-2px);
+      outline:none;
+    }
+    #genreToggle svg, #streamLink svg {
+      stroke: var(--color-text-muted);
+      transition: stroke 0.2s ease;
+    }
+    #genreToggle:hover svg, #streamLink:hover svg {
+      stroke: var(--color-accent);
+    }
+    
+    #genreModalContainer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 200ms ease}#genreModalContainer.open{opacity:1;pointer-events:auto}#genreOverlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);backdrop-filter:blur(4px)}#genreMenu{position:relative;background:var(--color-base);border-radius:var(--radius);width:90%;max-width:340px;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.5);transform:scale(.95);transition:transform 200ms ease}#genreModalContainer.open #genreMenu{transform:scale(1)}.genre-menu-header{padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.1);display:flex;justify-content:center;align-items:center;flex-shrink:0}.genre-menu-header h2{font-size:1rem;font-weight:600}#genreList{overflow-y:auto;padding:.5rem}#genreList .item{padding:.35rem .5rem;display:flex;align-items:center;gap:.5rem;font-size:.9rem;white-space:nowrap;cursor:pointer;position:relative;border-radius:.25rem}#genreMenu .check{visibility:hidden;color:#38a169}#genreMenu .item.selected .check{visibility:visible}.site-footer{width:100%;margin-top:auto;padding-top:1.5rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem 1rem;color:var(--color-text-muted);flex-shrink:0;font-size:clamp(.7rem,2.5vw,.75rem)}.site-footer a{color:var(--color-text-muted);text-decoration:none}.site-footer a:hover{color:var(--color-accent);text-decoration:underline}.footer-center{flex-basis:100%;text-align:center}
     
     @media (min-width: 768px) {
       #genreOverlay,.genre-menu-header{display:none}
@@ -22,8 +54,6 @@
       #genreList{padding:0;overflow-y:visible}
       #genreList .item{padding:.15rem .4rem;gap:.3rem;font-size:.8125rem}
       #genreList .item:hover{background:rgba(45,212,191,.1)}
-
-      /* <<< THIS IS THE KEY FIX: .site-footer is removed from this list >>> */
       #posterWrapper,.btn,.controls{max-width:320px}
       
       .site-footer {
@@ -52,9 +82,17 @@
     </div>
     <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
     <div id='result'><div id='movieResult'></div></div>
+    
+    <!-- <<< MODIFIED: CONTROLS HTML WITH ICONS >>> -->
     <div class='controls'>
-      <button id='genreToggle'>▾ Genres</button>
-      <a id='streamLink' href='#' target='_blank'>Where to stream</a>
+      <button id='genreToggle'>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/></svg>
+          <span>Genres</span>
+      </button>
+      <a id='streamLink' href='#' target='_blank'>
+          <span>Stream</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
       <div id="genreModalContainer">
         <div id="genreOverlay"></div>
         <div id='genreMenu' role='menu'>
@@ -63,7 +101,7 @@
         </div>
       </div>
     </div>
-    <!-- The HTML structure is correct from the last step -->
+
     <footer class="site-footer">
       <a href="mailto:movierandomizertool@gmail.com" class="footer-left">Contact Us</a>
       <div class="footer-right-stack">
