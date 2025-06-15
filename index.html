@@ -40,18 +40,16 @@
       height: 100%;
     }
     
-    /* === THIS IS THE NEW, SLEEKER H1 STYLE === */
     h1 {
-      font-size: clamp(1.5rem, 5vw, 2rem); /* Reduced max size */
-      line-height: 1.2; /* A little more space between lines */
-      font-weight: 400; /* From semibold to regular */
-      letter-spacing: 0.025em; /* For a more refined look */
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      line-height: 1.2;
+      font-weight: 400;
+      letter-spacing: 0.025em;
       margin-top: 0;
-      margin-bottom: 1rem; /* Added a bit more space below */
+      margin-bottom: 1rem;
       text-align: center;
       flex-shrink: 0; 
     }
-    /* === END OF CORRECTION === */
 
     #posterWrapper {
       background: var(--color-bg); 
@@ -399,7 +397,8 @@
       
       const movieSource = seenMovies.length > 0 ? seenMovies : movies;
 
-      for (let i = 0; i.length)];
+      for (let i = 0; i < stripLength; i++) {
+        const movieForStrip = movieSource[i % movieSource.length];
         stripHTML += `<img class="filmstrip-image" src="${movieForStrip.src}" style="top: ${i * 100}%;" alt="">`;
       }
       stripHTML += `<img class="filmstrip-image" src="${winner.src}" style="top: ${stripLength * 100}%;" alt="${winner.title}">`;
