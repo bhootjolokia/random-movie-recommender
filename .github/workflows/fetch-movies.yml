@@ -31,48 +31,39 @@ jobs:
         run: |
           jq -s 'flatten' data/page*.json > data/all_movies.json
 
-      - name: Enrich with streaming/free/adSupported providers only
+      - name: Enrich and filter for streamable movies
         run: |
           jq -c '.[]' data/all_movies.json | \
           while read -r movie; do
             id=$(jq -r '.id' <<<"$movie")
             raw=$(curl -s "https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${{ secrets.TMDB_API_KEY }}")
             link=$(jq -r '.results.US.link // empty' <<<"$raw")
-            # This next command still CHECKS for providers, but we won't save them.
-            providers=$(jq -c '
-              [ (.results.US.flatrate?[]?),
-                (.results.US.free?[]?),
-                (.results.US.adSupported?[]?) ]
-              | flatten
-            ' <<<"$raw")
-            # Only include movies that have at least one streaming provider.
+            providers=$(jq -c '[ .results.US.flatrate?[], .results.US.free?[], .results.US.adSupported?[] ] | flatten')
             if [[ $(jq 'length' <<<"$providers") -gt 0 ]]; then
-              # MODIFIED: This line no longer adds the heavy 'watch_providers' data.
-              # It only adds the essential 'watch_link'.
-              echo "$movie" \
-                | jq --arg link "$link" \
-                     '. + { watch_link: $link }'
+              echo "$movie" | jq --arg link "$link" '. + { watch_link: $link }'
             fi
           done | jq -s '.' > data/movies.json
 
-      - name: Slice to a max of 800 movies (optional cap)
+      - name: Slice to a max of 800 movies
         run: |
           jq '.[0:800]' data/movies.json > data/movies.json.tmp
           mv data/movies.json.tmp data/movies.json
 
-      # NEW STEP: This removes all unnecessary fields from the final file.
-      - name: Prune to only necessary fields for fast loading
+      - name: Prune to only necessary fields
         run: |
           jq '[.[] | {id, title, release_date, poster_path, genre_ids, watch_link}]' data/movies.json > data/movies.json.tmp
           mv data/movies.json.tmp data/movies.json
 
-      - name: Commit updated movies.json
+      - name: Create daily pool of 10 random movies
+        run: |
+          jq 'shuffle | .[0:10]' data/movies.json > data/daily-pool.json
+
+      - name: Commit updated movie files
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/movies.json
-          # MODIFIED: Updated the commit message to be more accurate.
-          git commit -m "chore: update and prune TMDb movie cache" || echo "No changes"
+          git add data/movies.json data/daily-pool.json
+          git commit -m "chore: update TMDb movie caches" || echo "No changes"
           git push
