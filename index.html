@@ -69,7 +69,6 @@
       position: absolute;
     }
 
-    /* === THIS IS THE MODIFIED BUTTON STYLE === */
     .btn {
       display: block; width: 100%; padding: 0.75rem; background: var(--color-accent);
       color: #121212; font-weight: 600; border: none; border-radius: var(--radius);
@@ -79,12 +78,11 @@
     }
     .btn:disabled { opacity: 0.6; cursor: default; }
     .btn:hover:not(:disabled), .btn:focus:not(:disabled) {
-      filter: brightness(0.9); /* Darken slightly on hover */
+      filter: brightness(0.9);
       transform: translateY(-2px); 
       outline: none;
     }
     .btn:active { transform: translateY(0); }
-    /* === END OF MODIFIED BUTTON STYLE === */
 
     #result {
       text-align: center;
@@ -130,7 +128,7 @@
     .genre-menu-header {
       padding: 0.75rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);
       display: flex;
-      justify-content: center; /* MODIFIED: Centered title now that button is gone */
+      justify-content: center;
       align-items: center;
       flex-shrink: 0;
     }
@@ -138,7 +136,7 @@
     
     #genreList { overflow-y: auto; padding: 0.5rem; }
     #genreList .item {
-      padding: 0.35rem 0.5rem; /* MODIFIED: Reduced vertical padding */
+      padding: 0.35rem 0.5rem;
       display: flex; align-items: center; gap: 0.5rem;
       font-size: 0.9rem; white-space: nowrap; cursor: pointer; position: relative; border-radius: 0.25rem;
     }
@@ -164,12 +162,17 @@
       
       #genreModalContainer { position: static; opacity: 1; pointer-events: auto; display: block; }
 
+      /* === THIS IS THE MODIFIED RULE === */
       #genreMenu {
-        position: absolute; bottom: 100%; left: 0; transform-origin: bottom left;
+        position: absolute; bottom: 100%; right: 100%;
+        transform-origin: bottom right;
+        margin-right: 1rem;
         max-height: 60vh; overflow-y: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         opacity: 0; transform: translateY(0.5rem) scale(0.95); pointer-events: none;
         transition: opacity 150ms ease, transform 150ms ease; width: auto; max-width: none;
       }
+      /* === END OF MODIFIED RULE === */
+
       #genreModalContainer.open #genreMenu { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
       
       #genreList { padding: 0; overflow-y: visible; }
@@ -206,7 +209,6 @@
         <div id='genreMenu' role='menu'>
             <div class="genre-menu-header">
                 <h2>Select Genres</h2>
-                <!-- MODIFIED: "Done" button is removed -->
             </div>
             <div id="genreList"></div>
         </div>
@@ -241,7 +243,6 @@
     const genreMenu = document.getElementById('genreMenu');
     const genreList = document.getElementById('genreList');
     const genreOverlay = document.getElementById('genreOverlay');
-    // MODIFIED: genreDoneBtn selector is removed
 
     const genreMap = {0:'Any Genre',28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Sci-Fi',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
     Object.entries(genreMap).forEach(([id,name]) => {
@@ -254,7 +255,6 @@
         }
         updateGenreSelection();
         randomize();
-        // MODIFIED: Always close the menu/popup on click
         closeGenreMenu();
       });
       genreList.appendChild(el);
@@ -301,7 +301,6 @@
         console.error(err); txt.textContent = 'Could not load movies.'; res.style.visibility = 'visible';
       });
 
-    // MODIFIED: Main button now has two functions: Randomize and Reset
     btn.addEventListener('click', () => {
         if (btn.textContent === 'Reset') {
             selectedGenres.clear();
@@ -314,18 +313,16 @@
     });
 
     function pickNewMovie(pool, movie) {
-        // This is called on failure (no results)
         if (!pool || !movie) {
             filmstrip.innerHTML = '';
             txt.textContent = 'No movies match the selected genres.';
             streamLink.href = '#';
             res.style.visibility = 'visible';
-            btn.textContent = 'Reset'; // MODIFIED: Change button text
+            btn.textContent = 'Reset';
             return;
         }
         
-        // This is called on success
-        btn.textContent = 'Randomize Movie'; // MODIFIED: Ensure button text is correct on success
+        btn.textContent = 'Randomize Movie';
         filmstrip.style.transition = 'none';
         filmstrip.innerHTML = `<img class="filmstrip-image" src="${movie.src}" alt="${movie.title}" style="top: 0;">`;
         filmstrip.style.transform = 'translateY(0)';
@@ -352,7 +349,7 @@
         if (fs.length > 0) pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
 
         if (pool.length === 0) { 
-            pickNewMovie(null, null); // This will trigger the "Reset" button state
+            pickNewMovie(null, null);
             return; 
         }
         
