@@ -8,10 +8,6 @@
   <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'>
   <script src='https://cdn.tailwindcss.com'></script>
   <style>
-    /* Poster flip animation */
-    @keyframes slotFlip { 0% { transform: rotateX(0deg); } 50% { transform: rotateX(90deg); } 100% { transform: rotateX(0deg); } }
-    #moviePoster.slot-flip { animation: slotFlip 0.6s ease-in-out; backface-visibility: hidden; }
-
     :root {
       --font-sans: 'Inter', system-ui, sans-serif;
       --color-bg: #121212;
@@ -19,7 +15,7 @@
       --color-card: #1F1F1F;
       --color-accent: #2DD4BF;
       --color-text: #E5E7EB;
-      --color-text-muted: #9CA3AF; /* Muted text color for footer */
+      --color-text-muted: #9CA3AF;
       --radius: 0.5rem;
     }
 
@@ -49,28 +45,36 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
       width: 100%;
       max-width: clamp(240px, 90vw, 320px);
-      max-height: 80vh;
-      overflow-y: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: max-width 0.2s, max-height 0.2s;
       margin-bottom: 1.25rem;
     }
 
+    /* --- MODIFIED --- This is now the viewport for our filmstrip */
     #posterWrapper {
       background: var(--color-base);
       border-radius: var(--radius);
-      overflow: hidden;
       width: 100%;
       aspect-ratio: 2/3;
       margin-bottom: 1rem;
+      position: relative;
+      overflow: hidden; /* This hides the parts of the filmstrip that are off-screen */
     }
-    #moviePoster {
-      display: block !important;
+    /* --- NEW --- This is the filmstrip that will scroll */
+    #filmstrip {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      /* The transition is what makes the scroll smooth */
+      transition: transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    #filmstrip img {
       width: 100%;
       height: 100%;
       object-fit: contain;
+      display: block;
     }
 
     .btn {
@@ -164,18 +168,16 @@
     .site-footer a { color: var(--color-text-muted); text-decoration: none; }
     .site-footer a:hover { color: var(--color-accent); text-decoration: underline; }
     .footer-center { flex-basis: 100%; text-align: center; }
-
-    @media (max-height: 700px) {
-      body { padding-bottom: 2rem; }
-      .randomizer { max-height: 60vh; overflow-y: auto; padding: 0.5rem; }
-    }
   </style>
 </head>
 <body>
   <h1>Randomly pick a top rated movie</h1>
 
   <div class='randomizer'>
-    <div id='posterWrapper'><img id='moviePoster' alt='Movie poster'></div>
+    <div id='posterWrapper'>
+      <!-- This will be filled by JavaScript -->
+      <div id="filmstrip"></div>
+    </div>
     <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
   </div>
 
@@ -196,154 +198,107 @@
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
-    const MIN_SPIN_DURATION = 1500;
-    const SHUFFLE_SPEED = 80;
-    const SEEN_MOVIES_CAP = 50; // Cap for our cached movie list
+    const SEEN_MOVIES_CAP = 50;
     let movies = [];
     let selectedGenres = new Set([0]);
     let isSpinning = false;
-    let seenMovies = []; // --- NEW --- Array to store cached movies for the shuffle effect
+    let seenMovies = [];
+    let randomizationCount = 0; // --- NEW --- Counter for the "slow build" effect
 
     const btn = document.getElementById('randomizeBtn');
-    const img = document.getElementById('moviePoster');
     const res = document.getElementById('result');
     const txt = document.getElementById('movieResult');
     const genreToggle = document.getElementById('genreToggle');
     const genreMenu = document.getElementById('genreMenu');
     const streamLink = document.getElementById('streamLink');
+    const filmstrip = document.getElementById('filmstrip');
+    const posterWrapper = document.getElementById('posterWrapper');
 
+    // ... (genre menu setup code remains the same)
     const genreMap = {0:'Any Genre',28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Sci-Fi',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
-
     Object.entries(genreMap).forEach(([id,name]) => {
-      const el = document.createElement('div');
-      el.className = 'item'; el.dataset.genre = id;
-      el.textContent = name;
-      const check = document.createElement('span');
-      check.className = 'check';
-      check.innerHTML = '✓ ';
-      el.prepend(check);
+      const el = document.createElement('div'); el.className = 'item'; el.dataset.genre = id; el.textContent = name;
+      const check = document.createElement('span'); check.className = 'check'; check.innerHTML = '✓ '; el.prepend(check);
       el.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const genreId = +id;
-        if (genreId === 0) {
-          selectedGenres.clear();
-          selectedGenres.add(0);
-        } else {
-          selectedGenres.delete(0);
-          if (selectedGenres.has(genreId)) {
-            selectedGenres.delete(genreId);
-            if (selectedGenres.size === 0) selectedGenres.add(0);
-          } else {
-            selectedGenres.add(genreId);
-          }
+        e.stopPropagation(); const genreId = +id;
+        if (genreId === 0) { selectedGenres.clear(); selectedGenres.add(0); } else {
+          selectedGenres.delete(0); if (selectedGenres.has(genreId)) { selectedGenres.delete(genreId); if (selectedGenres.size === 0) selectedGenres.add(0); } else { selectedGenres.add(genreId); }
         }
-        updateGenreSelection();
-        randomize();
-        genreMenu.classList.remove('open');
+        updateGenreSelection(); randomize(); genreMenu.classList.remove('open');
       });
       genreMenu.appendChild(el);
     });
-
-    function updateGenreSelection() {
-      document.querySelectorAll('#genreMenu .item').forEach(i => {
-        i.classList.toggle('selected', selectedGenres.has(+i.dataset.genre));
-      });
-    }
-
+    function updateGenreSelection() { document.querySelectorAll('#genreMenu .item').forEach(i => { i.classList.toggle('selected', selectedGenres.has(+i.dataset.genre)); }); }
     genreToggle.addEventListener('click', e => { e.stopPropagation(); genreMenu.classList.toggle('open'); });
     document.addEventListener('click', () => { genreMenu.classList.remove('open'); });
+
 
     fetch('data/movies.json')
       .then(r => r.ok ? r.json() : Promise.reject('Failed to load movie data.'))
       .then(arr => {
         movies = arr.filter(m => m.poster_path).map(m => ({
-          id: m.id,
-          title: m.title,
-          year: m.release_date ? m.release_date.slice(0,4) : 'N/A',
-          src: `https://image.tmdb.org/t/p/w342${m.poster_path}`,
-          genre_ids: m.genre_ids,
-          watch_link: m.watch_link
+          id: m.id, title: m.title, year: m.release_date ? m.release_date.slice(0,4) : 'N/A', src: `https://image.tmdb.org/t/p/w342${m.poster_path}`, genre_ids: m.genre_ids, watch_link: m.watch_link
         }));
         btn.disabled = false;
         updateGenreSelection();
-        pickNewMovie(movies);
+        // Show the very first movie without animation
+        const firstMovie = movies[Math.floor(Math.random()*movies.length)];
+        pickNewMovie(movies, firstMovie, false);
       })
       .catch(err => {
-        console.error(err);
-        txt.textContent = 'Could not load movies.';
-        res.style.visibility = 'visible';
+        console.error(err); txt.textContent = 'Could not load movies.'; res.style.visibility = 'visible';
       });
 
     btn.addEventListener('click', randomize);
 
-    // --- MODIFIED --- pickNewMovie now populates our "seenMovies" cache
-    function pickNewMovie(moviePool, movieToShow) {
-        if (!moviePool || moviePool.length === 0) {
-            img.src = '';
-            txt.textContent = 'No movies match the selected genres.';
-            streamLink.href = '#';
-            res.style.visibility = 'visible';
-            return null;
+    // --- MODIFIED --- pickNewMovie now handles adding a movie to the filmstrip and caching
+    function pickNewMovie(pool, movie, isAnimated) {
+        if (!pool || pool.length === 0) {
+            filmstrip.innerHTML = ''; txt.textContent = 'No movies match the selected genres.'; streamLink.href = '#'; res.style.visibility = 'visible';
+            return;
         }
-        const m = movieToShow || moviePool[Math.floor(Math.random() * moviePool.length)];
-        img.src = m.src;
-        txt.textContent = `${m.title} (${m.year})`;
-        streamLink.href = m.watch_link || `${TMDB_BASE}/${m.id}/watch?locale=US`;
-        res.style.visibility = 'visible';
         
-        // Add the new movie to our cache for the next spin
-        if (m && !seenMovies.some(sm => sm.id === m.id)) {
-            seenMovies.unshift(m); // Add to the front
-            if (seenMovies.length > SEEN_MOVIES_CAP) {
-                seenMovies.pop(); // Remove the oldest if we're over the cap
-            }
+        if (!isAnimated) {
+          filmstrip.style.transition = 'none'; // No animation for the first load
+          filmstrip.innerHTML = `<img src="${movie.src}" alt="Movie poster">`;
+          filmstrip.style.transform = 'translateY(0)';
         }
-        return m;
+        
+        txt.textContent = `${movie.title} (${movie.year})`;
+        streamLink.href = movie.watch_link || `${TMDB_BASE}/${movie.id}/watch?locale=US`;
+        res.style.visibility = 'visible';
+
+        if (movie && !seenMovies.some(sm => sm.id === movie.id)) {
+            seenMovies.unshift(movie);
+            if (seenMovies.length > SEEN_MOVIES_CAP) seenMovies.pop();
+        }
     }
     
-    // --- MODIFIED --- This is the new "Hybrid Cached Spin" function
     async function randomize() {
       if (isSpinning || !movies.length) return;
-      
       isSpinning = true;
       btn.disabled = true;
 
       try {
-        let pool = movies;
+        let pool = movies.filter(m => !seenMovies.some(sm => sm.id === m.id)); // Prefer unseen movies
+        if (pool.length < 10) pool = movies; // Fallback to all movies if we've seen too many
         const fs = [...selectedGenres].filter(g => g !== 0);
-        if (fs.length > 0) {
-          pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
-        }
+        if (fs.length > 0) pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
 
-        if (pool.length === 0) {
-          pickNewMovie(pool);
-          return;
-        }
-
-        const winner = pool[Math.floor(Math.random() * pool.length)];
-        const imageLoadPromise = preloadImages([winner.src]);
-        const minSpinPromise = new Promise(resolve => setTimeout(resolve, MIN_SPIN_DURATION));
-
-        // Start shuffling INSTANTLY using our cache of seen movies
-        const spinInterval = setInterval(() => {
-            img.classList.add('slot-flip');
-            if (seenMovies.length > 0) {
-                // Pick a random movie from the cache to display
-                const randomSeenMovie = seenMovies[Math.floor(Math.random() * seenMovies.length)];
-                img.src = randomSeenMovie.src;
-            }
-            txt.textContent = 'Finding a movie...';
-            setTimeout(() => img.classList.remove('slot-flip'), 600);
-        }, SHUFFLE_SPEED);
-
-        // Wait for the winner's image to load AND the minimum spin time to pass
-        await Promise.all([imageLoadPromise, minSpinPromise]);
-
-        // Stop the shuffle and reveal the winner
-        clearInterval(spinInterval);
-        img.classList.remove('slot-flip');
-        pickNewMovie(pool, winner);
+        if (pool.length === 0) { pickNewMovie(pool); return; }
         
+        randomizationCount++;
+        const winner = pool[Math.floor(Math.random() * pool.length)];
+        await preloadImages([winner.src]);
+
+        if (randomizationCount <= 3) {
+            await performSlowSpin(pool);
+        } else {
+            await performFastSpin(winner);
+        }
+        // Update details at the end of the animation
+        pickNewMovie(pool, winner, true);
+
       } catch (error) {
         console.error("An error occurred during randomization:", error);
         txt.textContent = "Oops! Something went wrong.";
@@ -352,19 +307,64 @@
         btn.disabled = false;
       }
     }
+    
+    // --- NEW --- Deliberate spin for the first 3 clicks
+    async function performSlowSpin(pool) {
+      const numMovies = Math.min(pool.length, Math.floor(Math.random() * 2) + 2); // 2 or 3 movies
+      const moviesToShow = [];
+      for (let i=0; i < numMovies; i++) {
+        moviesToShow.push(pool[Math.floor(Math.random() * pool.length)]);
+      }
+      await preloadImages(moviesToShow.map(m => m.src));
+
+      txt.textContent = 'Finding a movie...';
+      for (const movie of moviesToShow) {
+        filmstrip.style.transition = 'opacity 0.3s ease-in-out';
+        filmstrip.style.opacity = '0';
+        await new Promise(r => setTimeout(r, 300));
+        filmstrip.innerHTML = `<img src="${movie.src}" alt="${movie.title}">`;
+        filmstrip.style.opacity = '1';
+        await new Promise(r => setTimeout(r, 600)); // Pause on each movie
+      }
+    }
+
+    // --- NEW --- High-speed, elegant filmstrip spin
+    async function performFastSpin(winner) {
+      const stripLength = 30;
+      let stripHTML = '';
+      for (let i = 0; i < stripLength; i++) {
+        const movieForStrip = seenMovies[i % seenMovies.length] || movies[i % movies.length];
+        stripHTML += `<img src="${movieForStrip.src}" alt="">`;
+      }
+      stripHTML += `<img src="${winner.src}" alt="${winner.title}">`; // Winner is the last image
+      
+      filmstrip.style.transition = 'none'; // Remove transition to teleport to the top
+      filmstrip.style.transform = 'translateY(0)';
+      filmstrip.innerHTML = stripHTML;
+      
+      // Allow the browser a frame to render the new filmstrip before we animate it
+      await new Promise(r => requestAnimationFrame(() => r()));
+
+      txt.textContent = 'Finding a movie...';
+      const posterHeight = posterWrapper.clientHeight;
+      const finalPosition = -posterHeight * stripLength;
+      
+      filmstrip.style.transition = 'transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
+      filmstrip.style.transform = `translateY(${finalPosition}px)`;
+      
+      // Wait for the CSS transition to finish
+      await new Promise(resolve => {
+        filmstrip.addEventListener('transitionend', resolve, { once: true });
+      });
+    }
 
     function preloadImages(srcArray) {
-      const promises = srcArray.map(src => {
-        return new Promise((resolve) => {
-          const img = new Image();
-          img.onload = resolve;
-          img.onerror = resolve;
-          img.src = src;
-        });
-      });
+      const promises = srcArray.map(src => new Promise((resolve) => {
+        const img = new Image(); img.onload = resolve; img.onerror = resolve; img.src = src;
+      }));
       return Promise.all(promises);
     }
   });
-</script>
+  </script>
 </body>
 </html>
