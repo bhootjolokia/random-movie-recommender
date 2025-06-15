@@ -36,7 +36,7 @@ jobs:
       - name: Create instant-load JS pool file
         run: |
           # Take 10 random movies from the main list using shuf
-          daily_pool_json=$(jq -c '.[]' data/movies.json | shuf | head -n 10 | jq -s '.')
+          daily_pool_json=$(jq -c '.[]' data/movies.json | shuf | head -n 30 | jq -s '.')
           # Create a JavaScript file that assigns this data to a variable
           echo "const initialMoviePool = ${daily_pool_json};" > data/initial-pool.js
 
