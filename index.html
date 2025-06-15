@@ -51,7 +51,6 @@
       margin-bottom: 1.25rem;
     }
 
-    /* --- MODIFIED --- This is now the viewport for our filmstrip */
     #posterWrapper {
       background: var(--color-base);
       border-radius: var(--radius);
@@ -59,15 +58,13 @@
       aspect-ratio: 2/3;
       margin-bottom: 1rem;
       position: relative;
-      overflow: hidden; /* This hides the parts of the filmstrip that are off-screen */
+      overflow: hidden; 
     }
-    /* --- NEW --- This is the filmstrip that will scroll */
     #filmstrip {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      /* The transition is what makes the scroll smooth */
       transition: transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
     #filmstrip img {
@@ -175,7 +172,6 @@
 
   <div class='randomizer'>
     <div id='posterWrapper'>
-      <!-- This will be filled by JavaScript -->
       <div id="filmstrip"></div>
     </div>
     <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
@@ -203,8 +199,7 @@
     let selectedGenres = new Set([0]);
     let isSpinning = false;
     let seenMovies = [];
-    let randomizationCount = 0; // --- NEW --- Counter for the "slow build" effect
-
+    
     const btn = document.getElementById('randomizeBtn');
     const res = document.getElementById('result');
     const txt = document.getElementById('movieResult');
@@ -214,7 +209,6 @@
     const filmstrip = document.getElementById('filmstrip');
     const posterWrapper = document.getElementById('posterWrapper');
 
-    // ... (genre menu setup code remains the same)
     const genreMap = {0:'Any Genre',28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Sci-Fi',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
     Object.entries(genreMap).forEach(([id,name]) => {
       const el = document.createElement('div'); el.className = 'item'; el.dataset.genre = id; el.textContent = name;
@@ -241,7 +235,6 @@
         }));
         btn.disabled = false;
         updateGenreSelection();
-        // Show the very first movie without animation
         const firstMovie = movies[Math.floor(Math.random()*movies.length)];
         pickNewMovie(movies, firstMovie, false);
       })
@@ -251,7 +244,6 @@
 
     btn.addEventListener('click', randomize);
 
-    // --- MODIFIED --- pickNewMovie now handles adding a movie to the filmstrip and caching
     function pickNewMovie(pool, movie, isAnimated) {
         if (!pool || pool.length === 0) {
             filmstrip.innerHTML = ''; txt.textContent = 'No movies match the selected genres.'; streamLink.href = '#'; res.style.visibility = 'visible';
@@ -259,7 +251,7 @@
         }
         
         if (!isAnimated) {
-          filmstrip.style.transition = 'none'; // No animation for the first load
+          filmstrip.style.transition = 'none';
           filmstrip.innerHTML = `<img src="${movie.src}" alt="Movie poster">`;
           filmstrip.style.transform = 'translateY(0)';
         }
@@ -280,23 +272,19 @@
       btn.disabled = true;
 
       try {
-        let pool = movies.filter(m => !seenMovies.some(sm => sm.id === m.id)); // Prefer unseen movies
-        if (pool.length < 10) pool = movies; // Fallback to all movies if we've seen too many
+        let pool = movies.filter(m => !seenMovies.some(sm => sm.id === m.id));
+        if (pool.length < 10) pool = movies;
         const fs = [...selectedGenres].filter(g => g !== 0);
         if (fs.length > 0) pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
 
         if (pool.length === 0) { pickNewMovie(pool); return; }
         
-        randomizationCount++;
         const winner = pool[Math.floor(Math.random() * pool.length)];
         await preloadImages([winner.src]);
 
-        if (randomizationCount <= 3) {
-            await performSlowSpin(pool);
-        } else {
-            await performFastSpin(winner);
-        }
-        // Update details at the end of the animation
+        // --- THE FIX --- Always use the fast spin animation
+        await performFastSpin(winner);
+        
         pickNewMovie(pool, winner, true);
 
       } catch (error) {
@@ -307,42 +295,24 @@
         btn.disabled = false;
       }
     }
-    
-    // --- NEW --- Deliberate spin for the first 3 clicks
-    async function performSlowSpin(pool) {
-      const numMovies = Math.min(pool.length, Math.floor(Math.random() * 2) + 2); // 2 or 3 movies
-      const moviesToShow = [];
-      for (let i=0; i < numMovies; i++) {
-        moviesToShow.push(pool[Math.floor(Math.random() * pool.length)]);
-      }
-      await preloadImages(moviesToShow.map(m => m.src));
 
-      txt.textContent = 'Finding a movie...';
-      for (const movie of moviesToShow) {
-        filmstrip.style.transition = 'opacity 0.3s ease-in-out';
-        filmstrip.style.opacity = '0';
-        await new Promise(r => setTimeout(r, 300));
-        filmstrip.innerHTML = `<img src="${movie.src}" alt="${movie.title}">`;
-        filmstrip.style.opacity = '1';
-        await new Promise(r => setTimeout(r, 600)); // Pause on each movie
-      }
-    }
-
-    // --- NEW --- High-speed, elegant filmstrip spin
     async function performFastSpin(winner) {
       const stripLength = 30;
       let stripHTML = '';
+      
+      // We need at least one movie to build the strip. Use the main list as a fallback.
+      const movieSource = seenMovies.length > 0 ? seenMovies : movies;
+
       for (let i = 0; i < stripLength; i++) {
-        const movieForStrip = seenMovies[i % seenMovies.length] || movies[i % movies.length];
+        const movieForStrip = movieSource[i % movieSource.length];
         stripHTML += `<img src="${movieForStrip.src}" alt="">`;
       }
-      stripHTML += `<img src="${winner.src}" alt="${winner.title}">`; // Winner is the last image
+      stripHTML += `<img src="${winner.src}" alt="${winner.title}">`;
       
-      filmstrip.style.transition = 'none'; // Remove transition to teleport to the top
+      filmstrip.style.transition = 'none';
       filmstrip.style.transform = 'translateY(0)';
       filmstrip.innerHTML = stripHTML;
       
-      // Allow the browser a frame to render the new filmstrip before we animate it
       await new Promise(r => requestAnimationFrame(() => r()));
 
       txt.textContent = 'Finding a movie...';
@@ -352,7 +322,6 @@
       filmstrip.style.transition = 'transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
       filmstrip.style.transform = `translateY(${finalPosition}px)`;
       
-      // Wait for the CSS transition to finish
       await new Promise(resolve => {
         filmstrip.addEventListener('transitionend', resolve, { once: true });
       });
