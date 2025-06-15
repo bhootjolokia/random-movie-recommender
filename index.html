@@ -111,6 +111,10 @@
       movies = initialMoviePool.map(formatMovie);
       
       const firstMovie = movies[Math.floor(Math.random() * movies.length)];
+
+      // <<< MODIFIED: Wait for the first image to download BEFORE hiding the placeholder.
+      await preloadImages([firstMovie.src]);
+      
       pickNewMovie([], firstMovie);
       seenMovies.push(firstMovie);
 
@@ -171,7 +175,6 @@
       try {
         spinCount++;
 
-        // Logic to upgrade to the full movie list after 3 spins
         if (spinCount >= 3 && fullMovieList.length > 0) {
             movies = fullMovieList;
         }
@@ -191,8 +194,6 @@
             return; 
         }
         const winner = pool[Math.floor(Math.random() * pool.length)];
-
-        // <<< MODIFIED: The 'await preloadImages' line was removed from here to prevent animation delay.
         
         await performFastSpin(winner);
         pickNewMovie(pool, winner);
