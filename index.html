@@ -42,7 +42,6 @@
     </footer>
   </div>
 
-  <!-- THIS SCRIPT NOW LOADS A JS VARIABLE INSTANTLY -->
   <script src="data/initial-pool.js" defer></script>
 
   <script>
@@ -51,6 +50,8 @@
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
     const SEEN_MOVIES_CAP = 50;
     let movies = [];
+    let fullMovieList = []; // <<< NEW: This will hold the full list when it loads
+    let spinCount = 0; // <<< NEW: A counter for the number of spins
     let selectedGenres = new Set([0]);
     let isSpinning = false;
     let seenMovies = [];
@@ -67,7 +68,7 @@
     const genreList = document.getElementById('genreList');
     const genreOverlay = document.getElementById('genreOverlay');
 
-    // --- SETUP: Genre Menu Logic ---
+    // --- SETUP: Genre Menu Logic (Unchanged) ---
     const genreMap = {0:'Any Genre',28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Sci-Fi',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
     Object.entries(genreMap).forEach(([id,name]) => {
       const el = document.createElement('div'); el.className = 'item'; el.dataset.genre = id; el.textContent = name;
@@ -93,7 +94,7 @@
       if (window.innerWidth >= 768 && !genreMenu.contains(e.target) && e.target !== genreToggle) { closeGenreMenu(); }
     });
 
-    // --- THE NEW, BULLETPROOF LOADING LOGIC ---
+    // --- NEW "PROGRESSIVE ENHANCEMENT" LOADING LOGIC ---
     function formatMovie(movieData) {
         return {
             id: movieData.id,
@@ -106,22 +107,24 @@
     }
 
     async function initializeApp() {
-      // 1. INSTANTLY pick a movie from the pre-loaded pool.
-      // The `initialMoviePool` variable comes from `data/initial-pool.js`
-      const firstMovieData = initialMoviePool[Math.floor(Math.random() * initialMoviePool.length)];
-      const firstMovie = formatMovie(firstMovieData);
+      // 1. Use the pre-loaded pool for an instant start.
+      movies = initialMoviePool.map(formatMovie); // Use the initial pool as our starting movie list
+      
+      const firstMovie = movies[Math.floor(Math.random() * movies.length)];
       pickNewMovie([], firstMovie);
       seenMovies.push(firstMovie);
 
-      // 2. In the background, fetch the main list for randomization.
+      btn.disabled = false; // <<< CHANGED: Enable the button immediately!
+
+      // 2. In the background, fetch the main list to "upgrade" our movie pool later.
       try {
         const response = await fetch('data/movies.json');
         if (!response.ok) throw new Error('Main movie list failed to load');
         const fullList = await response.json();
-        movies = fullList.map(formatMovie);
-        btn.disabled = false; // Enable the randomize button
+        fullMovieList = fullList.map(formatMovie); // <<< CHANGED: Load into our new variable
       } catch (err) {
-        console.error('Could not load the full movie list for randomization.');
+        // If this fails, the app keeps working with the initial 30 movies, which is great!
+        console.error('Could not load the full movie list. Sticking with initial pool.');
       }
     }
     
@@ -129,7 +132,7 @@
     // --- END OF NEW LOADING LOGIC ---
 
 
-    // --- CORE APP FUNCTIONS (Remain the same) ---
+    // --- CORE APP FUNCTIONS ---
     btn.addEventListener('click', () => {
         if (btn.textContent === 'Reset') {
             selectedGenres.clear();
@@ -165,10 +168,19 @@
     }
     
     async function randomize() {
-      if (isSpinning || !movies.length) return;
+      if (isSpinning || movies.length === 0) return;
       isSpinning = true;
       btn.disabled = true;
       try {
+        spinCount++; // <<< NEW: Increment the spin counter each time
+
+        // <<< NEW: Logic to upgrade to the full movie list
+        // If it's the 3rd spin (or more) AND the full list has finished loading,
+        // switch our main `movies` variable to the full list.
+        if (spinCount >= 3 && fullMovieList.length > 0) {
+            movies = fullMovieList;
+        }
+
         let pool = movies.filter(m => !seenMovies.some(sm => sm.id === m.id));
         if (pool.length === 0) { 
           const currentMovieId = seenMovies[0]?.id;
@@ -201,8 +213,13 @@
       let stripHTML = '';
       const posterHeight = filmstrip.clientHeight;
       if (posterHeight === 0) return; 
-      const movieSource = seenMovies.length > 1 ? seenMovies : movies;
+
+      // <<< CHANGED: Always use the 'movies' variable for a great animation.
+      // This will be the 30-movie pool at first, then the 800-movie pool later.
+      const movieSource = movies; 
+
       for (let i = 0; i < stripLength; i++) {
+        // Use modulo to safely loop through the movieSource array
         const movieForStrip = movieSource[i % movieSource.length];
         stripHTML += `<img class="filmstrip-image" src="${movieForStrip.src}" style="top: ${i * 100}%;" alt="">`;
       }
