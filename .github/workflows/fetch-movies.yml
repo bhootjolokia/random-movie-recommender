@@ -30,12 +30,13 @@ jobs:
           done
           
           # Now process the combined file
-          jq -s 'flatten | .[0:800] | [.[] | . + {watch_link: ("https://www.themoviedb.org/movie/" + (.id|tostring) + "/watch")}] | [.[] | {id, title, release_date, poster_path, genre_ids, watch_link}]' temp_all_movies.json > data/movies.json
+          # <<< MODIFIED: Added map(select(.poster_path != null)) to remove movies without posters
+          jq -s 'flatten | map(select(.poster_path != null)) | .[0:800] | [.[] | . + {watch_link: ("https://www.themoviedb.org/movie/" + (.id|tostring) + "/watch")}] | [.[] | {id, title, release_date, poster_path, genre_ids, watch_link}]' temp_all_movies.json > data/movies.json
 
-      # === THIS IS THE BULLETPROOF STEP USING 'shuf' ===
       - name: Create instant-load JS pool file
         run: |
-          # Take 10 random movies from the main list using shuf
+          # <<< MODIFIED: Changed head -n 10 to head -n 30 for a bigger initial pool
+          # Take 30 random movies from the main list using shuf
           daily_pool_json=$(jq -c '.[]' data/movies.json | shuf | head -n 30 | jq -s '.')
           # Create a JavaScript file that assigns this data to a variable
           echo "const initialMoviePool = ${daily_pool_json};" > data/initial-pool.js
