@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-  <!-- All your head content remains the same -->
+  <!-- Head content remains the same -->
   <meta charset='UTF-8'>
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
@@ -11,8 +11,35 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css" />
   <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'>
   <style>
-    /* All your CSS is perfect and remains unchanged */
-    :root{--font-sans:'Inter',system-ui,sans-serif;--color-bg:#121212;--color-base:#1E1E1E;--color-accent:#2DD4BF;--color-text:#E5E7EB;--color-text-muted:#9CA3AF;--radius:0.5rem}html{height:100%}body{height:100%;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans);padding:1rem;margin:0;box-sizing:border-box;overflow:hidden}.page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100%}h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin-top:0;margin-bottom:.75rem;text-align:center;flex-shrink:0}#posterWrapper{background:var(--color-bg);border-radius:var(--radius);width:100%;margin-bottom:1rem;position:relative;overflow:hidden;display:flex;aspect-ratio:2/3}#loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}.btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;flex-shrink:0;margin-bottom:1.5rem}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}#result{text-align:center;min-height:1.25rem;visibility:hidden;flex-shrink:0}#movieResult{font-weight:600;font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;max-width:clamp(240px,90vw,320px);box-sizing:border-box}.controls{width:100%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;position:relative;margin-top:1rem;flex-shrink:0}#genreToggle,#streamLink{font-size:.875rem;font-weight:600;cursor:pointer;padding:.25rem .5rem;border-radius:var(--radius);background:transparent;border:none;color:var(--color-text);text-decoration:none;transition:background .2s}#genreToggle:focus,#genreToggle:hover,#streamLink:focus,#streamLink:hover{background:rgba(45,212,191,.1);outline:none}#genreModalContainer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 200ms ease}#genreModalContainer.open{opacity:1;pointer-events:auto}#genreOverlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);backdrop-filter:blur(4px)}#genreMenu{position:relative;background:var(--color-base);border-radius:var(--radius);width:90%;max-width:340px;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.5);transform:scale(.95);transition:transform 200ms ease}#genreModalContainer.open #genreMenu{transform:scale(1)}.genre-menu-header{padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.1);display:flex;justify-content:center;align-items:center;flex-shrink:0}.genre-menu-header h2{font-size:1rem;font-weight:600}#genreList{overflow-y:auto;padding:.5rem}#genreList .item{padding:.35rem .5rem;display:flex;align-items:center;gap:.5rem;font-size:.9rem;white-space:nowrap;cursor:pointer;position:relative;border-radius:.25rem}#genreMenu .check{visibility:hidden;color:#38a169}#genreMenu .item.selected .check{visibility:visible}.site-footer{width:100%;margin-top:auto;padding-top:1.5rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem 1rem;color:var(--color-text-muted);flex-shrink:0;font-size:clamp(.7rem,2.5vw,.75rem)}.site-footer a{color:var(--color-text-muted);text-decoration:none}.site-footer a:hover{color:var(--color-accent);text-decoration:underline}.footer-center{flex-basis:100%;text-align:center}@media (min-width:768px){#genreOverlay,.genre-menu-header{display:none}#genreModalContainer{position:static;opacity:1;pointer-events:auto;display:block}#genreMenu{position:absolute;bottom:100%;right:100%;transform-origin:bottom right;margin-right:1rem;max-height:60vh;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.5);opacity:0;transform:translateY(.5rem) scale(.95);pointer-events:none;transition:opacity 150ms ease,transform 150ms ease;width:auto;max-width:none}#genreModalContainer.open #genreMenu{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}#genreList{padding:0;overflow-y:visible}#genreList .item{padding:.15rem .4rem;gap:.3rem;font-size:.8125rem}#genreList .item:hover{background:rgba(45,212,191,.1)}#posterWrapper,.btn,.site-footer,.controls{max-width:320px}}
+    /* Base CSS remains the same */
+    :root{--font-sans:'Inter',system-ui,sans-serif;--color-bg:#121212;--color-base:#1E1E1E;--color-accent:#2DD4BF;--color-text:#E5E7EB;--color-text-muted:#9CA3AF;--radius:0.5rem}html{height:100%}body{height:100%;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans);padding:1rem;margin:0;box-sizing:border-box;overflow:hidden}.page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100%}h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin-top:0;margin-bottom:.75rem;text-align:center;flex-shrink:0}#posterWrapper{background:var(--color-bg);border-radius:var(--radius);width:100%;margin-bottom:1rem;position:relative;overflow:hidden;display:flex;aspect-ratio:2/3}#loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}.btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;flex-shrink:0;margin-bottom:1.5rem}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}#result{text-align:center;min-height:1.25rem;visibility:hidden;flex-shrink:0}#movieResult{font-weight:600;font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;max-width:clamp(240px,90vw,320px);box-sizing:border-box}.controls{width:100%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;position:relative;margin-top:1rem;flex-shrink:0}#genreToggle,#streamLink{font-size:.875rem;font-weight:600;cursor:pointer;padding:.25rem .5rem;border-radius:var(--radius);background:transparent;border:none;color:var(--color-text);text-decoration:none;transition:background .2s}#genreToggle:focus,#genreToggle:hover,#streamLink:focus,#streamLink:hover{background:rgba(45,212,191,.1);outline:none}#genreModalContainer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 200ms ease}#genreModalContainer.open{opacity:1;pointer-events:auto}#genreOverlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);backdrop-filter:blur(4px)}#genreMenu{position:relative;background:var(--color-base);border-radius:var(--radius);width:90%;max-width:340px;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.5);transform:scale(.95);transition:transform 200ms ease}#genreModalContainer.open #genreMenu{transform:scale(1)}.genre-menu-header{padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.1);display:flex;justify-content:center;align-items:center;flex-shrink:0}.genre-menu-header h2{font-size:1rem;font-weight:600}#genreList{overflow-y:auto;padding:.5rem}#genreList .item{padding:.35rem .5rem;display:flex;align-items:center;gap:.5rem;font-size:.9rem;white-space:nowrap;cursor:pointer;position:relative;border-radius:.25rem}#genreMenu .check{visibility:hidden;color:#38a169}#genreMenu .item.selected .check{visibility:visible}.site-footer{width:100%;margin-top:auto;padding-top:1.5rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem 1rem;color:var(--color-text-muted);flex-shrink:0;font-size:clamp(.7rem,2.5vw,.75rem)}.site-footer a{color:var(--color-text-muted);text-decoration:none}.site-footer a:hover{color:var(--color-accent);text-decoration:underline}.footer-center{flex-basis:100%;text-align:center}
+    
+    @media (min-width: 768px) {
+      #genreOverlay,.genre-menu-header{display:none}
+      #genreModalContainer{position:static;opacity:1;pointer-events:auto;display:block}
+      #genreMenu{position:absolute;bottom:100%;right:100%;transform-origin:bottom right;margin-right:1rem;max-height:60vh;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.5);opacity:0;transform:translateY(.5rem) scale(.95);pointer-events:none;transition:opacity 150ms ease,transform 150ms ease;width:auto;max-width:none}
+      #genreModalContainer.open #genreMenu{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+      #genreList{padding:0;overflow-y:visible}
+      #genreList .item{padding:.15rem .4rem;gap:.3rem;font-size:.8125rem}
+      #genreList .item:hover{background:rgba(45,212,191,.1)}
+      #posterWrapper,.btn,.site-footer,.controls{max-width:320px}
+      
+      /* <<< FINAL, CORRECTED FOOTER STYLES FOR DESKTOP >>> */
+      .site-footer {
+        flex-wrap: nowrap; /* Prevents wrapping to a new line */
+        align-items: flex-end; /* Aligns items to the bottom, looks nice with stacking */
+      }
+      .site-footer .footer-center {
+        flex-basis: auto; /* Reset the mobile-first rule */
+        text-align: right; /* Keep text aligned right */
+      }
+      .footer-right-stack {
+        display: flex; /* Makes this div a flex container */
+        flex-direction: column; /* Stacks its children vertically */
+        align-items: flex-end; /* Aligns the children to the right */
+        gap: 0.25rem; /* Adds a small space between the two stacked links */
+      }
+    }
   </style>
 </head>
 <body>
@@ -35,18 +62,19 @@
         </div>
       </div>
     </div>
+    <!-- <<< MODIFIED HTML STRUCTURE FOR FOOTER >>> -->
     <footer class="site-footer">
       <a href="mailto:movierandomizertool@gmail.com" class="footer-left">Contact Us</a>
-      <a href="#" class="footer-right">Privacy Policy</a>
-      <div class="footer-center">Data provided by <a href="https://www.themoviedb.org" target="_blank">TMDb</a></div>
+      <div class="footer-right-stack">
+        <a href="#" class="footer-right">Privacy Policy</a>
+        <div class="footer-center">Data provided by <a href="https://www.themoviedb.org" target="_blank">TMDb</a></div>
+      </div>
     </footer>
   </div>
-
   <script src="data/initial-pool.js" defer></script>
-
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // --- SETUP: Constants and Element Selectors ---
+    // All JavaScript is unchanged and correct
+    document.addEventListener('DOMContentLoaded', () => {
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
     const SEEN_MOVIES_CAP = 50;
     let movies = [];
@@ -55,7 +83,6 @@
     let selectedGenres = new Set([0]);
     let isSpinning = false;
     let seenMovies = [];
-    
     const btn = document.getElementById('randomizeBtn');
     const res = document.getElementById('result');
     const txt = document.getElementById('movieResult');
@@ -67,8 +94,6 @@
     const genreMenu = document.getElementById('genreMenu');
     const genreList = document.getElementById('genreList');
     const genreOverlay = document.getElementById('genreOverlay');
-
-    // --- SETUP: Genre Menu Logic (Unchanged) ---
     const genreMap = {0:'Any Genre',28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Sci-Fi',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
     Object.entries(genreMap).forEach(([id,name]) => {
       const el = document.createElement('div'); el.className = 'item'; el.dataset.genre = id; el.textContent = name;
@@ -93,8 +118,6 @@
     document.addEventListener('click', (e) => {
       if (window.innerWidth >= 768 && !genreMenu.contains(e.target) && e.target !== genreToggle) { closeGenreMenu(); }
     });
-
-    // --- "PROGRESSIVE ENHANCEMENT" LOADING LOGIC ---
     function formatMovie(movieData) {
         return {
             id: movieData.id,
@@ -105,22 +128,13 @@
             watch_link: movieData.watch_link
         };
     }
-
     async function initializeApp() {
-      // 1. Use the pre-loaded pool for an instant start.
       movies = initialMoviePool.map(formatMovie);
-      
       const firstMovie = movies[Math.floor(Math.random() * movies.length)];
-
-      // <<< MODIFIED: Wait for the first image to download BEFORE hiding the placeholder.
       await preloadImages([firstMovie.src]);
-      
       pickNewMovie([], firstMovie);
       seenMovies.push(firstMovie);
-
-      btn.disabled = false; // Enable the button immediately!
-
-      // 2. In the background, fetch the main list to "upgrade" our movie pool later.
+      btn.disabled = false;
       try {
         const response = await fetch('data/movies.json');
         if (!response.ok) throw new Error('Main movie list failed to load');
@@ -130,10 +144,7 @@
         console.error('Could not load the full movie list. Sticking with initial pool.');
       }
     }
-    
     initializeApp();
-
-    // --- CORE APP FUNCTIONS ---
     btn.addEventListener('click', () => {
         if (btn.textContent === 'Reset') {
             selectedGenres.clear();
@@ -144,7 +155,6 @@
             randomize();
         }
     });
-
     function pickNewMovie(pool, movie) {
         loadingPlaceholder.style.display = 'none';
         if (!movie) {
@@ -167,18 +177,15 @@
             if (seenMovies.length > SEEN_MOVIES_CAP) seenMovies.pop();
         }
     }
-    
     async function randomize() {
       if (isSpinning || movies.length === 0) return;
       isSpinning = true;
       btn.disabled = true;
       try {
         spinCount++;
-
         if (spinCount >= 3 && fullMovieList.length > 0) {
             movies = fullMovieList;
         }
-
         let pool = movies.filter(m => !seenMovies.some(sm => sm.id === m.id));
         if (pool.length === 0) { 
           const currentMovieId = seenMovies[0]?.id;
@@ -194,7 +201,6 @@
             return; 
         }
         const winner = pool[Math.floor(Math.random() * pool.length)];
-        
         await performFastSpin(winner);
         pickNewMovie(pool, winner);
       } catch (error) {
@@ -205,15 +211,12 @@
         btn.disabled = false;
       }
     }
-
     async function performFastSpin(winner) {
       const stripLength = 30;
       let stripHTML = '';
       const posterHeight = filmstrip.clientHeight;
       if (posterHeight === 0) return; 
-
       const movieSource = movies; 
-
       for (let i = 0; i < stripLength; i++) {
         const movieForStrip = movieSource[i % movieSource.length];
         stripHTML += `<img class="filmstrip-image" src="${movieForStrip.src}" style="top: ${i * 100}%;" alt="">`;
@@ -235,7 +238,6 @@
         filmstrip.addEventListener('transitionend', () => { clearTimeout(fallback); resolve(); }, { once: true });
       });
     }
-
     function preloadImages(srcArray) {
       const promises = srcArray.map(src => new Promise((resolve) => {
         const img = new Image(); img.onload = resolve; img.onerror = resolve; img.src = src;
