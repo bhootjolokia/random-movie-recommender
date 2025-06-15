@@ -6,7 +6,7 @@
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
   <title>Randomly pick a top rated movie</title>
   <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'>
-  <script src='https://cdn.tailwindcss.com'></script>
+  <!-- The slow, unused Tailwind script has been removed from here -->
   <style>
     :root {
       --font-sans: 'Inter', system-ui, sans-serif;
@@ -162,7 +162,6 @@
       
       #genreModalContainer { position: static; opacity: 1; pointer-events: auto; display: block; }
 
-      /* === THIS IS THE MODIFIED RULE === */
       #genreMenu {
         position: absolute; bottom: 100%; right: 100%;
         transform-origin: bottom right;
@@ -171,7 +170,6 @@
         opacity: 0; transform: translateY(0.5rem) scale(0.95); pointer-events: none;
         transition: opacity 150ms ease, transform 150ms ease; width: auto; max-width: none;
       }
-      /* === END OF MODIFIED RULE === */
 
       #genreModalContainer.open #genreMenu { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
       
