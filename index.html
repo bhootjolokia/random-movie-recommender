@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang='en'>
 <head>
@@ -34,15 +33,13 @@
       padding: 1rem;
       margin: 0;
     }
-    /* --- MODIFIED --- Centered title and allow it to wrap on small screens */
     h1 {
       font-size: 2.25rem;
       line-height: 1.1;
       font-weight: 700;
       margin-bottom: 1rem;
       letter-spacing: 0.025em;
-      text-align: center; /* Center the title */
-      /* removed white-space: nowrap; to allow wrapping */
+      text-align: center;
     }
 
     .randomizer {
@@ -128,11 +125,10 @@
     }
     #genreToggle, #streamLink { font-size: 0.875rem; font-weight: 600; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius); }
 
-    /* --- MODIFIED --- Adjusted dropdown position to be safer on mobile */
     #genreMenu {
       position: absolute;
       bottom: 100%;
-      right: 0; /* Changed from 'right: calc(100% + 0.25rem)' to prevent going off-screen */
+      right: 0;
       transform-origin: bottom right;
       max-height: 60vh;
       overflow-y: auto;
@@ -152,33 +148,22 @@
     #genreMenu .check { visibility: hidden; color: #38A169; }
     #genreMenu .item.selected .check { visibility: visible; }
 
-    /* --- NEW --- Added styles for a flexible, responsive footer */
     .site-footer {
       width: 100%;
-      max-width: 320px; /* Match the width of the main card */
-      margin-top: auto; /* Push footer to the bottom */
+      max-width: 320px;
+      margin-top: auto;
       padding-top: 2rem;
       display: flex;
-      flex-wrap: wrap; /* Allows items to wrap onto the next line on small screens */
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 1rem 1.5rem; /* Provides space between links */
-      font-size: 0.75rem; /* 12px */
+      gap: 1rem 1.5rem;
+      font-size: 0.75rem;
       color: var(--color-text-muted);
     }
-    .site-footer a {
-      color: var(--color-text-muted);
-      text-decoration: none;
-    }
-    .site-footer a:hover {
-      color: var(--color-accent);
-      text-decoration: underline;
-    }
-    .footer-center {
-      /* This will make the attribution text take up the full width and center itself when it wraps to a new line */
-      flex-basis: 100%;
-      text-align: center;
-    }
+    .site-footer a { color: var(--color-text-muted); text-decoration: none; }
+    .site-footer a:hover { color: var(--color-accent); text-decoration: underline; }
+    .footer-center { flex-basis: 100%; text-align: center; }
 
     @media (max-height: 700px) {
       body { padding-bottom: 2rem; }
@@ -202,7 +187,6 @@
     <div id='genreMenu' role='menu'></div>
   </div>
 
-  <!-- --- NEW --- Replaced absolute positioned links with a semantic footer -->
   <footer class="site-footer">
     <a href="mailto:movierandomizertool@gmail.com" class="footer-left">Contact Us</a>
     <a href="#" class="footer-right">Privacy Policy</a>
@@ -226,7 +210,6 @@
 
     const genreMap = {0:'Any Genre',28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Sci-Fi',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
 
-    // Populate genre menu
     Object.entries(genreMap).forEach(([id,name]) => {
       const el = document.createElement('div');
       el.className = 'item'; el.dataset.genre = id;
@@ -261,19 +244,11 @@
       document.querySelectorAll('#genreMenu .item').forEach(i => {
         i.classList.toggle('selected', selectedGenres.has(+i.dataset.genre));
       });
-      document.querySelector('#genreMenu .item[data-genre="0"]').classList.toggle('selected', selectedGenres.has(0));
     }
 
-    // Toggle genre menu
-    genreToggle.addEventListener('click', e => {
-      e.stopPropagation();
-      genreMenu.classList.toggle('open');
-    });
-    document.addEventListener('click', () => {
-      genreMenu.classList.remove('open');
-    });
+    genreToggle.addEventListener('click', e => { e.stopPropagation(); genreMenu.classList.toggle('open'); });
+    document.addEventListener('click', () => { genreMenu.classList.remove('open'); });
 
-    // Fetch full movie list
     fetch('data/movies.json')
       .then(r => r.ok ? r.json() : Promise.reject('Failed to load movie data.'))
       .then(arr => {
@@ -287,7 +262,6 @@
         }));
         btn.disabled = false;
         updateGenreSelection();
-        // show initial movie
         pickNewMovie(movies);
       })
       .catch(err => {
@@ -298,18 +272,18 @@
 
     btn.addEventListener('click', randomize);
 
-    function pickNewMovie(moviePool) {
+    function pickNewMovie(moviePool, movieToShow) {
         if (!moviePool || moviePool.length === 0) {
             img.src = ''; // A blank poster or placeholder
             txt.textContent = 'No movies match the selected genres.';
             streamLink.href = '#';
             res.style.visibility = 'visible';
-            btn.disabled = true; // Disable button if no movies available
+            btn.disabled = true;
             return null;
         }
 
-        btn.disabled = false; // Re-enable if there are movies
-        const m = moviePool[Math.floor(Math.random() * moviePool.length)];
+        btn.disabled = false;
+        const m = movieToShow || moviePool[Math.floor(Math.random() * moviePool.length)];
         img.src = m.src;
         txt.textContent = `${m.title} (${m.year})`;
         streamLink.href = m.watch_link || `${TMDB_BASE}/${m.id}/watch?locale=US`;
@@ -317,37 +291,67 @@
         return m;
     }
 
-    function randomize() {
+    // --- MODIFIED --- This is the new, optimized randomize function
+    async function randomize() {
       if (!movies.length) return;
+      btn.disabled = true;
+
+      // 1. Get the correct pool of movies based on genre
       let pool = movies;
       const fs = [...selectedGenres].filter(g => g !== 0);
       if (fs.length > 0) {
         pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
       }
 
-      // Check if pool is empty after filtering
       if (pool.length === 0) {
-          pickNewMovie(pool); // This will show the "no movies found" message
+          pickNewMovie(pool); // Shows the "no movies found" message
           return;
       }
 
-      btn.disabled = true;
+      // 2. Select all movies for the animation ahead of time
+      const moviesForSpin = [];
+      for (let i = 0; i < spinCount; i++) {
+        moviesForSpin.push(pool[Math.floor(Math.random() * pool.length)]);
+      }
+      
+      // 3. Pre-load all images for the spin animation
+      await preloadImages(moviesForSpin.map(m => m.src));
+
+      // 4. Start the animation now that images are cached
       let i = 0;
       const spinInterval = setInterval(() => {
         img.classList.add('slot-flip');
-        pickNewMovie(pool);
-        // Remove class after animation to allow it to be re-added
-        setTimeout(() => img.classList.remove('slot-flip'), 600);
+        const movie = moviesForSpin[i];
+        
+        // Update poster and text
+        img.src = movie.src;
+        txt.textContent = `${movie.title} (${movie.year})`;
+
+        // On the final frame, update the stream link and stop
         if (++i >= spinCount) {
           clearInterval(spinInterval);
           btn.disabled = false;
+          streamLink.href = movie.watch_link || `${TMDB_BASE}/${movie.id}/watch?locale=US`;
         }
+        
+        // Remove animation class to allow it to be re-added on next frame
+        setTimeout(() => img.classList.remove('slot-flip'), 600);
       }, spinSpeed + 50);
+    }
+
+    // --- NEW --- Helper function to pre-load an array of images
+    function preloadImages(srcArray) {
+      const promises = srcArray.map(src => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = resolve;
+          img.onerror = resolve; // Also resolve on error so one broken image doesn't stop the show
+          img.src = src;
+        });
+      });
+      return Promise.all(promises);
     }
   });
 </script>
 </body>
 </html>
-
-
-Just copy and paste this code, and your site will look and feel much better on phones and tablets. Let me know if you have any other ideas for your website
