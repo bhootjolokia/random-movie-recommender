@@ -52,9 +52,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center; /* Center the card block vertically */
+      justify-content: center; /* Vertically center the card block */
       width: 100%;
-      flex-grow: 1; /* This container fills the space */
+      flex-grow: 1; 
       min-height: 0;
     }
 
@@ -64,18 +64,18 @@
       padding: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
       width: 100%;
-      max-width: 400px;
+      max-width: 320px; /* A more constrained max-width for better scaling */
       display: flex;
       flex-direction: column;
       align-items: center;
-      /* No flex-grow here! The card sizes naturally */
+      /* NO flex-grow. Size is determined by content */
     }
 
     #posterWrapper {
       background: var(--color-base);
       border-radius: var(--radius);
       width: 100%;
-      /* This rule is key: it forces the container to be a perfect portrait */
+      /* This rule is key: forces a perfect portrait shape */
       aspect-ratio: 2 / 3; 
       margin-bottom: 1rem;
       position: relative;
@@ -89,7 +89,7 @@
     }
     #filmstrip .filmstrip-image {
       width: 100%; height: 100%;
-      /* The container has the aspect ratio, so the image can just fill it */
+      /* Use cover to ensure the image fills the portrait frame, no letterboxing */
       object-fit: cover; 
       position: absolute;
     }
@@ -112,7 +112,7 @@
     }
     #movieResult {
       font-weight: 600; font-size: 0.875rem; white-space: nowrap; overflow: hidden;
-      text-overflow: ellipsis; width: 100%; max-width: clamp(240px, 90vw, 400px);
+      text-overflow: ellipsis; width: 100%; max-width: clamp(240px, 90vw, 320px);
       box-sizing: border-box;
     }
 
