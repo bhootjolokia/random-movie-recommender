@@ -28,50 +28,65 @@
       padding: 1rem;
       margin: 0;
       box-sizing: border-box;
-      overflow: hidden; 
-    }
-    .page-container {
+      /* The body itself will manage the primary layout */
       display: flex;
       flex-direction: column;
-      align-items: center;
-      width: 100%;
-      height: 100%;
-    }
-    
-    /* --- SOLUTION PART 1: A NEW MAIN CONTENT BLOCK --- */
-    .main-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center; /* Vertically center the entire interactive block */
-      width: 100%;
-      flex-grow: 1; 
-      min-height: 0;
     }
 
+    /* --- THE DEFINITIVE FIX: A STICKY HEADER/FOOTER & SCROLLABLE CONTENT --- */
     h1 {
       font-size: clamp(1.5rem, 5vw, 2.25rem); 
       line-height: 1.1;
       font-weight: 700;
-      margin-bottom: 1.5rem; /* Give title breathing room */
+      margin-bottom: 1rem;
       text-align: center;
-      flex-shrink: 0; 
+      flex-shrink: 0; /* Prevent from shrinking */
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      flex-shrink: 1; /* Allow this section to shrink */
+      flex-grow: 1;   /* Allow it to grow */
+      min-height: 0;  /* A critical rule for flexbox shrinking */
+      overflow-y: auto; /* This is the key: allow ONLY this section to scroll if needed */
+      padding: 0.5rem; /* Add some internal padding for when scrollbar appears */
+    }
+    
+    .site-footer {
+      width: 100%; 
+      margin-top: auto; /* Pushes footer to bottom */
+      padding-top: 1.5rem;
+      display: flex; 
+      flex-wrap: wrap; 
+      justify-content: center; /* Center footer content */
+      align-items: center; 
+      gap: 0.5rem 1.5rem; 
+      color: var(--color-text-muted);
+      flex-shrink: 0; /* Prevent from shrinking */
+      font-size: clamp(0.7rem, 2.5vw, 0.75rem);
+    }
+    .footer-item {
+        white-space: nowrap;
+    }
+    .footer-center { 
+        width: 100%; text-align: center; order: 3; /* Ensure it's last on wrap */
     }
 
     .randomizer {
       background: var(--color-card);
       border-radius: var(--radius);
+      padding: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
       width: 100%;
       max-width: 320px; 
       display: flex;
       flex-direction: column;
       align-items: center;
-      /* --- SOLUTION PART 3: REMOVED PADDING, ADDED GAP --- */
-      padding: 1rem;
     }
 
-    /* --- SOLUTION PART 2: RESTORED ASPECT RATIO --- */
     #posterWrapper {
       background: var(--color-base);
       border-radius: var(--radius);
@@ -97,7 +112,6 @@
       display: block; width: 100%; padding: 0.75rem; background: var(--color-base);
       color: var(--color-text); font-weight: 600; border: none; border-radius: var(--radius);
       font-size: 0.875rem; transition: background 0.2s, transform 0.1s; cursor: pointer;
-      flex-shrink: 0;
     }
     .btn:disabled { opacity: 0.6; cursor: default; }
     .btn:hover:not(:disabled), .btn:focus:not(:disabled) {
@@ -105,10 +119,9 @@
     }
     .btn:active { transform: translateY(0); }
 
-    /* --- SOLUTION PART 3: HIERARCHICAL SPACING --- */
     #result {
-      text-align: center; margin-top: 1.5rem; /* More space above */
-      min-height: 1.25rem; visibility: hidden; flex-shrink: 0;
+      text-align: center; margin-top: 1.5rem;
+      min-height: 1.25rem; visibility: hidden;
     }
     #movieResult {
       font-weight: 600; font-size: 0.875rem; white-space: nowrap; overflow: hidden;
@@ -119,8 +132,7 @@
     .controls {
       width: 100%; max-width: clamp(200px, 90vw, 280px); display: flex;
       justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; position: relative;
-      margin-top: 1rem; /* More space between title and controls */
-      flex-shrink: 0;
+      margin-top: 1rem;
     }
     #genreToggle, #streamLink { font-size: 0.875rem; font-weight: 600; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius); }
 
@@ -136,24 +148,12 @@
     #streamLink:hover, #streamLink:focus { background: rgba(45, 212, 191, 0.1); border-radius: var(--radius); outline: none; }
     #genreMenu .check { visibility: hidden; color: #38A169; }
     #genreMenu .item.selected .check { visibility: visible; }
-    
-    .site-footer {
-      width: 100%; max-width: 320px; margin-top: auto; padding-top: 1.5rem;
-      display: flex; flex-wrap: wrap; justify-content: space-between;
-      align-items: center; gap: 0.5rem 1rem; color: var(--color-text-muted);
-      flex-shrink: 0;
-      font-size: clamp(0.7rem, 2.5vw, 0.75rem);
-    }
-    .site-footer a { color: var(--color-text-muted); text-decoration: none; }
-    .site-footer a:hover { color: var(--color-accent); text-decoration: underline; }
-    .footer-center { flex-basis: 100%; text-align: center; }
   </style>
 </head>
 <body>
-  <div class="page-container">
-    <div class="main-content">
-      <h1>Randomly pick a top rated movie</h1>
+    <h1>Randomly pick a top rated movie</h1>
 
+    <div class="main-content">
       <div class='randomizer'>
         <div id='posterWrapper'>
           <div id="filmstrip"></div>
@@ -171,11 +171,10 @@
     </div>
 
     <footer class="site-footer">
-      <a href="mailto:movierandomizertool@gmail.com" class="footer-left">Contact Us</a>
-      <a href="#" class="footer-right">Privacy Policy</a>
-      <div class="footer-center">Data provided by <a href="https://www.themoviedb.org" target="_blank">TMDb</a></div>
+      <span class="footer-item"><a href="mailto:movierandomizertool@gmail.com">Contact Us</a></span>
+      <span class="footer-item"><a href="#" >Privacy Policy</a></span>
+      <span class="footer-center">Data provided by <a href="https://www.themoviedb.org" target="_blank">TMDb</a></span>
     </footer>
-  </div>
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
