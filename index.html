@@ -38,47 +38,43 @@
       height: 100%;
     }
     
-    /* --- DEFINITIVE SOLUTION --- */
-    .main-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center; /* Center the whole block vertically */
-      width: 100%;
-      flex-grow: 1; 
-      min-height: 0;
-    }
-
     h1 {
       font-size: clamp(1.5rem, 5vw, 2.25rem); 
       line-height: 1.1;
       font-weight: 700;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       text-align: center;
       flex-shrink: 0; 
     }
 
+    /* --- THE DEFINITIVE FIX: A MULTI-ZONE FLEX LAYOUT --- */
     .randomizer {
       background: var(--color-card);
       border-radius: var(--radius);
       padding: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
       width: 100%;
-      max-width: 320px;
+      max-width: 320px; 
       display: flex;
       flex-direction: column;
       align-items: center;
+      /* This element is now the only one that grows/shrinks */
+      flex-grow: 1;
+      min-height: 0;
+      margin-bottom: 1.5rem; /* Space between card and result */
     }
 
     #posterWrapper {
       background: var(--color-base);
       border-radius: var(--radius);
       width: 100%;
-      /* This is the unbreakable rule for the poster's shape */
-      aspect-ratio: 2 / 3; 
       margin-bottom: 1rem;
       position: relative;
       overflow: hidden; 
+      /* This is now a flex container to fill the available space */
+      display: flex;
+      flex-grow: 1;
+      min-height: 0;
     }
 
     #filmstrip {
@@ -88,7 +84,8 @@
     }
     #filmstrip .filmstrip-image {
       width: 100%; height: 100%;
-      object-fit: cover; /* Fills the container without distortion */
+      /* Contain ensures the aspect ratio is kept inside the wrapper */
+      object-fit: contain; 
       position: absolute;
     }
 
@@ -96,7 +93,7 @@
       display: block; width: 100%; padding: 0.75rem; background: var(--color-base);
       color: var(--color-text); font-weight: 600; border: none; border-radius: var(--radius);
       font-size: 0.875rem; transition: background 0.2s, transform 0.1s; cursor: pointer;
-      flex-shrink: 0;
+      flex-shrink: 0; /* Button should not shrink */
     }
     .btn:disabled { opacity: 0.6; cursor: default; }
     .btn:hover:not(:disabled), .btn:focus:not(:disabled) {
@@ -105,7 +102,7 @@
     .btn:active { transform: translateY(0); }
 
     #result {
-      text-align: center; margin-top: 1.5rem;
+      text-align: center;
       min-height: 1.25rem; visibility: hidden; flex-shrink: 0;
     }
     #movieResult {
@@ -148,23 +145,21 @@
 </head>
 <body>
   <div class="page-container">
-    <div class="main-content">
-      <h1>Randomly pick a top rated movie</h1>
-      
-      <div class='randomizer'>
-        <div id='posterWrapper'>
-          <div id="filmstrip"></div>
-        </div>
-        <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
+    <h1>Randomly pick a top rated movie</h1>
+    
+    <div class='randomizer'>
+      <div id='posterWrapper'>
+        <div id="filmstrip"></div>
       </div>
+      <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
+    </div>
 
-      <div id='result'><div id='movieResult'></div></div>
+    <div id='result'><div id='movieResult'></div></div>
 
-      <div class='controls'>
-        <button id='genreToggle'>▾ Genres</button>
-        <a id='streamLink' href='#' target='_blank'>Where to stream</a>
-        <div id='genreMenu' role='menu'></div>
-      </div>
+    <div class='controls'>
+      <button id='genreToggle'>▾ Genres</button>
+      <a id='streamLink' href='#' target='_blank'>Where to stream</a>
+      <div id='genreMenu' role='menu'></div>
     </div>
 
     <footer class="site-footer">
@@ -335,4 +330,4 @@
   });
   </script>
 </body>
-</html>
+</htm
