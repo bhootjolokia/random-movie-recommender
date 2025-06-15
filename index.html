@@ -12,7 +12,6 @@
       --font-sans: 'Inter', system-ui, sans-serif;
       --color-bg: #121212;
       --color-base: #1E1E1E;
-      --color-card: #1F1F1F;
       --color-accent: #2DD4BF;
       --color-text: #E5E7EB;
       --color-text-muted: #9CA3AF;
@@ -42,25 +41,23 @@
       font-size: clamp(1.5rem, 5vw, 2.25rem); 
       line-height: 1.1;
       font-weight: 700;
-      margin-bottom: 0.75rem; /* MODIFIED: Reduced for snug fit */
+      margin-bottom: 0.75rem;
       text-align: center;
       flex-shrink: 0; 
     }
 
-    /* --- MODIFIED: The .randomizer rule has been deleted --- */
-
-    /* MODIFIED: Poster wrapper now controls the layout */
+    /* MODIFIED: Using aspect-ratio for elegant scaling on all devices */
     #posterWrapper {
       background: var(--color-base);
       border-radius: var(--radius);
       width: 100%;
-      max-width: 320px; /* Constrains width on big screens */
-      margin-bottom: 1rem; /* Space between poster and button */
+      max-width: 320px;
+      margin-bottom: 1rem;
       position: relative;
       overflow: hidden; 
       display: flex;
-      flex-grow: 1; /* This makes the poster area stretch to fill space */
-      min-height: 0; /* A flexbox magic trick for responsiveness */
+      /* This forces a standard 2:3 poster shape and scales beautifully */
+      aspect-ratio: 2 / 3; 
     }
 
     #filmstrip {
@@ -70,18 +67,18 @@
     }
     #filmstrip .filmstrip-image {
       width: 100%; height: 100%;
+      /* contain is now perfect because the container has the right shape */
       object-fit: contain; 
       position: absolute;
     }
 
-    /* MODIFIED: Button now has max-width and bottom margin */
     .btn {
       display: block; width: 100%; padding: 0.75rem; background: var(--color-base);
       color: var(--color-text); font-weight: 600; border: none; border-radius: var(--radius);
       font-size: 0.875rem; transition: background 0.2s, transform 0.1s; cursor: pointer;
-      flex-shrink: 0; /* Button should not shrink */
-      max-width: 320px; /* Add this to match the poster width */
-      margin-bottom: 1.5rem; /* Add this to create space below the button */
+      flex-shrink: 0;
+      max-width: 320px;
+      margin-bottom: 1.5rem;
     }
     .btn:disabled { opacity: 0.6; cursor: default; }
     .btn:hover:not(:disabled), .btn:focus:not(:disabled) {
@@ -135,7 +132,6 @@
   <div class="page-container">
     <h1>Randomly pick a top rated movie</h1>
     
-    <!-- MODIFIED: The poster and button are now direct children -->
     <div id='posterWrapper'>
       <div id="filmstrip"></div>
     </div>
@@ -157,6 +153,7 @@
   </div>
 
   <script>
+  // --- The Javascript code remains unchanged ---
   document.addEventListener('DOMContentLoaded', () => {
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
     const SEEN_MOVIES_CAP = 50;
