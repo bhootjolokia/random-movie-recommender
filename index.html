@@ -196,11 +196,13 @@
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
-    const MIN_SPIN_DURATION = 1500; // Minimum spin time in milliseconds (1.5 seconds)
-    const FAKE_SPIN_SPEED = 60;
+    const MIN_SPIN_DURATION = 1500;
+    const SHUFFLE_SPEED = 80;
+    const SEEN_MOVIES_CAP = 50; // Cap for our cached movie list
     let movies = [];
     let selectedGenres = new Set([0]);
     let isSpinning = false;
+    let seenMovies = []; // --- NEW --- Array to store cached movies for the shuffle effect
 
     const btn = document.getElementById('randomizeBtn');
     const img = document.getElementById('moviePoster');
@@ -274,6 +276,7 @@
 
     btn.addEventListener('click', randomize);
 
+    // --- MODIFIED --- pickNewMovie now populates our "seenMovies" cache
     function pickNewMovie(moviePool, movieToShow) {
         if (!moviePool || moviePool.length === 0) {
             img.src = '';
@@ -287,10 +290,18 @@
         txt.textContent = `${m.title} (${m.year})`;
         streamLink.href = m.watch_link || `${TMDB_BASE}/${m.id}/watch?locale=US`;
         res.style.visibility = 'visible';
+        
+        // Add the new movie to our cache for the next spin
+        if (m && !seenMovies.some(sm => sm.id === m.id)) {
+            seenMovies.unshift(m); // Add to the front
+            if (seenMovies.length > SEEN_MOVIES_CAP) {
+                seenMovies.pop(); // Remove the oldest if we're over the cap
+            }
+        }
         return m;
     }
     
-    // --- MODIFIED --- This is the new "Fake Spin" optimized function
+    // --- MODIFIED --- This is the new "Hybrid Cached Spin" function
     async function randomize() {
       if (isSpinning || !movies.length) return;
       
@@ -309,29 +320,28 @@
           return;
         }
 
-        // 1. Pick the final winning movie immediately
         const winner = pool[Math.floor(Math.random() * pool.length)];
-
-        // 2. Create two promises: one for loading the winner's image, one for the minimum spin time
         const imageLoadPromise = preloadImages([winner.src]);
         const minSpinPromise = new Promise(resolve => setTimeout(resolve, MIN_SPIN_DURATION));
 
-        // 3. Start the "fake" animation instantly
-        const currentPosterSrc = img.src; // Cache the current poster
+        // Start shuffling INSTANTLY using our cache of seen movies
         const spinInterval = setInterval(() => {
             img.classList.add('slot-flip');
-            // Flash between the current poster and a blank state to create a blur/shuffle effect
-            img.src = (img.src === currentPosterSrc) ? '' : currentPosterSrc;
+            if (seenMovies.length > 0) {
+                // Pick a random movie from the cache to display
+                const randomSeenMovie = seenMovies[Math.floor(Math.random() * seenMovies.length)];
+                img.src = randomSeenMovie.src;
+            }
             txt.textContent = 'Finding a movie...';
             setTimeout(() => img.classList.remove('slot-flip'), 600);
-        }, FAKE_SPIN_SPEED);
+        }, SHUFFLE_SPEED);
 
-        // 4. Wait for BOTH the winner's image to be loaded AND the minimum spin time to pass
+        // Wait for the winner's image to load AND the minimum spin time to pass
         await Promise.all([imageLoadPromise, minSpinPromise]);
 
-        // 5. Stop the fake animation and reveal the winner
+        // Stop the shuffle and reveal the winner
         clearInterval(spinInterval);
-        img.classList.remove('slot-flip'); // Ensure flip class is removed
+        img.classList.remove('slot-flip');
         pickNewMovie(pool, winner);
         
       } catch (error) {
