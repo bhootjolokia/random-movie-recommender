@@ -40,13 +40,14 @@
       height: 100%;
     }
     
-    /* === THIS IS THE CORRECTED H1 STYLE === */
+    /* === THIS IS THE NEW, SLEEKER H1 STYLE === */
     h1 {
-      font-size: clamp(1.5rem, 5vw, 2.25rem); 
-      line-height: 1.1;
-      font-weight: 600; /* CHANGED: From 700 (bold) to 600 (semibold) to restore original look */
-      margin-top: 0; /* ADDED: Removes any extra top spacing from the reset */
-      margin-bottom: 0.75rem;
+      font-size: clamp(1.5rem, 5vw, 2rem); /* Reduced max size */
+      line-height: 1.2; /* A little more space between lines */
+      font-weight: 400; /* From semibold to regular */
+      letter-spacing: 0.025em; /* For a more refined look */
+      margin-top: 0;
+      margin-bottom: 1rem; /* Added a bit more space below */
       text-align: center;
       flex-shrink: 0; 
     }
@@ -398,8 +399,7 @@
       
       const movieSource = seenMovies.length > 0 ? seenMovies : movies;
 
-      for (let i = 0; i < stripLength; i++) {
-        const movieForStrip = movieSource[i % movieSource.length];
+      for (let i = 0; i.length)];
         stripHTML += `<img class="filmstrip-image" src="${movieForStrip.src}" style="top: ${i * 100}%;" alt="">`;
       }
       stripHTML += `<img class="filmstrip-image" src="${winner.src}" style="top: ${stripLength * 100}%;" alt="${winner.title}">`;
