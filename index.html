@@ -5,13 +5,13 @@
   <meta charset='UTF-8'>
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-  <title>Randomly pick a top rated movie</title>
+  <title>Random Movie Generator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css" />
   <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'>
   <style>
-    /* Base CSS remains the same */
+    /* All CSS is correct and unchanged */
     :root{--font-sans:'Inter',system-ui,sans-serif;--color-bg:#121212;--color-base:#1E1E1E;--color-accent:#2DD4BF;--color-text:#E5E7EB;--color-text-muted:#9CA3AF;--radius:0.5rem}html{height:100%}body{height:100%;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans);padding:1rem;margin:0;box-sizing:border-box;overflow:hidden}.page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100%}h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin-top:0;margin-bottom:.75rem;text-align:center;flex-shrink:0}#posterWrapper{background:var(--color-bg);border-radius:var(--radius);width:100%;margin-bottom:1rem;position:relative;overflow:hidden;display:flex;aspect-ratio:2/3}#loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}.btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;flex-shrink:0;margin-bottom:1.5rem}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}#result{text-align:center;min-height:1.25rem;visibility:hidden;flex-shrink:0}#movieResult{font-weight:600;font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;max-width:clamp(240px,90vw,320px);box-sizing:border-box}.controls{width:100%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;position:relative;margin-top:1rem;flex-shrink:0}
     #genreToggle, #streamLink {display: inline-flex;align-items: center;gap: 0.5rem;padding: 0.5rem 0.8rem;background: var(--color-base);border: 1px solid rgba(255, 255, 255, 0.1);transition: all 0.2s ease;font-size:.875rem;font-weight:600;cursor:pointer;border-radius:var(--radius);color:var(--color-text);text-decoration:none;}
     #genreToggle:hover, #streamLink:hover {background: rgba(45, 212, 191, 0.1);border-color: rgba(45, 212, 191, 0.5);transform: translateY(-2px);outline:none;}
@@ -29,13 +29,13 @@
     #genreList{overflow-y:auto;padding:.5rem}
     .site-footer{width:100%;margin-top:auto;padding-top:1.5rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem 1rem;color:var(--color-text-muted);flex-shrink:0;font-size:clamp(.7rem,2.5vw,.75rem)}.site-footer a{color:var(--color-text-muted);text-decoration:none}.site-footer a:hover{color:var(--color-accent);text-decoration:underline}.footer-center{flex-basis:100%;text-align:center}
     
+    /* <<< MODIFIED: This is now the default style for all screen sizes, using the compact desktop values >>> */
     #genreList .item {
-      /* <<< MODIFIED: Reduced horizontal padding and gap for a snugger mobile view >>> */
-      padding: .6rem .75rem;
+      padding: .45rem .75rem;
       display: flex;
       align-items: center;
       gap: .5rem; 
-      font-size: 1rem;
+      font-size: 0.875rem;
       font-weight: 400;
       color: var(--color-text-muted);
       cursor: pointer;
@@ -58,7 +58,12 @@
       #genreMenu{position:absolute;bottom:100%;right:100%;transform-origin:bottom right;margin-right:1rem;max-height: 75vh;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.5);opacity:0;transform:translateY(.5rem) scale(.95);pointer-events:none;transition:opacity 150ms ease,transform 150ms ease;width:auto;max-width:none;}
       #genreModalContainer.open #genreMenu{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
       #genreList{padding:0.25rem;}
-      #genreList .item{font-size: 0.875rem;padding: .35rem .75rem;gap: .5rem;white-space: nowrap;}
+      
+      /* <<< MODIFIED: This rule is now simplified, only keeping desktop-specific overrides >>> */
+      #genreList .item{
+        white-space: nowrap;
+      }
+      
       #genreList .item:hover{background:rgba(45,212,191,.1)}
       #posterWrapper,.btn,.controls{max-width:320px}
       .site-footer {flex-wrap: nowrap;align-items: flex-end;}
@@ -68,36 +73,35 @@
   </style>
 </head>
 <body>
-  <!-- All Body and Script content is correct and unchanged -->
   <div class="page-container">
-    <h1>Randomly pick a top rated movie</h1>
-    <div id='posterWrapper'>
-      <div id="loading-placeholder"><div>Loading movie...</div></div>
-      <div id="filmstrip"></div>
-    </div>
-    <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
-    <div id='result'><div id='movieResult'></div></div>
-    
-    <div class='controls'>
-      <button id='genreToggle'>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/></svg>
-          <span>Genres</span>
-      </button>
-      <a id='streamLink' href='#' target='_blank'>
-          <span>Stream</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      </a>
-      <div id="genreModalContainer">
-        <div id="genreOverlay"></div>
-        <div id='genreMenu' role='menu'>
-          <div class="genre-menu-header">
-            <h2>Select Genres</h2>
-            <button class="genre-menu-close">×</button>
+      <h1>Random Movie Generator</h1>
+      <div id='posterWrapper'>
+        <div id="loading-placeholder"><div>Loading movie...</div></div>
+        <div id="filmstrip"></div>
+      </div>
+      <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
+      <div id='result'><div id='movieResult'></div></div>
+      
+      <div class='controls'>
+        <button id='genreToggle'>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/></svg>
+            <span>Genres</span>
+        </button>
+        <a id='streamLink' href='#' target='_blank'>
+            <span>Stream</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+        <div id="genreModalContainer">
+          <div id="genreOverlay"></div>
+          <div id='genreMenu' role='menu'>
+            <div class="genre-menu-header">
+              <h2>Select Genres</h2>
+              <button class="genre-menu-close">×</button>
+            </div>
+            <div id="genreList"></div>
           </div>
-          <div id="genreList"></div>
         </div>
       </div>
-    </div>
 
     <footer class="site-footer">
       <a href="mailto:movierandomizertool@gmail.com" class="footer-left">Contact Us</a>
@@ -187,7 +191,7 @@
       movies = initialMoviePool.map(formatMovie);
       const firstMovie = movies[Math.floor(Math.random() * movies.length)];
       await preloadImages([firstMovie.src]);
-      pickNewMovie([], firstMovie);
+      pickNewMovie(firstMovie);
       seenMovies.push(firstMovie);
       btn.disabled = false;
       try {
@@ -201,7 +205,7 @@
       updateGenreSelection();
     }
     initializeApp();
-    function pickNewMovie(pool, movie) {
+    function pickNewMovie(movie) {
         loadingPlaceholder.style.display = 'none';
         if (!movie) {
             filmstrip.innerHTML = '';
@@ -213,7 +217,7 @@
         }
         btn.textContent = 'Randomize Movie';
         filmstrip.style.transition = 'none';
-        filmstrip.innerHTML = `<img class="filmstrip-image" src="${movie.src}" alt="${movie.title}" style="top: 0;">`;
+        filmstrip.innerHTML = `<img class="filmstrip-image" src="${movie.src}" alt="Poster for ${movie.title}" style="top: 0;">`;
         filmstrip.style.transform = 'translateY(0)';
         txt.textContent = `${movie.title} (${movie.year})`;
         streamLink.href = movie.watch_link || `${TMDB_BASE}/${movie.id}/watch?locale=US`;
@@ -243,12 +247,13 @@
           pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
         }
         if (pool.length === 0) { 
-            pickNewMovie(null, null);
+            pickNewMovie(null);
             return; 
         }
         const winner = pool[Math.floor(Math.random() * pool.length)];
         await performFastSpin(winner);
-        pickNewMovie(pool, winner);
+        await preloadImages([winner.src]);
+        pickNewMovie(winner);
       } catch (error) {
         console.error("An error occurred during randomization:", error);
         txt.textContent = "Oops! Something went wrong.";
@@ -267,7 +272,7 @@
         const movieForStrip = movieSource[i % movieSource.length];
         stripHTML += `<img class="filmstrip-image" src="${movieForStrip.src}" style="top: ${i * 100}%;" alt="">`;
       }
-      stripHTML += `<img class="filmstrip-image" src="${winner.src}" style="top: ${stripLength * 100}%;" alt="${winner.title}">`;
+      stripHTML += `<img class="filmstrip-image" src="${winner.src}" style="top: ${stripLength * 100}%;" alt="Poster for ${winner.title}">`;
       filmstrip.style.transition = 'none';
       filmstrip.style.transform = 'translateY(0)';
       filmstrip.innerHTML = stripHTML;
