@@ -69,18 +69,22 @@
       position: absolute;
     }
 
+    /* === THIS IS THE MODIFIED BUTTON STYLE === */
     .btn {
-      display: block; width: 100%; padding: 0.75rem; background: var(--color-base);
-      color: var(--color-text); font-weight: 600; border: none; border-radius: var(--radius);
-      font-size: 0.875rem; transition: background 0.2s, transform 0.1s; cursor: pointer;
+      display: block; width: 100%; padding: 0.75rem; background: var(--color-accent);
+      color: #121212; font-weight: 600; border: none; border-radius: var(--radius);
+      font-size: 0.875rem; transition: filter 0.2s, transform 0.1s; cursor: pointer;
       flex-shrink: 0;
       margin-bottom: 1.5rem;
     }
     .btn:disabled { opacity: 0.6; cursor: default; }
     .btn:hover:not(:disabled), .btn:focus:not(:disabled) {
-      background: var(--color-accent); color: #121212; transform: translateY(-2px); outline: none;
+      filter: brightness(0.9); /* Darken slightly on hover */
+      transform: translateY(-2px); 
+      outline: none;
     }
     .btn:active { transform: translateY(0); }
+    /* === END OF MODIFIED BUTTON STYLE === */
 
     #result {
       text-align: center;
