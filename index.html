@@ -109,7 +109,7 @@
       margin: 1rem 0 2rem;
       min-height: 1.25rem;
       visibility: hidden;
-      transition: margin 0.2s;
+      transition: margin 0.2s, min-height 0.2s;
     }
     #movieResult {
       font-weight: 600;
@@ -176,38 +176,42 @@
     .site-footer a:hover { color: var(--color-accent); text-decoration: underline; }
     .footer-center { flex-basis: 100%; text-align: center; }
 
-    /* --- THE DEFINITIVE FIX --- This media query targets short, narrow screens */
-    @media (max-height: 680px) and (max-width: 400px) {
+    /* --- THE FINAL FIX --- This media query is more aggressive and inclusive */
+    @media (max-height: 680px) {
       body {
-        padding: 0.5rem; /* Reduce body padding */
+        padding: 0.5rem; 
       }
       .page-container {
-        min-height: calc(100vh - 1rem); /* Adjust container height for new padding */
+        min-height: calc(100vh - 1rem);
       }
       h1 {
-        font-size: 1.5rem; /* Shrink title */
-        margin-bottom: 0.5rem;
+        font-size: 1.4rem; 
+        margin-bottom: 0.25rem;
       }
       .randomizer {
-        padding: 0.5rem; /* Compact the card's internal padding */
-        margin-bottom: 0.5rem;
+        padding: 0.5rem;
+        margin-bottom: 0.25rem;
       }
       #posterWrapper {
         margin-bottom: 0.5rem;
       }
       .btn {
         padding: 0.5rem;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.25rem;
       }
       #result {
-        margin: 0.5rem 0; /* Tighten up all vertical spacing */
+        margin: 0.25rem 0;
+        min-height: 1rem;
+      }
+      #result #movieResult {
+        font-size: 0.8rem;
       }
       .controls {
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.25rem;
       }
       .site-footer {
-        padding-top: 1rem;
-        gap: 0.25rem 0.5rem; /* Make footer links tighter */
+        padding-top: 0.5rem;
+        gap: 0.25rem 1rem;
         font-size: 0.65rem;
       }
     }
@@ -383,7 +387,7 @@
 
     function preloadImages(srcArray) {
       const promises = srcArray.map(src => new Promise((resolve) => {
-        const img = new Image(); img.onload = resolve; img.onerror = resolve; img.src = src;
+        const img = new Image(); img.onload = resolve; img.onerror = resolve; src.src = src;
       }));
       return Promise.all(promises);
     }
