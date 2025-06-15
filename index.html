@@ -22,22 +22,23 @@
       #genreList{padding:0;overflow-y:visible}
       #genreList .item{padding:.15rem .4rem;gap:.3rem;font-size:.8125rem}
       #genreList .item:hover{background:rgba(45,212,191,.1)}
-      #posterWrapper,.btn,.site-footer,.controls{max-width:320px}
+
+      /* <<< THIS IS THE KEY FIX: .site-footer is removed from this list >>> */
+      #posterWrapper,.btn,.controls{max-width:320px}
       
-      /* <<< FINAL, CORRECTED FOOTER STYLES FOR DESKTOP >>> */
       .site-footer {
-        flex-wrap: nowrap; /* Prevents wrapping to a new line */
-        align-items: flex-end; /* Aligns items to the bottom, looks nice with stacking */
+        flex-wrap: nowrap;
+        align-items: flex-end; 
       }
       .site-footer .footer-center {
-        flex-basis: auto; /* Reset the mobile-first rule */
-        text-align: right; /* Keep text aligned right */
+        flex-basis: auto;
+        text-align: right;
       }
       .footer-right-stack {
-        display: flex; /* Makes this div a flex container */
-        flex-direction: column; /* Stacks its children vertically */
-        align-items: flex-end; /* Aligns the children to the right */
-        gap: 0.25rem; /* Adds a small space between the two stacked links */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.25rem;
       }
     }
   </style>
@@ -62,7 +63,7 @@
         </div>
       </div>
     </div>
-    <!-- <<< MODIFIED HTML STRUCTURE FOR FOOTER >>> -->
+    <!-- The HTML structure is correct from the last step -->
     <footer class="site-footer">
       <a href="mailto:movierandomizertool@gmail.com" class="footer-left">Contact Us</a>
       <div class="footer-right-stack">
