@@ -47,7 +47,6 @@
     }
 
     #posterWrapper {
-      /* THE FIX: Match the main page background to hide bars seamlessly */
       background: var(--color-bg); 
       border-radius: var(--radius);
       width: 100%;
@@ -93,10 +92,16 @@
       box-sizing: border-box;
     }
 
+    /* MODIFIED: Removed specific max-width from this rule */
     .controls {
-      width: 100%; max-width: clamp(200px, 90vw, 280px); display: flex;
-      justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; position: relative;
-      margin-top: 1rem; flex-shrink: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      position: relative;
+      margin-top: 1rem;
+      flex-shrink: 0;
     }
     #genreToggle, #streamLink { font-size: 0.875rem; font-weight: 600; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius); }
 
@@ -125,11 +130,12 @@
     .site-footer a:hover { color: var(--color-accent); text-decoration: underline; }
     .footer-center { flex-basis: 100%; text-align: center; }
 
-    /* Media Query for larger screens */
+    /* MODIFIED: Added .controls to this list for perfect alignment */
     @media (min-width: 480px) {
       #posterWrapper,
       .btn,
-      .site-footer {
+      .site-footer,
+      .controls {
         max-width: 320px;
       }
     }
