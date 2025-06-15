@@ -14,15 +14,30 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # === THIS IS THE TEMPORARY DIAGNOSTIC STEP ===
-      - name: Diagnose API Key
+      # === THIS IS THE NEW, MORE POWERFUL DIAGNOSTIC STEP ===
+      - name: Diagnose Watch Providers API Call
         run: |
-          echo "--- Testing TMDb API Key ---"
-          # This command will either show a list of movies or an error message.
-          curl "https://api.themoviedb.org/3/movie/top_rated?api_key=${{ secrets.TMDB_API_KEY }}&language=en-US&page=1"
+          echo "--- Testing Watch Providers for a single movie (ID 238) ---"
+          
+          # We will try to get the providers for "The Godfather"
+          raw_output=$(curl -s "https://api.themoviedb.org/3/movie/238/watch/providers?api_key=${{ secrets.TMDB_API_KEY }}")
+          
+          echo "Raw output from TMDb:"
+          echo "$raw_output"
+          
+          # Now let's see what jq does with that output
+          providers_output=$(echo "$raw_output" | jq -c '[ .results.US.flatrate?[], .results.US.free?[], .results.US.adSupported?[] ] | flatten')
+          
+          echo "Processed providers by jq:"
+          echo "$providers_output"
+          
+          echo "Length of providers array:"
+          echo "$providers_output" | jq 'length'
+
           echo "--- End of Test ---"
       # === END OF DIAGNOSTIC STEP ===
 
+      # The rest of the workflow is here but will likely fail if the key is bad.
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -53,19 +68,10 @@ jobs:
             fi
           done | jq -s '.' > data/movies.json
 
-      - name: Slice to a max of 800 movies
+      - name: Create final movie files
         run: |
-          jq '.[0:800]' data/movies.json > data/movies.json.tmp
-          mv data/movies.json.tmp data/movies.json
-
-      - name: Prune to only necessary fields
-        run: |
-          jq '[.[] | {id, title, release_date, poster_path, genre_ids, watch_link}]' data/movies.json > data/movies.json.tmp
-          mv data/movies.json.tmp data/movies.json
-
-      - name: Create daily pool of 10 random movies using shuf
-        run: |
-          # This command will fail if the input file (movies.json) is empty.
+          jq '.[0:800]' data/movies.json > data/movies.json.tmp && mv data/movies.json.tmp data/movies.json
+          jq '[.[] | {id, title, release_date, poster_path, genre_ids, watch_link}]' data/movies.json > data/movies.json.tmp && mv data/movies.json.tmp data/movies.json
           jq -c '.[]' data/movies.json | shuf | head -n 10 | jq -s '.' > data/daily-pool.json
 
       - name: Commit updated movie files
