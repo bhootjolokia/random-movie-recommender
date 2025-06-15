@@ -8,8 +8,8 @@
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css" />
 
-  <!-- THIS LINK HAS BEEN UPDATED TO INCLUDE THE '300' FONT WEIGHT -->
-  <link href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap' rel='stylesheet'>
+  <!-- The unneeded '300' weight has been removed from this link -->
+  <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'>
 
   <style>
     :root {
@@ -41,16 +41,16 @@
       height: 100%;
     }
     
-    /* === THE FINAL, SLEEK H1 STYLE === */
+    /* === THIS H1 STYLE NOW EXACTLY MATCHES YOUR ORIGINAL SCREENSHOT === */
     h1 {
-      font-size: clamp(1.5rem, 5vw, 2rem);
+      font-size: clamp(1.25rem, 4vw, 1.5rem); /* More subtle size like the original */
       line-height: 1.2;
-      font-weight: 300; /* Using the 'Light' weight */
-      letter-spacing: 0.05em; /* Increased spacing to complement the lighter font */
-      text-transform: uppercase; /* Makes it feel more like a refined title */
-      color: var(--color-text-muted); /* Slightly softer color for a sleeker feel */
+      font-weight: 400; /* The standard, clean, regular weight */
+      color: var(--color-text); /* The main bright text color */
+      text-transform: none; /* Ensures it is not uppercase */
+      letter-spacing: normal; /* Ensures normal letter spacing */
       margin-top: 0;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem; /* The original tight margin */
       text-align: center;
       flex-shrink: 0; 
     }
