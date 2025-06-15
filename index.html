@@ -196,9 +196,10 @@
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
-    const spinCount = 30, spinSpeed = 20;
+    const spinCount = 30, spinSpeed = 50; // Increased spinSpeed slightly for smoother visual
     let movies = [];
     let selectedGenres = new Set([0]);
+    let isSpinning = false; // --- NEW --- "Busy" flag to prevent multiple spins at once
 
     const btn = document.getElementById('randomizeBtn');
     const img = document.getElementById('moviePoster');
@@ -216,7 +217,7 @@
       el.textContent = name;
       const check = document.createElement('span');
       check.className = 'check';
-      check.innerHTML = '✓ '; // Checkmark
+      check.innerHTML = '✓ ';
       el.prepend(check);
       el.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -280,7 +281,6 @@
             res.style.visibility = 'visible';
             return null;
         }
-
         const m = movieToShow || moviePool[Math.floor(Math.random() * moviePool.length)];
         img.src = m.src;
         txt.textContent = `${m.title} (${m.year})`;
@@ -288,46 +288,61 @@
         res.style.visibility = 'visible';
         return m;
     }
-
+    
+    // --- MODIFIED --- This is the new, super-robust randomize function
     async function randomize() {
-      if (!movies.length) return;
+      if (isSpinning || !movies.length) return; // Don't run if already spinning
+      
+      isSpinning = true;
       btn.disabled = true;
 
-      let pool = movies;
-      const fs = [...selectedGenres].filter(g => g !== 0);
-      if (fs.length > 0) {
-        pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
-      }
+      try {
+        let pool = movies;
+        const fs = [...selectedGenres].filter(g => g !== 0);
+        if (fs.length > 0) {
+          pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
+        }
 
-      if (pool.length === 0) {
+        if (pool.length === 0) {
           pickNewMovie(pool);
-          btn.disabled = false; 
-          return;
-      }
+          return; // Exit early, the 'finally' block will still run
+        }
 
-      const moviesForSpin = [];
-      for (let i = 0; i < spinCount; i++) {
-        moviesForSpin.push(pool[Math.floor(Math.random() * pool.length)]);
-      }
-      
-      await preloadImages(moviesForSpin.map(m => m.src));
-
-      let i = 0;
-      const spinInterval = setInterval(() => {
-        img.classList.add('slot-flip');
-        const movie = moviesForSpin[i];
-        
-        img.src = movie.src;
-        txt.textContent = `${movie.title} (${movie.year})`;
-
-        if (++i >= spinCount) {
-          clearInterval(spinInterval);
-          btn.disabled = false;
-          streamLink.href = movie.watch_link || `${TMDB_BASE}/${movie.id}/watch?locale=US`;
+        const moviesForSpin = [];
+        for (let i = 0; i < spinCount; i++) {
+          moviesForSpin.push(pool[Math.floor(Math.random() * pool.length)]);
         }
         
-        setTimeout(() => img.classList.remove('slot-flip'), 600);
-      }, spinSpeed + 50);
+        await preloadImages(moviesForSpin.map(m => m.src));
+
+        // This wraps the animation in a Promise so we can wait for it to finish
+        await new Promise(resolve => {
+          let i = 0;
+          const spinInterval = setInterval(() => {
+            img.classList.add('slot-flip');
+            const movie = moviesForSpin[i];
+            
+            img.src = movie.src;
+            txt.textContent = `${movie.title} (${movie.year})`;
+
+            if (++i >= spinCount) {
+              clearInterval(spinInterval);
+              streamLink.href = movie.watch_link || `${TMDB_BASE}/${movie.id}/watch?locale=US`;
+              resolve(); // Resolve the promise, signaling the animation is done
+            }
+            
+            setTimeout(() => img.classList.remove('slot-flip'), 600);
+          }, spinSpeed);
+        });
+
+      } catch (error) {
+        console.error("An error occurred during randomization:", error);
+        txt.textContent = "Oops! Something went wrong."; // Show a user-friendly error
+      } finally {
+        // This block is GUARANTEED to run, ensuring the button is always re-enabled
+        isSpinning = false;
+        btn.disabled = false;
+      }
     }
 
     function preloadImages(srcArray) {
@@ -335,7 +350,7 @@
         return new Promise((resolve) => {
           const img = new Image();
           img.onload = resolve;
-          img.onerror = resolve;
+          img.onerror = resolve; // Always resolve, even on error
           img.src = src;
         });
       });
