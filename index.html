@@ -37,6 +37,11 @@
     #genreMenu .item.selected .check {visibility: visible;}
 
     @media (min-width: 768px) {
+      /* <<< NEW: Vertically center the main content block on larger screens for better balance >>> */
+      .page-container {
+        justify-content: center;
+      }
+      
       .genre-menu-close {display: none;}
       #genreOverlay,.genre-menu-header{display:none}
       #genreModalContainer{position:static;opacity:1;pointer-events:auto;display:block}
@@ -53,6 +58,7 @@
   </style>
 </head>
 <body>
+  <!-- All Body and Script content is correct and unchanged -->
   <div class="page-container">
     <h1>Randomly pick a top rated movie</h1>
     <div id='posterWrapper'>
@@ -94,7 +100,6 @@
   <script src="data/initial-pool.js" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-    // All setup and variables remain the same
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
     const SEEN_MOVIES_CAP = 50;
     let movies = [];
@@ -186,7 +191,6 @@
       updateGenreSelection();
     }
     initializeApp();
-
     function pickNewMovie(movie) {
         loadingPlaceholder.style.display = 'none';
         if (!movie) {
@@ -209,7 +213,6 @@
             if (seenMovies.length > SEEN_MOVIES_CAP) seenMovies.pop();
         }
     }
-    
     async function randomize() {
       if (isSpinning || movies.length === 0) return;
       isSpinning = true;
@@ -234,15 +237,9 @@
             return; 
         }
         const winner = pool[Math.floor(Math.random() * pool.length)];
-        
-        // <<< MODIFIED: This is the definitive fix for the race condition >>>
-        // 1. Start the visual animation immediately.
         await performFastSpin(winner);
-        // 2. Use the animation time to ensure the image is downloaded.
         await preloadImages([winner.src]);
-        // 3. Now, display the final, clean result. It's guaranteed to be ready.
         pickNewMovie(winner);
-
       } catch (error) {
         console.error("An error occurred during randomization:", error);
         txt.textContent = "Oops! Something went wrong.";
@@ -251,7 +248,6 @@
         btn.disabled = false;
       }
     }
-
     async function performFastSpin(winner) {
       const stripLength = 30;
       let stripHTML = '';
