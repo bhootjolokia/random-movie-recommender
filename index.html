@@ -21,14 +21,16 @@
 
     html { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); }
     body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
       padding: 1rem;
       margin: 0;
     }
+    .page-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: calc(100vh - 2rem);
+    }
+    
     h1 {
       font-size: 2.25rem;
       line-height: 1.1;
@@ -148,7 +150,7 @@
     #streamLink:hover, #streamLink:focus { background: rgba(45, 212, 191, 0.1); border-radius: var(--radius); outline: none; }
     #genreMenu .check { visibility: hidden; color: #38A169; }
     #genreMenu .item.selected .check { visibility: visible; }
-
+    
     .site-footer {
       width: 100%;
       max-width: 320px;
@@ -168,28 +170,30 @@
   </style>
 </head>
 <body>
-  <h1>Randomly pick a top rated movie</h1>
+  <div class="page-container">
+    <h1>Randomly pick a top rated movie</h1>
 
-  <div class='randomizer'>
-    <div id='posterWrapper'>
-      <div id="filmstrip"></div>
+    <div class='randomizer'>
+      <div id='posterWrapper'>
+        <div id="filmstrip"></div>
+      </div>
+      <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
     </div>
-    <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
+
+    <div id='result'><div id='movieResult'></div></div>
+
+    <div class='controls'>
+      <button id='genreToggle'>▾ Genres</button>
+      <a id='streamLink' href='#' target='_blank'>Where to stream</a>
+      <div id='genreMenu' role='menu'></div>
+    </div>
+
+    <footer class="site-footer">
+      <a href="mailto:movierandomizertool@gmail.com" class="footer-left">Contact Us</a>
+      <a href="#" class="footer-right">Privacy Policy</a>
+      <div class="footer-center">Data provided by <a href="https://www.themoviedb.org" target="_blank">TMDb</a></div>
+    </footer>
   </div>
-
-  <div id='result'><div id='movieResult'></div></div>
-
-  <div class='controls'>
-    <button id='genreToggle'>▾ Genres</button>
-    <a id='streamLink' href='#' target='_blank'>Where to stream</a>
-    <div id='genreMenu' role='menu'></div>
-  </div>
-
-  <footer class="site-footer">
-    <a href="mailto:movierandomizertool@gmail.com" class="footer-left">Contact Us</a>
-    <a href="#" class="footer-right">Privacy Policy</a>
-    <div class="footer-center">Data provided by <a href="https://www.themoviedb.org" target="_blank">TMDb</a></div>
-  </footer>
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -233,6 +237,15 @@
         movies = arr.filter(m => m.poster_path).map(m => ({
           id: m.id, title: m.title, year: m.release_date ? m.release_date.slice(0,4) : 'N/A', src: `https://image.tmdb.org/t/p/w342${m.poster_path}`, genre_ids: m.genre_ids, watch_link: m.watch_link
         }));
+        
+        // --- NEW --- Pre-warm the cache to ensure a great first animation
+        const PRE_WARM_COUNT = 15;
+        const tempSeen = new Set();
+        while(tempSeen.size < PRE_WARM_COUNT && tempSeen.size < movies.length) {
+            tempSeen.add(movies[Math.floor(Math.random() * movies.length)]);
+        }
+        seenMovies = Array.from(tempSeen);
+
         btn.disabled = false;
         updateGenreSelection();
         const firstMovie = movies[Math.floor(Math.random()*movies.length)];
@@ -273,7 +286,7 @@
 
       try {
         let pool = movies.filter(m => !seenMovies.some(sm => sm.id === m.id));
-        if (pool.length < 10) pool = movies;
+        if (pool.length === 0) pool = movies; // Fallback if we've seen everything
         const fs = [...selectedGenres].filter(g => g !== 0);
         if (fs.length > 0) pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
 
@@ -282,7 +295,6 @@
         const winner = pool[Math.floor(Math.random() * pool.length)];
         await preloadImages([winner.src]);
 
-        // --- THE FIX --- Always use the fast spin animation
         await performFastSpin(winner);
         
         pickNewMovie(pool, winner, true);
@@ -300,7 +312,6 @@
       const stripLength = 30;
       let stripHTML = '';
       
-      // We need at least one movie to build the strip. Use the main list as a fallback.
       const movieSource = seenMovies.length > 0 ? seenMovies : movies;
 
       for (let i = 0; i < stripLength; i++) {
