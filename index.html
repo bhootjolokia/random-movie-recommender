@@ -6,7 +6,6 @@
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
   <title>Randomly pick a top rated movie</title>
   
-  <!-- THIS is the new, fast line that fixes the fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css" />
 
   <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'>
@@ -41,14 +40,17 @@
       height: 100%;
     }
     
+    /* === THIS IS THE CORRECTED H1 STYLE === */
     h1 {
       font-size: clamp(1.5rem, 5vw, 2.25rem); 
       line-height: 1.1;
-      font-weight: 700;
+      font-weight: 600; /* CHANGED: From 700 (bold) to 600 (semibold) to restore original look */
+      margin-top: 0; /* ADDED: Removes any extra top spacing from the reset */
       margin-bottom: 0.75rem;
       text-align: center;
       flex-shrink: 0; 
     }
+    /* === END OF CORRECTION === */
 
     #posterWrapper {
       background: var(--color-bg); 
@@ -108,7 +110,25 @@
       margin-top: 1rem;
       flex-shrink: 0;
     }
-    #genreToggle, #streamLink { font-size: 0.875rem; font-weight: 600; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius); }
+    
+    #genreToggle, #streamLink { 
+      font-size: 0.875rem; 
+      font-weight: 600; 
+      cursor: pointer; 
+      padding: 0.25rem 0.5rem; 
+      border-radius: var(--radius);
+      background: transparent;
+      border: none;
+      color: var(--color-text);
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    #genreToggle:hover, #genreToggle:focus,
+    #streamLink:hover, #streamLink:focus { 
+      background: rgba(45, 212, 191, 0.1); 
+      outline: none; 
+    }
 
     #genreModalContainer {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -146,7 +166,6 @@
     }
     #genreMenu .check { visibility: hidden; color: #38A169; }
     #genreMenu .item.selected .check { visibility: visible; }
-    #streamLink:hover, #streamLink:focus { background: rgba(45, 212, 191, 0.1); border-radius: var(--radius); outline: none; }
     
     .site-footer {
       width: 100%;
