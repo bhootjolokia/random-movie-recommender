@@ -50,7 +50,6 @@
       background: var(--color-base);
       border-radius: var(--radius);
       width: 100%;
-      /* max-width removed for mobile-first full-width */
       margin-bottom: 1rem;
       position: relative;
       overflow: hidden; 
@@ -65,7 +64,7 @@
     }
     #filmstrip .filmstrip-image {
       width: 100%; height: 100%;
-      object-fit: contain; 
+      object-fit: cover; /* THE DEFINITIVE FIX: Ensures image fills container */
       position: absolute;
     }
 
@@ -74,7 +73,6 @@
       color: var(--color-text); font-weight: 600; border: none; border-radius: var(--radius);
       font-size: 0.875rem; transition: background 0.2s, transform 0.1s; cursor: pointer;
       flex-shrink: 0;
-      /* max-width removed for mobile-first full-width */
       margin-bottom: 1.5rem;
     }
     .btn:disabled { opacity: 0.6; cursor: default; }
@@ -115,7 +113,6 @@
     
     .site-footer {
       width: 100%;
-      /* max-width is handled in the media query now */
       margin-top: auto; padding-top: 1.5rem;
       display: flex; flex-wrap: wrap; justify-content: space-between;
       align-items: center; gap: 0.5rem 1rem; color: var(--color-text-muted);
@@ -126,8 +123,7 @@
     .site-footer a:hover { color: var(--color-accent); text-decoration: underline; }
     .footer-center { flex-basis: 100%; text-align: center; }
 
-    /* NEW: Media Query for larger screens */
-    /* This rule applies styles ONLY on screens wider than 480px */
+    /* Media Query for larger screens */
     @media (min-width: 480px) {
       #posterWrapper,
       .btn,
