@@ -19,28 +19,34 @@
       --radius: 0.5rem;
     }
 
-    html { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); }
+    html { height: 100%; }
     body {
+      height: 100%;
+      background: var(--color-bg); 
+      color: var(--color-text); 
+      font-family: var(--font-sans);
       padding: 1rem;
       margin: 0;
-      transition: padding 0.2s ease;
+      box-sizing: border-box;
+      overflow: hidden; /* Prevent any accidental scrolling */
     }
     .page-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 100%;
-      min-height: calc(100vh - 2rem);
+      height: 100%;
     }
     
+    /* --- DEFINITIVE FIX 1: FLUID FONT SIZING --- */
     h1 {
-      font-size: 2.25rem;
+      /* Scales between 1.5rem and 2.25rem based on viewport width, but never smaller/larger */
+      font-size: clamp(1.5rem, 5vw, 2.25rem); 
       line-height: 1.1;
       font-weight: 700;
-      margin-bottom: 1rem;
-      letter-spacing: 0.025em;
+      margin-bottom: 0.5rem;
       text-align: center;
-      transition: font-size 0.2s, margin-bottom 0.2s;
+      flex-shrink: 0; 
     }
 
     .randomizer {
@@ -49,107 +55,78 @@
       padding: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
       width: 100%;
-      max-width: clamp(240px, 90vw, 320px);
+      max-width: 400px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-bottom: 1.25rem;
-      transition: padding 0.2s, margin-bottom 0.2s;
+      margin-bottom: 1rem;
+      flex-grow: 1; 
+      flex-shrink: 1;
+      min-height: 0; 
     }
 
     #posterWrapper {
       background: var(--color-base);
       border-radius: var(--radius);
       width: 100%;
-      aspect-ratio: 2/3;
       margin-bottom: 1rem;
       position: relative;
       overflow: hidden; 
-      transition: margin-bottom 0.2s;
+      display: flex;
+      flex-grow: 1; 
+      min-height: 0;
     }
+
     #filmstrip {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
+      height: 100%;
       transition: transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
-    #filmstrip img {
+    #filmstrip .filmstrip-image {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: contain; 
       display: block;
+      position: absolute;
     }
 
     .btn {
-      display: block;
-      width: 100%;
-      padding: 0.75rem;
-      background: var(--color-base);
-      color: var(--color-text);
-      font-weight: 600;
-      border: none;
-      border-radius: var(--radius);
-      font-size: 0.875rem;
-      transition: background 0.2s, transform 0.1s, padding 0.2s, margin-bottom 0.2s;
-      cursor: pointer;
-      margin-bottom: 1rem;
+      display: block; width: 100%; padding: 0.75rem; background: var(--color-base);
+      color: var(--color-text); font-weight: 600; border: none; border-radius: var(--radius);
+      font-size: 0.875rem; transition: background 0.2s, transform 0.1s; cursor: pointer;
+      flex-shrink: 0;
     }
     .btn:disabled { opacity: 0.6; cursor: default; }
     .btn:hover:not(:disabled), .btn:focus:not(:disabled) {
-      background: var(--color-accent);
-      color: #121212;
-      transform: translateY(-2px);
-      outline: none;
+      background: var(--color-accent); color: #121212; transform: translateY(-2px); outline: none;
     }
     .btn:active { transform: translateY(0); }
 
     #result {
-      text-align: center;
-      margin: 1rem 0 2rem;
-      min-height: 1.25rem;
-      visibility: hidden;
-      transition: margin 0.2s, min-height 0.2s;
+      text-align: center; margin-top: 0; margin-bottom: 1rem; min-height: 1.25rem;
+      visibility: hidden; flex-shrink: 0;
     }
     #movieResult {
-      font-weight: 600;
-      font-size: 0.875rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      width: 100%;
+      font-weight: 600; font-size: 0.875rem; white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis; width: 100%; max-width: clamp(240px, 90vw, 400px);
       box-sizing: border-box;
     }
 
     .controls {
-      width: 100%;
-      max-width: clamp(200px, 90vw, 280px);
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      position: relative;
-      margin-top: 0;
-      margin-bottom: 1rem;
-      transition: margin-bottom 0.2s;
+      width: 100%; max-width: clamp(200px, 90vw, 280px); display: flex;
+      justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; position: relative;
+      margin-bottom: 1rem; flex-shrink: 0;
     }
     #genreToggle, #streamLink { font-size: 0.875rem; font-weight: 600; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius); }
 
     #genreMenu {
-      position: absolute;
-      bottom: 100%;
-      right: 0;
-      transform-origin: bottom right;
-      max-height: 60vh;
-      overflow-y: auto;
-      background: var(--color-base);
-      border-radius: var(--radius);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      opacity: 0;
-      transform: translateY(0.5rem) scale(0.95);
-      pointer-events: none;
-      transition: opacity 150ms ease, transform 150ms ease;
-      z-index: 1000;
+      position: absolute; bottom: 100%; right: 0; transform-origin: bottom right; max-height: 60vh;
+      overflow-y: auto; background: var(--color-base); border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5); opacity: 0; transform: translateY(0.5rem) scale(0.95);
+      pointer-events: none; transition: opacity 150ms ease, transform 150ms ease; z-index: 1000;
     }
     #genreMenu.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
     #genreMenu .item { padding: 0.2rem 0.4rem; display: flex; align-items: center; gap: 0.3rem; font-size: 0.8125rem; white-space: nowrap; cursor: pointer; position: relative; }
@@ -159,62 +136,16 @@
     #genreMenu .item.selected .check { visibility: visible; }
     
     .site-footer {
-      width: 100%;
-      max-width: 320px;
-      margin-top: auto;
-      padding-top: 2rem;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem 1.5rem;
-      font-size: 0.75rem;
-      color: var(--color-text-muted);
-      transition: padding-top 0.2s, gap 0.2s, font-size 0.2s;
+      width: 100%; max-width: 320px; margin-top: auto; padding-top: 1rem;
+      display: flex; flex-wrap: wrap; justify-content: space-between;
+      align-items: center; gap: 0.5rem 1rem; color: var(--color-text-muted);
+      flex-shrink: 0;
+      /* --- DEFINITIVE FIX 2: FLUID FONT SIZING --- */
+      font-size: clamp(0.7rem, 2.5vw, 0.75rem);
     }
     .site-footer a { color: var(--color-text-muted); text-decoration: none; }
     .site-footer a:hover { color: var(--color-accent); text-decoration: underline; }
     .footer-center { flex-basis: 100%; text-align: center; }
-
-    /* --- THE FINAL FIX --- This media query is more aggressive and inclusive */
-    @media (max-height: 680px) {
-      body {
-        padding: 0.5rem; 
-      }
-      .page-container {
-        min-height: calc(100vh - 1rem);
-      }
-      h1 {
-        font-size: 1.4rem; 
-        margin-bottom: 0.25rem;
-      }
-      .randomizer {
-        padding: 0.5rem;
-        margin-bottom: 0.25rem;
-      }
-      #posterWrapper {
-        margin-bottom: 0.5rem;
-      }
-      .btn {
-        padding: 0.5rem;
-        margin-bottom: 0.25rem;
-      }
-      #result {
-        margin: 0.25rem 0;
-        min-height: 1rem;
-      }
-      #result #movieResult {
-        font-size: 0.8rem;
-      }
-      .controls {
-        margin-bottom: 0.25rem;
-      }
-      .site-footer {
-        padding-top: 0.5rem;
-        gap: 0.25rem 1rem;
-        font-size: 0.65rem;
-      }
-    }
   </style>
 </head>
 <body>
@@ -296,7 +227,7 @@
         btn.disabled = false;
         updateGenreSelection();
         const firstMovie = movies[Math.floor(Math.random()*movies.length)];
-        pickNewMovie(movies, firstMovie, false);
+        pickNewMovie(movies, firstMovie);
       })
       .catch(err => {
         console.error(err); txt.textContent = 'Could not load movies.'; res.style.visibility = 'visible';
@@ -304,17 +235,15 @@
 
     btn.addEventListener('click', randomize);
 
-    function pickNewMovie(pool, movie, isAnimated) {
+    function pickNewMovie(pool, movie) {
         if (!pool || pool.length === 0) {
             filmstrip.innerHTML = ''; txt.textContent = 'No movies match the selected genres.'; streamLink.href = '#'; res.style.visibility = 'visible';
             return;
         }
         
-        if (!isAnimated) {
-          filmstrip.style.transition = 'none';
-          filmstrip.innerHTML = `<img src="${movie.src}" alt="Movie poster">`;
-          filmstrip.style.transform = 'translateY(0)';
-        }
+        filmstrip.style.transition = 'none';
+        filmstrip.innerHTML = `<img class="filmstrip-image" src="${movie.src}" alt="${movie.title}">`;
+        filmstrip.style.transform = 'translateY(0)';
         
         txt.textContent = `${movie.title} (${movie.year})`;
         streamLink.href = movie.watch_link || `${TMDB_BASE}/${movie.id}/watch?locale=US`;
@@ -344,7 +273,7 @@
 
         await performFastSpin(winner);
         
-        pickNewMovie(pool, winner, true);
+        pickNewMovie(pool, winner);
 
       } catch (error) {
         console.error("An error occurred during randomization:", error);
@@ -358,14 +287,14 @@
     async function performFastSpin(winner) {
       const stripLength = 30;
       let stripHTML = '';
-      
+      const posterHeight = posterWrapper.clientHeight;
       const movieSource = seenMovies.length > 0 ? seenMovies : movies;
 
       for (let i = 0; i < stripLength; i++) {
         const movieForStrip = movieSource[i % movieSource.length];
-        stripHTML += `<img src="${movieForStrip.src}" alt="">`;
+        stripHTML += `<div class="filmstrip-image" style="transform: translateY(${i * 100}%);"><img src="${movieForStrip.src}" style="object-fit: contain; width: 100%; height: 100%;" alt=""></div>`;
       }
-      stripHTML += `<img src="${winner.src}" alt="${winner.title}">`;
+      stripHTML += `<div class="filmstrip-image" style="transform: translateY(${stripLength * 100}%);"><img src="${winner.src}" style="object-fit: contain; width: 100%; height: 100%;" alt="${winner.title}"></div>`;
       
       filmstrip.style.transition = 'none';
       filmstrip.style.transform = 'translateY(0)';
@@ -374,7 +303,6 @@
       await new Promise(r => requestAnimationFrame(() => r()));
 
       txt.textContent = 'Finding a movie...';
-      const posterHeight = posterWrapper.clientHeight;
       const finalPosition = -posterHeight * stripLength;
       
       filmstrip.style.transition = 'transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
@@ -387,7 +315,7 @@
 
     function preloadImages(srcArray) {
       const promises = srcArray.map(src => new Promise((resolve) => {
-        const img = new Image(); img.onload = resolve; img.onerror = resolve; src.src = src;
+        const img = new Image(); img.onload = resolve; img.onerror = resolve; img.src = src;
       }));
       return Promise.all(promises);
     }
