@@ -38,44 +38,44 @@
       height: 100%;
     }
     
-    h1 {
-      font-size: clamp(1.5rem, 5vw, 2.25rem); 
-      line-height: 1.1;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      text-align: center;
-      flex-shrink: 0; 
-    }
-
-    /* --- THE DEFINITIVE FIX --- */
+    /* --- SOLUTION PART 1: A NEW MAIN CONTENT BLOCK --- */
     .main-content {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center; /* Vertically center the card block */
+      justify-content: center; /* Vertically center the entire interactive block */
       width: 100%;
       flex-grow: 1; 
       min-height: 0;
     }
 
+    h1 {
+      font-size: clamp(1.5rem, 5vw, 2.25rem); 
+      line-height: 1.1;
+      font-weight: 700;
+      margin-bottom: 1.5rem; /* Give title breathing room */
+      text-align: center;
+      flex-shrink: 0; 
+    }
+
     .randomizer {
       background: var(--color-card);
       border-radius: var(--radius);
-      padding: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
       width: 100%;
-      max-width: 320px; /* A more constrained max-width for better scaling */
+      max-width: 320px; 
       display: flex;
       flex-direction: column;
       align-items: center;
-      /* NO flex-grow. Size is determined by content */
+      /* --- SOLUTION PART 3: REMOVED PADDING, ADDED GAP --- */
+      padding: 1rem;
     }
 
+    /* --- SOLUTION PART 2: RESTORED ASPECT RATIO --- */
     #posterWrapper {
       background: var(--color-base);
       border-radius: var(--radius);
       width: 100%;
-      /* This rule is key: forces a perfect portrait shape */
       aspect-ratio: 2 / 3; 
       margin-bottom: 1rem;
       position: relative;
@@ -89,7 +89,6 @@
     }
     #filmstrip .filmstrip-image {
       width: 100%; height: 100%;
-      /* Use cover to ensure the image fills the portrait frame, no letterboxing */
       object-fit: cover; 
       position: absolute;
     }
@@ -106,8 +105,9 @@
     }
     .btn:active { transform: translateY(0); }
 
+    /* --- SOLUTION PART 3: HIERARCHICAL SPACING --- */
     #result {
-      text-align: center; margin-top: 1rem;
+      text-align: center; margin-top: 1.5rem; /* More space above */
       min-height: 1.25rem; visibility: hidden; flex-shrink: 0;
     }
     #movieResult {
@@ -119,7 +119,8 @@
     .controls {
       width: 100%; max-width: clamp(200px, 90vw, 280px); display: flex;
       justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; position: relative;
-      margin-top: 1rem; flex-shrink: 0;
+      margin-top: 1rem; /* More space between title and controls */
+      flex-shrink: 0;
     }
     #genreToggle, #streamLink { font-size: 0.875rem; font-weight: 600; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius); }
 
@@ -137,7 +138,7 @@
     #genreMenu .item.selected .check { visibility: visible; }
     
     .site-footer {
-      width: 100%; max-width: 320px; margin-top: auto; padding-top: 1rem;
+      width: 100%; max-width: 320px; margin-top: auto; padding-top: 1.5rem;
       display: flex; flex-wrap: wrap; justify-content: space-between;
       align-items: center; gap: 0.5rem 1rem; color: var(--color-text-muted);
       flex-shrink: 0;
@@ -150,9 +151,9 @@
 </head>
 <body>
   <div class="page-container">
-    <h1>Randomly pick a top rated movie</h1>
-
     <div class="main-content">
+      <h1>Randomly pick a top rated movie</h1>
+
       <div class='randomizer'>
         <div id='posterWrapper'>
           <div id="filmstrip"></div>
