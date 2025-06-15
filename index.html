@@ -92,7 +92,6 @@
       box-sizing: border-box;
     }
 
-    /* MODIFIED: Removed specific max-width from this rule */
     .controls {
       width: 100%;
       display: flex;
@@ -105,14 +104,36 @@
     }
     #genreToggle, #streamLink { font-size: 0.875rem; font-weight: 600; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius); }
 
+    /* MODIFIED: Repositioned to the left */
     #genreMenu {
-      position: absolute; bottom: 100%; right: 0; transform-origin: bottom right; max-height: 60vh;
-      overflow-y: auto; background: var(--color-base); border-radius: var(--radius);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5); opacity: 0; transform: translateY(0.5rem) scale(0.95);
-      pointer-events: none; transition: opacity 150ms ease, transform 150ms ease; z-index: 1000;
+      position: absolute;
+      bottom: 100%;
+      left: 0; /* Changed from right: 0 */
+      transform-origin: bottom left; /* Changed from bottom right */
+      max-height: 60vh;
+      overflow-y: auto;
+      background: var(--color-base);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      opacity: 0;
+      transform: translateY(0.5rem) scale(0.95);
+      pointer-events: none;
+      transition: opacity 150ms ease, transform 150ms ease;
+      z-index: 1000;
     }
     #genreMenu.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-    #genreMenu .item { padding: 0.2rem 0.4rem; display: flex; align-items: center; gap: 0.3rem; font-size: 0.8125rem; white-space: nowrap; cursor: pointer; position: relative; }
+    
+    /* MODIFIED: Reduced vertical padding for tighter spacing */
+    #genreMenu .item {
+      padding: 0.15rem 0.4rem; 
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.8125rem;
+      white-space: nowrap;
+      cursor: pointer;
+      position: relative;
+    }
     #genreMenu .item:hover { background: rgba(45, 212, 191, 0.1); }
     #streamLink:hover, #streamLink:focus { background: rgba(45, 212, 191, 0.1); border-radius: var(--radius); outline: none; }
     #genreMenu .check { visibility: hidden; color: #38A169; }
@@ -130,7 +151,6 @@
     .site-footer a:hover { color: var(--color-accent); text-decoration: underline; }
     .footer-center { flex-basis: 100%; text-align: center; }
 
-    /* MODIFIED: Added .controls to this list for perfect alignment */
     @media (min-width: 480px) {
       #posterWrapper,
       .btn,
