@@ -50,8 +50,8 @@
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
     const SEEN_MOVIES_CAP = 50;
     let movies = [];
-    let fullMovieList = []; // <<< NEW: This will hold the full list when it loads
-    let spinCount = 0; // <<< NEW: A counter for the number of spins
+    let fullMovieList = [];
+    let spinCount = 0;
     let selectedGenres = new Set([0]);
     let isSpinning = false;
     let seenMovies = [];
@@ -94,7 +94,7 @@
       if (window.innerWidth >= 768 && !genreMenu.contains(e.target) && e.target !== genreToggle) { closeGenreMenu(); }
     });
 
-    // --- NEW "PROGRESSIVE ENHANCEMENT" LOADING LOGIC ---
+    // --- "PROGRESSIVE ENHANCEMENT" LOADING LOGIC ---
     function formatMovie(movieData) {
         return {
             id: movieData.id,
@@ -108,29 +108,26 @@
 
     async function initializeApp() {
       // 1. Use the pre-loaded pool for an instant start.
-      movies = initialMoviePool.map(formatMovie); // Use the initial pool as our starting movie list
+      movies = initialMoviePool.map(formatMovie);
       
       const firstMovie = movies[Math.floor(Math.random() * movies.length)];
       pickNewMovie([], firstMovie);
       seenMovies.push(firstMovie);
 
-      btn.disabled = false; // <<< CHANGED: Enable the button immediately!
+      btn.disabled = false; // Enable the button immediately!
 
       // 2. In the background, fetch the main list to "upgrade" our movie pool later.
       try {
         const response = await fetch('data/movies.json');
         if (!response.ok) throw new Error('Main movie list failed to load');
         const fullList = await response.json();
-        fullMovieList = fullList.map(formatMovie); // <<< CHANGED: Load into our new variable
+        fullMovieList = fullList.map(formatMovie);
       } catch (err) {
-        // If this fails, the app keeps working with the initial 30 movies, which is great!
         console.error('Could not load the full movie list. Sticking with initial pool.');
       }
     }
     
     initializeApp();
-    // --- END OF NEW LOADING LOGIC ---
-
 
     // --- CORE APP FUNCTIONS ---
     btn.addEventListener('click', () => {
@@ -172,11 +169,9 @@
       isSpinning = true;
       btn.disabled = true;
       try {
-        spinCount++; // <<< NEW: Increment the spin counter each time
+        spinCount++;
 
-        // <<< NEW: Logic to upgrade to the full movie list
-        // If it's the 3rd spin (or more) AND the full list has finished loading,
-        // switch our main `movies` variable to the full list.
+        // Logic to upgrade to the full movie list after 3 spins
         if (spinCount >= 3 && fullMovieList.length > 0) {
             movies = fullMovieList;
         }
@@ -196,7 +191,9 @@
             return; 
         }
         const winner = pool[Math.floor(Math.random() * pool.length)];
-        await preloadImages([winner.src]);
+
+        // <<< MODIFIED: The 'await preloadImages' line was removed from here to prevent animation delay.
+        
         await performFastSpin(winner);
         pickNewMovie(pool, winner);
       } catch (error) {
@@ -214,12 +211,9 @@
       const posterHeight = filmstrip.clientHeight;
       if (posterHeight === 0) return; 
 
-      // <<< CHANGED: Always use the 'movies' variable for a great animation.
-      // This will be the 30-movie pool at first, then the 800-movie pool later.
       const movieSource = movies; 
 
       for (let i = 0; i < stripLength; i++) {
-        // Use modulo to safely loop through the movieSource array
         const movieForStrip = movieSource[i % movieSource.length];
         stripHTML += `<img class="filmstrip-image" src="${movieForStrip.src}" style="top: ${i * 100}%;" alt="">`;
       }
