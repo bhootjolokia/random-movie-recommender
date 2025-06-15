@@ -28,7 +28,7 @@
       padding: 1rem;
       margin: 0;
       box-sizing: border-box;
-      overflow: hidden; /* Prevent any accidental scrolling */
+      overflow: hidden; 
     }
     .page-container {
       display: flex;
@@ -38,15 +38,24 @@
       height: 100%;
     }
     
-    /* --- DEFINITIVE FIX 1: FLUID FONT SIZING --- */
     h1 {
-      /* Scales between 1.5rem and 2.25rem based on viewport width, but never smaller/larger */
       font-size: clamp(1.5rem, 5vw, 2.25rem); 
       line-height: 1.1;
       font-weight: 700;
       margin-bottom: 0.5rem;
       text-align: center;
       flex-shrink: 0; 
+    }
+
+    /* --- THE DEFINITIVE FIX --- */
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center; /* Center the card block vertically */
+      width: 100%;
+      flex-grow: 1; /* This container fills the space */
+      min-height: 0;
     }
 
     .randomizer {
@@ -59,37 +68,29 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-bottom: 1rem;
-      flex-grow: 1; 
-      flex-shrink: 1;
-      min-height: 0; 
+      /* No flex-grow here! The card sizes naturally */
     }
 
     #posterWrapper {
       background: var(--color-base);
       border-radius: var(--radius);
       width: 100%;
+      /* This rule is key: it forces the container to be a perfect portrait */
+      aspect-ratio: 2 / 3; 
       margin-bottom: 1rem;
       position: relative;
       overflow: hidden; 
-      display: flex;
-      flex-grow: 1; 
-      min-height: 0;
     }
 
     #filmstrip {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0; width: 100%; height: 100%;
       transition: transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
     #filmstrip .filmstrip-image {
-      width: 100%;
-      height: 100%;
-      object-fit: contain; 
-      display: block;
+      width: 100%; height: 100%;
+      /* The container has the aspect ratio, so the image can just fill it */
+      object-fit: cover; 
       position: absolute;
     }
 
@@ -106,8 +107,8 @@
     .btn:active { transform: translateY(0); }
 
     #result {
-      text-align: center; margin-top: 0; margin-bottom: 1rem; min-height: 1.25rem;
-      visibility: hidden; flex-shrink: 0;
+      text-align: center; margin-top: 1rem;
+      min-height: 1.25rem; visibility: hidden; flex-shrink: 0;
     }
     #movieResult {
       font-weight: 600; font-size: 0.875rem; white-space: nowrap; overflow: hidden;
@@ -118,7 +119,7 @@
     .controls {
       width: 100%; max-width: clamp(200px, 90vw, 280px); display: flex;
       justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; position: relative;
-      margin-bottom: 1rem; flex-shrink: 0;
+      margin-top: 1rem; flex-shrink: 0;
     }
     #genreToggle, #streamLink { font-size: 0.875rem; font-weight: 600; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius); }
 
@@ -140,7 +141,6 @@
       display: flex; flex-wrap: wrap; justify-content: space-between;
       align-items: center; gap: 0.5rem 1rem; color: var(--color-text-muted);
       flex-shrink: 0;
-      /* --- DEFINITIVE FIX 2: FLUID FONT SIZING --- */
       font-size: clamp(0.7rem, 2.5vw, 0.75rem);
     }
     .site-footer a { color: var(--color-text-muted); text-decoration: none; }
@@ -152,19 +152,21 @@
   <div class="page-container">
     <h1>Randomly pick a top rated movie</h1>
 
-    <div class='randomizer'>
-      <div id='posterWrapper'>
-        <div id="filmstrip"></div>
+    <div class="main-content">
+      <div class='randomizer'>
+        <div id='posterWrapper'>
+          <div id="filmstrip"></div>
+        </div>
+        <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
       </div>
-      <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
-    </div>
 
-    <div id='result'><div id='movieResult'></div></div>
+      <div id='result'><div id='movieResult'></div></div>
 
-    <div class='controls'>
-      <button id='genreToggle'>▾ Genres</button>
-      <a id='streamLink' href='#' target='_blank'>Where to stream</a>
-      <div id='genreMenu' role='menu'></div>
+      <div class='controls'>
+        <button id='genreToggle'>▾ Genres</button>
+        <a id='streamLink' href='#' target='_blank'>Where to stream</a>
+        <div id='genreMenu' role='menu'></div>
+      </div>
     </div>
 
     <footer class="site-footer">
@@ -214,7 +216,7 @@
       .then(r => r.ok ? r.json() : Promise.reject('Failed to load movie data.'))
       .then(arr => {
         movies = arr.filter(m => m.poster_path).map(m => ({
-          id: m.id, title: m.title, year: m.release_date ? m.release_date.slice(0,4) : 'N/A', src: `https://image.tmdb.org/t/p/w342${m.poster_path}`, genre_ids: m.genre_ids, watch_link: m.watch_link
+          id: m.id, title: m.title, year: m.release_date ? m.release_date.slice(0,4) : 'N/A', src: `https://image.tmdb.org/t/p/w500${m.poster_path}`, genre_ids: m.genre_ids, watch_link: m.watch_link
         }));
         
         const PRE_WARM_COUNT = 15;
@@ -226,7 +228,7 @@
 
         btn.disabled = false;
         updateGenreSelection();
-        const firstMovie = movies[Math.floor(Math.random()*movies.length)];
+        const firstMovie = seenMovies[0] || movies[0];
         pickNewMovie(movies, firstMovie);
       })
       .catch(err => {
@@ -236,20 +238,20 @@
     btn.addEventListener('click', randomize);
 
     function pickNewMovie(pool, movie) {
-        if (!pool || pool.length === 0) {
+        if (!pool || !movie) {
             filmstrip.innerHTML = ''; txt.textContent = 'No movies match the selected genres.'; streamLink.href = '#'; res.style.visibility = 'visible';
             return;
         }
         
         filmstrip.style.transition = 'none';
-        filmstrip.innerHTML = `<img class="filmstrip-image" src="${movie.src}" alt="${movie.title}">`;
+        filmstrip.innerHTML = `<img class="filmstrip-image" src="${movie.src}" alt="${movie.title}" style="top: 0;">`;
         filmstrip.style.transform = 'translateY(0)';
         
         txt.textContent = `${movie.title} (${movie.year})`;
         streamLink.href = movie.watch_link || `${TMDB_BASE}/${movie.id}/watch?locale=US`;
         res.style.visibility = 'visible';
 
-        if (movie && !seenMovies.some(sm => sm.id === movie.id)) {
+        if (!seenMovies.some(sm => sm.id === movie.id)) {
             seenMovies.unshift(movie);
             if (seenMovies.length > SEEN_MOVIES_CAP) seenMovies.pop();
         }
@@ -266,7 +268,10 @@
         const fs = [...selectedGenres].filter(g => g !== 0);
         if (fs.length > 0) pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
 
-        if (pool.length === 0) { pickNewMovie(pool); return; }
+        if (pool.length === 0) { 
+            pickNewMovie(null, null); 
+            return; 
+        }
         
         const winner = pool[Math.floor(Math.random() * pool.length)];
         await preloadImages([winner.src]);
@@ -288,13 +293,15 @@
       const stripLength = 30;
       let stripHTML = '';
       const posterHeight = posterWrapper.clientHeight;
+      if (posterHeight === 0) return; 
+      
       const movieSource = seenMovies.length > 0 ? seenMovies : movies;
 
       for (let i = 0; i < stripLength; i++) {
         const movieForStrip = movieSource[i % movieSource.length];
-        stripHTML += `<div class="filmstrip-image" style="transform: translateY(${i * 100}%);"><img src="${movieForStrip.src}" style="object-fit: contain; width: 100%; height: 100%;" alt=""></div>`;
+        stripHTML += `<img class="filmstrip-image" src="${movieForStrip.src}" style="top: ${i * 100}%;" alt="">`;
       }
-      stripHTML += `<div class="filmstrip-image" style="transform: translateY(${stripLength * 100}%);"><img src="${winner.src}" style="object-fit: contain; width: 100%; height: 100%;" alt="${winner.title}"></div>`;
+      stripHTML += `<img class="filmstrip-image" src="${winner.src}" style="top: ${stripLength * 100}%;" alt="${winner.title}">`;
       
       filmstrip.style.transition = 'none';
       filmstrip.style.transform = 'translateY(0)';
@@ -309,7 +316,15 @@
       filmstrip.style.transform = `translateY(${finalPosition}px)`;
       
       await new Promise(resolve => {
-        filmstrip.addEventListener('transitionend', resolve, { once: true });
+        const fallback = setTimeout(() => {
+          console.warn('Animation fallback timer fired.');
+          resolve();
+        }, 2600); 
+
+        filmstrip.addEventListener('transitionend', () => {
+          clearTimeout(fallback);
+          resolve();
+        }, { once: true });
       });
     }
 
