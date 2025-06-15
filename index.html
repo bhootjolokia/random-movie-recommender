@@ -21,57 +21,60 @@
 
     html { height: 100%; }
     body {
-      min-height: 100%; /* Use min-height to allow natural scrolling if absolutely necessary */
+      height: 100%;
       background: var(--color-bg); 
       color: var(--color-text); 
       font-family: var(--font-sans);
+      padding: 1rem;
       margin: 0;
-      /* The body is the primary flex container for the page sections */
-      display: flex;
-      flex-direction: column;
+      box-sizing: border-box;
+      overflow: hidden; 
     }
-
     .page-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center; /* Center the content vertically */
       width: 100%;
-      box-sizing: border-box;
-      padding: 1rem;
-      /* This makes the main content area take up the available space */
-      flex-grow: 1; 
-      min-height: 0; /* Necessary for flex shrinking */
+      height: 100%;
     }
     
     h1 {
       font-size: clamp(1.5rem, 5vw, 2.25rem); 
       line-height: 1.1;
       font-weight: 700;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       text-align: center;
+      flex-shrink: 0; 
     }
 
+    /* --- THE DEFINITIVE FIX: A MULTI-ZONE FLEX LAYOUT --- */
     .randomizer {
       background: var(--color-card);
       border-radius: var(--radius);
       padding: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
       width: 100%;
-      max-width: 320px;
+      max-width: 320px; 
       display: flex;
       flex-direction: column;
       align-items: center;
+      /* This element is now the only one that grows/shrinks */
+      flex-grow: 1;
+      min-height: 0;
+      margin-bottom: 1.5rem; /* Space between card and result */
     }
 
     #posterWrapper {
       background: var(--color-base);
       border-radius: var(--radius);
       width: 100%;
-      aspect-ratio: 2 / 3; /* This rule dictates the shape */
       margin-bottom: 1rem;
       position: relative;
       overflow: hidden; 
+      /* This is now a flex container to fill the available space */
+      display: flex;
+      flex-grow: 1;
+      min-height: 0;
     }
 
     #filmstrip {
@@ -81,7 +84,8 @@
     }
     #filmstrip .filmstrip-image {
       width: 100%; height: 100%;
-      object-fit: cover; 
+      /* Contain ensures the aspect ratio is kept inside the wrapper */
+      object-fit: contain; 
       position: absolute;
     }
 
@@ -89,6 +93,7 @@
       display: block; width: 100%; padding: 0.75rem; background: var(--color-base);
       color: var(--color-text); font-weight: 600; border: none; border-radius: var(--radius);
       font-size: 0.875rem; transition: background 0.2s, transform 0.1s; cursor: pointer;
+      flex-shrink: 0; /* Button should not shrink */
     }
     .btn:disabled { opacity: 0.6; cursor: default; }
     .btn:hover:not(:disabled), .btn:focus:not(:disabled) {
@@ -97,8 +102,8 @@
     .btn:active { transform: translateY(0); }
 
     #result {
-      text-align: center; margin-top: 1.5rem;
-      min-height: 1.25rem; visibility: hidden;
+      text-align: center;
+      min-height: 1.25rem; visibility: hidden; flex-shrink: 0;
     }
     #movieResult {
       font-weight: 600; font-size: 0.875rem; white-space: nowrap; overflow: hidden;
@@ -109,7 +114,7 @@
     .controls {
       width: 100%; max-width: clamp(200px, 90vw, 280px); display: flex;
       justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; position: relative;
-      margin-top: 1rem;
+      margin-top: 1rem; flex-shrink: 0;
     }
     #genreToggle, #streamLink { font-size: 0.875rem; font-weight: 600; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius); }
 
@@ -127,19 +132,15 @@
     #genreMenu .item.selected .check { visibility: visible; }
     
     .site-footer {
-      width: 100%;
-      /* NO position:absolute. It's part of the normal flow */
-      margin-top: auto; /* Pushes the footer to the bottom on tall screens */
-      padding: 1.5rem 1rem 1rem 1rem;
-      box-sizing: border-box;
-      display: flex; flex-wrap: wrap; 
-      justify-content: center;
-      align-items: center; gap: 0.5rem 1.5rem; color: var(--color-text-muted);
-      flex-shrink: 0; /* The footer should never shrink */
+      width: 100%; max-width: 320px; margin-top: auto; padding-top: 1.5rem;
+      display: flex; flex-wrap: wrap; justify-content: space-between;
+      align-items: center; gap: 0.5rem 1rem; color: var(--color-text-muted);
+      flex-shrink: 0;
       font-size: clamp(0.7rem, 2.5vw, 0.75rem);
     }
-    .footer-item { white-space: nowrap; }
-    .footer-center { width: 100%; text-align: center; order: 3; margin-top: 0.5rem;}
+    .site-footer a { color: var(--color-text-muted); text-decoration: none; }
+    .site-footer a:hover { color: var(--color-accent); text-decoration: underline; }
+    .footer-center { flex-basis: 100%; text-align: center; }
   </style>
 </head>
 <body>
@@ -160,13 +161,13 @@
       <a id='streamLink' href='#' target='_blank'>Where to stream</a>
       <div id='genreMenu' role='menu'></div>
     </div>
-  </div>
 
-  <footer class="site-footer">
-    <span class="footer-item"><a href="mailto:movierandomizertool@gmail.com">Contact Us</a></span>
-    <span class="footer-item"><a href="#">Privacy Policy</a></span>
-    <div class="footer-center">Data provided by <a href="https://www.themoviedb.org" target="_blank">TMDb</a></div>
-  </footer>
+    <footer class="site-footer">
+      <a href="mailto:movierandomizertool@gmail.com" class="footer-left">Contact Us</a>
+      <a href="#" class="footer-right">Privacy Policy</a>
+      <div class="footer-center">Data provided by <a href="https://www.themoviedb.org" target="_blank">TMDb</a></div>
+    </footer>
+  </div>
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -329,4 +330,4 @@
   });
   </script>
 </body>
-</html>
+</htm
