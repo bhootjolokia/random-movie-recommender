@@ -172,7 +172,7 @@
       movies = initialMoviePool.map(formatMovie);
       const firstMovie = movies[Math.floor(Math.random() * movies.length)];
       await preloadImages([firstMovie.src]);
-      pickNewMovie([], firstMovie);
+      pickNewMovie(firstMovie);
       seenMovies.push(firstMovie);
       btn.disabled = false;
       try {
@@ -187,7 +187,7 @@
     }
     initializeApp();
 
-    function pickNewMovie(pool, movie) {
+    function pickNewMovie(movie) {
         loadingPlaceholder.style.display = 'none';
         if (!movie) {
             filmstrip.innerHTML = '';
@@ -199,7 +199,6 @@
         }
         btn.textContent = 'Randomize Movie';
         filmstrip.style.transition = 'none';
-        // <<< MODIFIED: Added more descriptive alt text for the main movie poster >>>
         filmstrip.innerHTML = `<img class="filmstrip-image" src="${movie.src}" alt="Poster for ${movie.title}" style="top: 0;">`;
         filmstrip.style.transform = 'translateY(0)';
         txt.textContent = `${movie.title} (${movie.year})`;
@@ -231,12 +230,19 @@
           pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
         }
         if (pool.length === 0) { 
-            pickNewMovie(null, null);
+            pickNewMovie(null);
             return; 
         }
         const winner = pool[Math.floor(Math.random() * pool.length)];
+        
+        // <<< MODIFIED: This is the definitive fix for the race condition >>>
+        // 1. Start the visual animation immediately.
         await performFastSpin(winner);
-        pickNewMovie(pool, winner);
+        // 2. Use the animation time to ensure the image is downloaded.
+        await preloadImages([winner.src]);
+        // 3. Now, display the final, clean result. It's guaranteed to be ready.
+        pickNewMovie(winner);
+
       } catch (error) {
         console.error("An error occurred during randomization:", error);
         txt.textContent = "Oops! Something went wrong.";
@@ -245,6 +251,7 @@
         btn.disabled = false;
       }
     }
+
     async function performFastSpin(winner) {
       const stripLength = 30;
       let stripHTML = '';
@@ -253,10 +260,8 @@
       const movieSource = movies; 
       for (let i = 0; i < stripLength; i++) {
         const movieForStrip = movieSource[i % movieSource.length];
-        // The alt="" here is correct for decorative images
         stripHTML += `<img class="filmstrip-image" src="${movieForStrip.src}" style="top: ${i * 100}%;" alt="">`;
       }
-      // The final winning image also needs descriptive alt text in the filmstrip
       stripHTML += `<img class="filmstrip-image" src="${winner.src}" style="top: ${stripLength * 100}%;" alt="Poster for ${winner.title}">`;
       filmstrip.style.transition = 'none';
       filmstrip.style.transform = 'translateY(0)';
