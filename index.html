@@ -23,11 +23,13 @@
     body {
       padding: 1rem;
       margin: 0;
+      transition: padding 0.2s ease;
     }
     .page-container {
       display: flex;
       flex-direction: column;
       align-items: center;
+      width: 100%;
       min-height: calc(100vh - 2rem);
     }
     
@@ -38,7 +40,6 @@
       margin-bottom: 1rem;
       letter-spacing: 0.025em;
       text-align: center;
-      /* --- NEW --- Added transition for smooth font size changes */
       transition: font-size 0.2s, margin-bottom 0.2s;
     }
 
@@ -53,8 +54,7 @@
       flex-direction: column;
       align-items: center;
       margin-bottom: 1.25rem;
-      /* --- NEW --- Added transition for smooth scaling */
-      transition: max-height 0.2s, padding 0.2s, margin-bottom 0.2s;
+      transition: padding 0.2s, margin-bottom 0.2s;
     }
 
     #posterWrapper {
@@ -65,6 +65,7 @@
       margin-bottom: 1rem;
       position: relative;
       overflow: hidden; 
+      transition: margin-bottom 0.2s;
     }
     #filmstrip {
       position: absolute;
@@ -90,7 +91,7 @@
       border: none;
       border-radius: var(--radius);
       font-size: 0.875rem;
-      transition: background 0.2s, transform 0.1s;
+      transition: background 0.2s, transform 0.1s, padding 0.2s, margin-bottom 0.2s;
       cursor: pointer;
       margin-bottom: 1rem;
     }
@@ -130,6 +131,7 @@
       position: relative;
       margin-top: 0;
       margin-bottom: 1rem;
+      transition: margin-bottom 0.2s;
     }
     #genreToggle, #streamLink { font-size: 0.875rem; font-weight: 600; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius); }
 
@@ -168,29 +170,45 @@
       gap: 1rem 1.5rem;
       font-size: 0.75rem;
       color: var(--color-text-muted);
-      transition: padding-top 0.2s, gap 0.2s;
+      transition: padding-top 0.2s, gap 0.2s, font-size 0.2s;
     }
     .site-footer a { color: var(--color-text-muted); text-decoration: none; }
     .site-footer a:hover { color: var(--color-accent); text-decoration: underline; }
     .footer-center { flex-basis: 100%; text-align: center; }
 
-    /* --- NEW --- This block contains all optimizations for short screens */
-    @media (max-height: 720px) {
+    /* --- THE DEFINITIVE FIX --- This media query targets short, narrow screens */
+    @media (max-height: 680px) and (max-width: 400px) {
+      body {
+        padding: 0.5rem; /* Reduce body padding */
+      }
+      .page-container {
+        min-height: calc(100vh - 1rem); /* Adjust container height for new padding */
+      }
       h1 {
-        font-size: 1.75rem; /* Make title smaller */
-        margin-bottom: 0.75rem;
+        font-size: 1.5rem; /* Shrink title */
+        margin-bottom: 0.5rem;
       }
       .randomizer {
-        max-height: 50vh; /* This is the key: limit the card's height */
-        padding: 0.75rem;
-        margin-bottom: 0.75rem;
+        padding: 0.5rem; /* Compact the card's internal padding */
+        margin-bottom: 0.5rem;
+      }
+      #posterWrapper {
+        margin-bottom: 0.5rem;
+      }
+      .btn {
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
       }
       #result {
-        margin: 0.75rem 0 1rem; /* Tighten up spacing */
+        margin: 0.5rem 0; /* Tighten up all vertical spacing */
+      }
+      .controls {
+        margin-bottom: 0.5rem;
       }
       .site-footer {
-        padding-top: 1.5rem; /* Bring footer up a bit */
-        gap: 0.5rem 1rem;
+        padding-top: 1rem;
+        gap: 0.25rem 0.5rem; /* Make footer links tighter */
+        font-size: 0.65rem;
       }
     }
   </style>
