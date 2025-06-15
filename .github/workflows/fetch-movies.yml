@@ -27,35 +27,25 @@ jobs:
               | jq '.results' > data/page${page}.json
           done
 
-      - name: Combine into single list
+      - name: Combine into a single raw list
         run: |
           jq -s 'flatten' data/page*.json > data/all_movies.json
 
-      - name: Enrich and filter for streamable movies
-        run: |
-          jq -c '.[]' data/all_movies.json | \
-          while read -r movie; do
-            id=$(jq -r '.id' <<<"$movie")
-            raw=$(curl -s "https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${{ secrets.TMDB_API_KEY }}")
-            link=$(jq -r '.results.US.link // empty' <<<"$raw")
-            
-            # === THIS IS THE CORRECTED JQ COMMAND ===
-            providers=$(jq -c '[ .results.US.flatrate?[], .results.US.free?[], .results.US.ads?[] ] | flatten')
-            
-            if [[ $(jq 'length' <<<"$providers") -gt 0 ]]; then
-              echo "$movie" | jq --arg link "$link" '. + { watch_link: $link }'
-            fi
-          done | jq -s '.' > data/movies.json
+      # === THE NEW, SIMPLIFIED LOGIC ===
+      # No more complex filtering. We take the raw list and process it.
 
-      - name: Slice to a max of 800 movies
+      - name: Slice to a max of 800 movies and create movies.json
         run: |
-          jq '.[0:800]' data/movies.json > data/movies.json.tmp
-          mv data/movies.json.tmp data/movies.json
+          # This step now takes the raw list and creates our main movies.json file.
+          jq '.[0:800]' data/all_movies.json > data/movies.json
 
-      - name: Prune to only necessary fields
+      - name: Prune to only necessary fields for fast loading
         run: |
-          jq '[.[] | {id, title, release_date, poster_path, genre_ids, watch_link}]' data/movies.json > data/movies.json.tmp
-          mv data/movies.json.tmp data/movies.json
+          # We add a generic watch_link to every movie.
+          jq '[.[] | . + {watch_link: ("https://www.themoviedb.org/movie/" + (.id|tostring) + "/watch")}]' data/movies.json > data/movies.json.tmp
+          
+          # Then we keep only the fields the website needs.
+          jq '[.[] | {id, title, release_date, poster_path, genre_ids, watch_link}]' data/movies.json.tmp > data/movies.json
 
       - name: Create daily pool of 10 random movies using shuf
         run: |
