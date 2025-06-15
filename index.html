@@ -20,62 +20,42 @@
     #genreModalContainer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 200ms ease}
     #genreModalContainer.open{opacity:1;pointer-events:auto}
     #genreOverlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);backdrop-filter:blur(4px)}
+    #genreMenu{position:relative;background:var(--color-base);border-radius:var(--radius);width:90%;max-width:340px;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.5);opacity: 0;transform: translateY(100px);transition: transform 300ms cubic-bezier(0.21, 0.6, 0.35, 1), opacity 300ms ease;}
+    #genreModalContainer.open #genreMenu{opacity: 1;transform: translateY(0);}
+    .genre-menu-header{padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.1);display:flex;justify-content:center;align-items:center;flex-shrink:0; position: relative;} /* <<< MODIFIED: Added position relative */
+    .genre-menu-header h2{font-size:1rem;font-weight:600}
     
-    /* <<< MODIFIED: Added mobile slide-up animation for the genre menu >>> */
-    #genreMenu{
-      position:relative;
-      background:var(--color-base);
-      border-radius:var(--radius);
-      width:90%;
-      max-width:340px;
-      max-height:80vh;
-      display:flex;
-      flex-direction:column;
-      box-shadow:0 8px 32px rgba(0,0,0,.5);
-      opacity: 0; /* Start invisible */
-      transform: translateY(100px); /* Start off-screen */
-      transition: transform 300ms cubic-bezier(0.21, 0.6, 0.35, 1), opacity 300ms ease; /* Smooth transition for slide and fade */
+    /* <<< NEW: Style for the mobile close button >>> */
+    .genre-menu-close {
+      display: block;
+      position: absolute;
+      top: 50%;
+      right: 0.25rem;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 1.75rem;
+      line-height: 1;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
     }
-    /* <<< MODIFIED: This rule brings the menu on-screen when the modal is open >>> */
-    #genreModalContainer.open #genreMenu{
-      opacity: 1;
-      transform: translateY(0);
+    .genre-menu-close:hover {
+      color: var(--color-text);
     }
-    
-    .genre-menu-header{padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.1);display:flex;justify-content:center;align-items:center;flex-shrink:0}.genre-menu-header h2{font-size:1rem;font-weight:600}#genreList{overflow-y:auto;padding:.5rem}#genreList .item{padding:.35rem .5rem;display:flex;align-items:center;gap:.5rem;font-size:.9rem;white-space:nowrap;cursor:pointer;position:relative;border-radius:.25rem}#genreMenu .check{visibility:hidden;color:#38a169}#genreMenu .item.selected .check{visibility:visible}.site-footer{width:100%;margin-top:auto;padding-top:1.5rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem 1rem;color:var(--color-text-muted);flex-shrink:0;font-size:clamp(.7rem,2.5vw,.75rem)}.site-footer a{color:var(--color-text-muted);text-decoration:none}.site-footer a:hover{color:var(--color-accent);text-decoration:underline}.footer-center{flex-basis:100%;text-align:center}
+
+    #genreList{overflow-y:auto;padding:.5rem}#genreList .item{padding:.35rem .5rem;display:flex;align-items:center;gap:.5rem;font-size:.9rem;white-space:nowrap;cursor:pointer;position:relative;border-radius:.25rem}#genreMenu .check{visibility:hidden;color:#38a169}#genreMenu .item.selected .check{visibility:visible}.site-footer{width:100%;margin-top:auto;padding-top:1.5rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem 1rem;color:var(--color-text-muted);flex-shrink:0;font-size:clamp(.7rem,2.5vw,.75rem)}.site-footer a{color:var(--color-text-muted);text-decoration:none}.site-footer a:hover{color:var(--color-accent);text-decoration:underline}.footer-center{flex-basis:100%;text-align:center}
     
     @media (min-width: 768px) {
+      .genre-menu-close {display: none;} /* <<< NEW: Hide close button on desktop */
       #genreOverlay,.genre-menu-header{display:none}
       #genreModalContainer{position:static;opacity:1;pointer-events:auto;display:block}
-      
-      /* <<< MODIFIED: Desktop animation rules override the mobile ones for the drop-up effect >>> */
-      #genreMenu{
-        position:absolute;
-        bottom:100%;
-        right:100%;
-        transform-origin:bottom right;
-        margin-right:1rem;
-        max-height:60vh;
-        overflow-y:auto;
-        box-shadow:0 4px 12px rgba(0,0,0,.5);
-        opacity:0;
-        transform:translateY(.5rem) scale(.95);
-        pointer-events:none;
-        transition:opacity 150ms ease,transform 150ms ease;
-        width:auto;
-        max-width:none;
-      }
-      #genreModalContainer.open #genreMenu{
-        opacity:1;
-        transform:translateY(0) scale(1);
-        pointer-events:auto;
-      }
-
+      #genreMenu{position:absolute;bottom:100%;right:100%;transform-origin:bottom right;margin-right:1rem;max-height:60vh;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.5);opacity:0;transform:translateY(.5rem) scale(.95);pointer-events:none;transition:opacity 150ms ease,transform 150ms ease;width:auto;max-width:none;}
+      #genreModalContainer.open #genreMenu{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
       #genreList{padding:0;overflow-y:visible}
       #genreList .item{padding:.15rem .4rem;gap:.3rem;font-size:.8125rem}
       #genreList .item:hover{background:rgba(45,212,191,.1)}
       #posterWrapper,.btn,.controls{max-width:320px}
-      
       .site-footer {flex-wrap: nowrap;align-items: flex-end;}
       .site-footer .footer-center {flex-basis: auto;text-align: right;}
       .footer-right-stack {display: flex;flex-direction: column;align-items: flex-end;gap: 0.25rem;}
@@ -104,7 +84,11 @@
       <div id="genreModalContainer">
         <div id="genreOverlay"></div>
         <div id='genreMenu' role='menu'>
-          <div class="genre-menu-header"><h2>Select Genres</h2></div>
+          <div class="genre-menu-header">
+            <h2>Select Genres</h2>
+            <!-- <<< NEW: Close button for mobile >>> -->
+            <button class="genre-menu-close">×</button>
+          </div>
           <div id="genreList"></div>
         </div>
       </div>
@@ -120,8 +104,8 @@
   </div>
   <script src="data/initial-pool.js" defer></script>
   <script>
-    // All JavaScript is unchanged and correct
     document.addEventListener('DOMContentLoaded', () => {
+    // --- SETUP: Constants and Element Selectors ---
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
     const SEEN_MOVIES_CAP = 50;
     let movies = [];
@@ -141,6 +125,9 @@
     const genreMenu = document.getElementById('genreMenu');
     const genreList = document.getElementById('genreList');
     const genreOverlay = document.getElementById('genreOverlay');
+    const genreMenuCloseBtn = document.querySelector('.genre-menu-close'); // <<< NEW: Select the close button
+
+    // --- SETUP: Genre Menu Logic ---
     const genreMap = {0:'Any Genre',28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Sci-Fi',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
     Object.entries(genreMap).forEach(([id,name]) => {
       const el = document.createElement('div'); el.className = 'item'; el.dataset.genre = id; el.textContent = name;
@@ -162,9 +149,12 @@
     function closeGenreMenu() { genreModalContainer.classList.remove('open'); }
     genreToggle.addEventListener('click', (e) => { e.stopPropagation(); genreModalContainer.classList.toggle('open'); });
     genreOverlay.addEventListener('click', closeGenreMenu);
+    genreMenuCloseBtn.addEventListener('click', closeGenreMenu); // <<< NEW: Add click listener to close button
     document.addEventListener('click', (e) => {
       if (window.innerWidth >= 768 && !genreMenu.contains(e.target) && e.target !== genreToggle) { closeGenreMenu(); }
     });
+
+    // --- LOADING LOGIC ---
     function formatMovie(movieData) {
         return {
             id: movieData.id,
@@ -190,8 +180,11 @@
       } catch (err) {
         console.error('Could not load the full movie list. Sticking with initial pool.');
       }
+      updateGenreSelection(); // <<< MODIFIED: Call this to set the initial checkmark
     }
     initializeApp();
+
+    // --- CORE APP FUNCTIONS (Unchanged) ---
     btn.addEventListener('click', () => {
         if (btn.textContent === 'Reset') {
             selectedGenres.clear();
