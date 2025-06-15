@@ -42,39 +42,25 @@
       font-size: clamp(1.5rem, 5vw, 2.25rem); 
       line-height: 1.1;
       font-weight: 700;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem; /* MODIFIED: Reduced for snug fit */
       text-align: center;
       flex-shrink: 0; 
     }
 
-    /* --- THE DEFINITIVE FIX: A MULTI-ZONE FLEX LAYOUT --- */
-    .randomizer {
-      background: var(--color-card);
-      border-radius: var(--radius);
-      padding: 1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      width: 100%;
-      max-width: 320px; 
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      /* This element is now the only one that grows/shrinks */
-      flex-grow: 1;
-      min-height: 0;
-      margin-bottom: 1.5rem; /* Space between card and result */
-    }
+    /* --- MODIFIED: The .randomizer rule has been deleted --- */
 
+    /* MODIFIED: Poster wrapper now controls the layout */
     #posterWrapper {
       background: var(--color-base);
       border-radius: var(--radius);
       width: 100%;
-      margin-bottom: 1rem;
+      max-width: 320px; /* Constrains width on big screens */
+      margin-bottom: 1rem; /* Space between poster and button */
       position: relative;
       overflow: hidden; 
-      /* This is now a flex container to fill the available space */
       display: flex;
-      flex-grow: 1;
-      min-height: 0;
+      flex-grow: 1; /* This makes the poster area stretch to fill space */
+      min-height: 0; /* A flexbox magic trick for responsiveness */
     }
 
     #filmstrip {
@@ -84,16 +70,18 @@
     }
     #filmstrip .filmstrip-image {
       width: 100%; height: 100%;
-      /* Contain ensures the aspect ratio is kept inside the wrapper */
       object-fit: contain; 
       position: absolute;
     }
 
+    /* MODIFIED: Button now has max-width and bottom margin */
     .btn {
       display: block; width: 100%; padding: 0.75rem; background: var(--color-base);
       color: var(--color-text); font-weight: 600; border: none; border-radius: var(--radius);
       font-size: 0.875rem; transition: background 0.2s, transform 0.1s; cursor: pointer;
       flex-shrink: 0; /* Button should not shrink */
+      max-width: 320px; /* Add this to match the poster width */
+      margin-bottom: 1.5rem; /* Add this to create space below the button */
     }
     .btn:disabled { opacity: 0.6; cursor: default; }
     .btn:hover:not(:disabled), .btn:focus:not(:disabled) {
@@ -147,12 +135,11 @@
   <div class="page-container">
     <h1>Randomly pick a top rated movie</h1>
     
-    <div class='randomizer'>
-      <div id='posterWrapper'>
-        <div id="filmstrip"></div>
-      </div>
-      <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
+    <!-- MODIFIED: The poster and button are now direct children -->
+    <div id='posterWrapper'>
+      <div id="filmstrip"></div>
     </div>
+    <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
 
     <div id='result'><div id='movieResult'></div></div>
 
@@ -330,4 +317,4 @@
   });
   </script>
 </body>
-</htm
+</html>
