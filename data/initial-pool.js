@@ -1,5 +1,222 @@
 const initialMoviePool = [
   {
+    "id": 103,
+    "title": "Taxi Driver",
+    "release_date": "1976-02-09",
+    "poster_path": "/ekstpH614fwDX8DUln1a2Opz0N8.jpg",
+    "genre_ids": [
+      80,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/103/watch"
+  },
+  {
+    "id": 273248,
+    "title": "The Hateful Eight",
+    "release_date": "2015-12-25",
+    "poster_path": "/jIywvdPjia2t3eKYbjVTcwBQlG8.jpg",
+    "genre_ids": [
+      18,
+      9648,
+      37
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/273248/watch"
+  },
+  {
+    "id": 22,
+    "title": "Pirates of the Caribbean: The Curse of the Black Pearl",
+    "release_date": "2003-07-09",
+    "poster_path": "/z8onk7LV9Mmw6zKz4hT6pzzvmvl.jpg",
+    "genre_ids": [
+      12,
+      14,
+      28
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/22/watch"
+  },
+  {
+    "id": 205,
+    "title": "Hotel Rwanda",
+    "release_date": "2004-12-22",
+    "poster_path": "/p3pHw85UMZPegfMZBA6dZ06yarm.jpg",
+    "genre_ids": [
+      18,
+      36,
+      10752
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/205/watch"
+  },
+  {
+    "id": 92321,
+    "title": "Hotarubi no Mori e",
+    "release_date": "2011-09-17",
+    "poster_path": "/mDqzHV8UXWWNpZkoAbKmKX1ZxEE.jpg",
+    "genre_ids": [
+      10749,
+      16,
+      14
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/92321/watch"
+  },
+  {
+    "id": 606856,
+    "title": "Togo",
+    "release_date": "2019-12-20",
+    "poster_path": "/wX0QD36a80hxulcizz7tyahYOF8.jpg",
+    "genre_ids": [
+      12,
+      10751
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/606856/watch"
+  },
+  {
+    "id": 515001,
+    "title": "Jojo Rabbit",
+    "release_date": "2019-10-18",
+    "poster_path": "/1mqL7VG4Ix8wmxwypmCA1HTHBky.jpg",
+    "genre_ids": [
+      35,
+      10752,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/515001/watch"
+  },
+  {
+    "id": 22504,
+    "title": "The King and the Mockingbird",
+    "release_date": "1980-03-19",
+    "poster_path": "/yDbfVUrb9b0Dkm1TptWtzkujXBk.jpg",
+    "genre_ids": [
+      16,
+      10751,
+      14
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/22504/watch"
+  },
+  {
+    "id": 393,
+    "title": "Kill Bill: Vol. 2",
+    "release_date": "2004-04-16",
+    "poster_path": "/2yhg0mZQMhDyvUQ4rG1IZ4oIA8L.jpg",
+    "genre_ids": [
+      28,
+      80,
+      53
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/393/watch"
+  },
+  {
+    "id": 673,
+    "title": "Harry Potter and the Prisoner of Azkaban",
+    "release_date": "2004-05-31",
+    "poster_path": "/aWxwnYoe8p2d2fcxOqtvAtJ72Rw.jpg",
+    "genre_ids": [
+      12,
+      14
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/673/watch"
+  },
+  {
+    "id": 15859,
+    "title": "A Moment to Remember",
+    "release_date": "2004-11-05",
+    "poster_path": "/s9ulpxLbkeJTTYxqLVUl6PreLGN.jpg",
+    "genre_ids": [
+      18,
+      10749
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/15859/watch"
+  },
+  {
+    "id": 10193,
+    "title": "Toy Story 3",
+    "release_date": "2010-06-16",
+    "poster_path": "/AbbXspMOwdvwWZgVN0nabZq03Ec.jpg",
+    "genre_ids": [
+      16,
+      10751,
+      35
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/10193/watch"
+  },
+  {
+    "id": 13855,
+    "title": "The Chaser",
+    "release_date": "2008-02-14",
+    "poster_path": "/hy49xJiKN1nakkN1ZmKuOf6vQYR.jpg",
+    "genre_ids": [
+      80,
+      53,
+      28
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/13855/watch"
+  },
+  {
+    "id": 354857,
+    "title": "Regular Show: The Movie",
+    "release_date": "2015-09-01",
+    "poster_path": "/p44RoW4naoE1nlSGOqqT0J2pc09.jpg",
+    "genre_ids": [
+      16,
+      35,
+      878,
+      10770,
+      12,
+      28,
+      10751,
+      14
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/354857/watch"
+  },
+  {
+    "id": 13042,
+    "title": "Presto",
+    "release_date": "2008-06-27",
+    "poster_path": "/mWRgBxm7twwntbrX0xZlY8lw3aV.jpg",
+    "genre_ids": [
+      16,
+      10751,
+      35
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/13042/watch"
+  },
+  {
+    "id": 46738,
+    "title": "Incendies",
+    "release_date": "2010-09-17",
+    "poster_path": "/yH6DAQVgbyj72S66gN4WWVoTjuf.jpg",
+    "genre_ids": [
+      18,
+      10752,
+      9648
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/46738/watch"
+  },
+  {
+    "id": 11036,
+    "title": "The Notebook",
+    "release_date": "2004-05-25",
+    "poster_path": "/rNzQyW4f8B8cQeg7Dgj3n6eT5k9.jpg",
+    "genre_ids": [
+      10749,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/11036/watch"
+  },
+  {
+    "id": 94047,
+    "title": "My Way",
+    "release_date": "2011-12-21",
+    "poster_path": "/3moPqIC1EBFilLI3YJNa5Nfel3e.jpg",
+    "genre_ids": [
+      18,
+      28,
+      36,
+      10752
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/94047/watch"
+  },
+  {
     "id": 688,
     "title": "The Bridges of Madison County",
     "release_date": "1995-06-02",
@@ -11,296 +228,64 @@ const initialMoviePool = [
     "watch_link": "https://www.themoviedb.org/movie/688/watch"
   },
   {
-    "id": 644479,
-    "title": "Dedicated to my ex",
-    "release_date": "2019-11-01",
-    "poster_path": "/xc4bTXVwYNXi10jG9dwcaYt5IpU.jpg",
-    "genre_ids": [
-      18,
-      35
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/644479/watch"
-  },
-  {
-    "id": 938,
-    "title": "For a Few Dollars More",
-    "release_date": "1965-12-18",
-    "poster_path": "/ooqASvA7qxlTVKL3KwOzBwy57Dh.jpg",
-    "genre_ids": [
-      37
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/938/watch"
-  },
-  {
-    "id": 640,
-    "title": "Catch Me If You Can",
-    "release_date": "2002-12-16",
-    "poster_path": "/ctjEj2xM32OvBXCq8zAdK3ZrsAj.jpg",
-    "genre_ids": [
-      18,
-      80
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/640/watch"
-  },
-  {
-    "id": 118340,
-    "title": "Guardians of the Galaxy",
-    "release_date": "2014-07-30",
-    "poster_path": "/jPrJPZKJVhvyJ4DmUTrDgmFN0yG.jpg",
-    "genre_ids": [
-      28,
-      878,
-      12
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/118340/watch"
-  },
-  {
-    "id": 805,
-    "title": "Rosemary's Baby",
-    "release_date": "1968-06-12",
-    "poster_path": "/nclYFGpVzfbiORO5ELVVdxzt9Vg.jpg",
-    "genre_ids": [
-      18,
-      27,
-      53
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/805/watch"
-  },
-  {
-    "id": 930094,
-    "title": "Red, White & Royal Blue",
-    "release_date": "2023-07-27",
-    "poster_path": "/ta3ReqbdEcLJM3mcHMzbYFZI8v7.jpg",
-    "genre_ids": [
-      35,
-      10749
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/930094/watch"
-  },
-  {
-    "id": 24382,
-    "title": "Big Deal on Madonna Street",
-    "release_date": "1958-07-26",
-    "poster_path": "/f5OxD8Nl0pR3DcYHtYhHRfpsmjl.jpg",
-    "genre_ids": [
-      35,
-      80
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/24382/watch"
-  },
-  {
-    "id": 11010,
-    "title": "The Postman",
-    "release_date": "1994-04-07",
-    "poster_path": "/cUaCpjVDefYShKyLmkcDsiPaBHn.jpg",
-    "genre_ids": [
-      35,
-      18,
-      10749
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/11010/watch"
-  },
-  {
-    "id": 615453,
-    "title": "Ne Zha",
-    "release_date": "2019-07-26",
-    "poster_path": "/phM9bb6s9c60LA8qwsdk7U1N2cS.jpg",
+    "id": 16859,
+    "title": "Kiki's Delivery Service",
+    "release_date": "1989-07-29",
+    "poster_path": "/Aufa4YdZIv4AXpR9rznwVA5SEfd.jpg",
     "genre_ids": [
       16,
-      14,
-      12
+      10751,
+      14
     ],
-    "watch_link": "https://www.themoviedb.org/movie/615453/watch"
+    "watch_link": "https://www.themoviedb.org/movie/16859/watch"
   },
   {
-    "id": 13,
-    "title": "Forrest Gump",
-    "release_date": "1994-06-23",
-    "poster_path": "/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg",
+    "id": 441130,
+    "title": "Wolfwalkers",
+    "release_date": "2020-10-26",
+    "poster_path": "/ehAKuE48okTuonq6TpsNQj8vFTC.jpg",
     "genre_ids": [
-      35,
-      18,
-      10749
+      16,
+      10751,
+      12,
+      14
     ],
-    "watch_link": "https://www.themoviedb.org/movie/13/watch"
+    "watch_link": "https://www.themoviedb.org/movie/441130/watch"
   },
   {
-    "id": 1280,
-    "title": "3-Iron",
-    "release_date": "2004-10-15",
-    "poster_path": "/8ens4pTquSxN7J9EgL0NOehWwdZ.jpg",
+    "id": 16869,
+    "title": "Inglourious Basterds",
+    "release_date": "2009-08-02",
+    "poster_path": "/7sfbEnaARXDDhKm0CZ7D7uc2sbo.jpg",
     "genre_ids": [
       18,
-      10749,
-      80
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/1280/watch"
-  },
-  {
-    "id": 423,
-    "title": "The Pianist",
-    "release_date": "2002-09-17",
-    "poster_path": "/2hFvxCCWrTmCYwfy7yum0GKRi3Y.jpg",
-    "genre_ids": [
-      18,
+      53,
       10752
     ],
-    "watch_link": "https://www.themoviedb.org/movie/423/watch"
+    "watch_link": "https://www.themoviedb.org/movie/16869/watch"
   },
   {
-    "id": 851,
-    "title": "Brief Encounter",
-    "release_date": "1945-11-24",
-    "poster_path": "/jC9EwLJcGhYMSQAHu2LxkKN5v7O.jpg",
+    "id": 491480,
+    "title": "The Boy Who Harnessed the Wind",
+    "release_date": "2019-02-14",
+    "poster_path": "/yOr7RxHw15MMXNxGMXSmngDqHyI.jpg",
     "genre_ids": [
-      18,
-      10749
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/851/watch"
-  },
-  {
-    "id": 650031,
-    "title": "The Shadow in My Eye",
-    "release_date": "2021-10-28",
-    "poster_path": "/jCKvbH3a4V5IPoRAG85eDaniNqO.jpg",
-    "genre_ids": [
-      10752,
       18,
       36
     ],
-    "watch_link": "https://www.themoviedb.org/movie/650031/watch"
+    "watch_link": "https://www.themoviedb.org/movie/491480/watch"
   },
   {
-    "id": 1084736,
-    "title": "The Count of Monte Cristo",
-    "release_date": "2024-06-28",
-    "poster_path": "/sAT1P3FGhtJ68anUyJScnMu8t1l.jpg",
-    "genre_ids": [
-      12,
-      28,
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/1084736/watch"
-  },
-  {
-    "id": 925,
-    "title": "Do the Right Thing",
-    "release_date": "1989-06-14",
-    "poster_path": "/63rmSDPahrH7C1gEFYzRuIBAN9W.jpg",
-    "genre_ids": [
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/925/watch"
-  },
-  {
-    "id": 85,
-    "title": "Raiders of the Lost Ark",
-    "release_date": "1981-06-12",
-    "poster_path": "/ceG9VzoRAVGwivFU403Wc3AHRys.jpg",
-    "genre_ids": [
-      12,
-      28
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/85/watch"
-  },
-  {
-    "id": 1000492,
-    "title": "All Your Faces",
-    "release_date": "2023-03-29",
-    "poster_path": "/zIgyDGsmIyMAf0ppg7QKTuIM1He.jpg",
-    "genre_ids": [
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/1000492/watch"
-  },
-  {
-    "id": 10674,
-    "title": "Mulan",
-    "release_date": "1998-06-18",
-    "poster_path": "/5TYgKxYhnhRNNwqnRAKHkgfqi2G.jpg",
-    "genre_ids": [
-      16,
-      10751,
-      12
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/10674/watch"
-  },
-  {
-    "id": 674,
-    "title": "Harry Potter and the Goblet of Fire",
-    "release_date": "2005-11-16",
-    "poster_path": "/fECBtHlr0RB3foNHDiCBXeg9Bv9.jpg",
-    "genre_ids": [
-      12,
-      14
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/674/watch"
-  },
-  {
-    "id": 550,
-    "title": "Fight Club",
-    "release_date": "1999-10-15",
-    "poster_path": "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
-    "genre_ids": [
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/550/watch"
-  },
-  {
-    "id": 25538,
-    "title": "Yi Yi",
-    "release_date": "2000-09-20",
-    "poster_path": "/mR8dSQZI8X6Z1NClJhFrtJp636z.jpg",
-    "genre_ids": [
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/25538/watch"
-  },
-  {
-    "id": 527774,
-    "title": "Raya and the Last Dragon",
-    "release_date": "2021-03-03",
-    "poster_path": "/5nVhgCzxKbK47OLIKxCR1syulOn.jpg",
-    "genre_ids": [
-      16,
-      10751,
-      14,
-      28,
-      12
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/527774/watch"
-  },
-  {
-    "id": 791373,
-    "title": "Zack Snyder's Justice League",
-    "release_date": "2021-03-18",
-    "poster_path": "/tnAuB8q5vv7Ax9UAEje5Xi4BXik.jpg",
+    "id": 530254,
+    "title": "The Witch: Part 1. The Subversion",
+    "release_date": "2018-06-27",
+    "poster_path": "/4i2wo2ja5g2PmUxWa1a2eYIboZf.jpg",
     "genre_ids": [
       28,
-      12,
-      14
+      9648,
+      878
     ],
-    "watch_link": "https://www.themoviedb.org/movie/791373/watch"
-  },
-  {
-    "id": 666,
-    "title": "Central Station",
-    "release_date": "1998-04-03",
-    "poster_path": "/zJvp7XjQ2LhPbDVYhFXyucs40vR.jpg",
-    "genre_ids": [
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/666/watch"
-  },
-  {
-    "id": 678580,
-    "title": "El mesero",
-    "release_date": "2021-07-15",
-    "poster_path": "/zvGC5jX5wQmU1GgPc0VGZz7Mtcs.jpg",
-    "genre_ids": [
-      35
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/678580/watch"
+    "watch_link": "https://www.themoviedb.org/movie/530254/watch"
   },
   {
     "id": 552532,
@@ -313,25 +298,59 @@ const initialMoviePool = [
     "watch_link": "https://www.themoviedb.org/movie/552532/watch"
   },
   {
-    "id": 996,
-    "title": "Double Indemnity",
-    "release_date": "1944-07-06",
-    "poster_path": "/rVNYZZgfhwqVMMWlBmxOfWqnwCj.jpg",
+    "id": 3782,
+    "title": "Ikiru",
+    "release_date": "1952-10-09",
+    "poster_path": "/dgNTS4EQDDVfkzJI5msKuHu2Ei3.jpg",
     "genre_ids": [
-      80,
-      53
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/996/watch"
-  },
-  {
-    "id": 470044,
-    "title": "The Hate U Give",
-    "release_date": "2018-10-19",
-    "poster_path": "/2icwBom0t5nmOuZI9FVXF3gkMK0.jpg",
-    "genre_ids": [
-      80,
       18
     ],
-    "watch_link": "https://www.themoviedb.org/movie/470044/watch"
+    "watch_link": "https://www.themoviedb.org/movie/3782/watch"
+  },
+  {
+    "id": 502033,
+    "title": "Sound of Metal",
+    "release_date": "2020-11-20",
+    "poster_path": "/3178oOJKKPDeQ2legWQvMPpllv.jpg",
+    "genre_ids": [
+      18,
+      10402
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/502033/watch"
+  },
+  {
+    "id": 278,
+    "title": "The Shawshank Redemption",
+    "release_date": "1994-09-23",
+    "poster_path": "/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg",
+    "genre_ids": [
+      18,
+      80
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/278/watch"
+  },
+  {
+    "id": 28971,
+    "title": "Limelight",
+    "release_date": "1952-10-23",
+    "poster_path": "/tDD11x3ZWCXXXwdpbGEU9uU4kh1.jpg",
+    "genre_ids": [
+      10749,
+      18,
+      10402
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/28971/watch"
+  },
+  {
+    "id": 1050035,
+    "title": "Monster",
+    "release_date": "2023-06-02",
+    "poster_path": "/kvUJUyUGOhEoiWWNH04IXoExPE2.jpg",
+    "genre_ids": [
+      9648,
+      53,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/1050035/watch"
   }
 ];
