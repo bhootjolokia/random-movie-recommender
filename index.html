@@ -8,7 +8,8 @@
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css" />
 
-  <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'>
+  <!-- THIS LINK HAS BEEN UPDATED TO INCLUDE THE '300' FONT WEIGHT -->
+  <link href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap' rel='stylesheet'>
 
   <style>
     :root {
@@ -40,16 +41,20 @@
       height: 100%;
     }
     
+    /* === THE FINAL, SLEEK H1 STYLE === */
     h1 {
       font-size: clamp(1.5rem, 5vw, 2rem);
       line-height: 1.2;
-      font-weight: 400;
-      letter-spacing: 0.025em;
+      font-weight: 300; /* Using the 'Light' weight */
+      letter-spacing: 0.05em; /* Increased spacing to complement the lighter font */
+      text-transform: uppercase; /* Makes it feel more like a refined title */
+      color: var(--color-text-muted); /* Slightly softer color for a sleeker feel */
       margin-top: 0;
       margin-bottom: 1rem;
       text-align: center;
       flex-shrink: 0; 
     }
+    /* === END OF H1 STYLE === */
 
     #posterWrapper {
       background: var(--color-bg); 
