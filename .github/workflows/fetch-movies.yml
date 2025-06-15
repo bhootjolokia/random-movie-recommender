@@ -19,37 +19,31 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y jq curl
 
-      - name: Fetch top-rated movies (pages 1–40)
+      - name: Fetch and process movies
         run: |
           mkdir -p data
+          # Fetch all movies
+          jq -n '[]' > data/all_movies_filtered.json
           for page in {1..40}; do
-            curl -s "https://api.themoviedb.org/3/movie/top_rated?api_key=${{ secrets.TMDB_API_KEY }}&language=en-US&page=$page" \
-              | jq '.results' > data/page${page}.json
+            raw_page=$(curl -s "https://api.themoviedb.org/3/movie/top_rated?api_key=${{ secrets.TMDB_API_KEY }}&language=en-US&page=$page")
+            
+            # Use jq to process each movie in the page
+            echo "$raw_page" | jq -c '.results[]' | while read -r movie; do
+              # Add a generic watch_link to every movie
+              echo "$movie" | jq '. + {watch_link: ("https://www.themoviedb.org/movie/" + (.id|tostring) + "/watch")}'
+            done | jq -s '.' >> temp_page.json
           done
-
-      - name: Combine into a single raw list
-        run: |
-          jq -s 'flatten' data/page*.json > data/all_movies.json
-
-      # === THE NEW, SIMPLIFIED LOGIC ===
-      # No more complex filtering. We take the raw list and process it.
-
-      - name: Slice to a max of 800 movies and create movies.json
-        run: |
-          # This step now takes the raw list and creates our main movies.json file.
-          jq '.[0:800]' data/all_movies.json > data/movies.json
-
-      - name: Prune to only necessary fields for fast loading
-        run: |
-          # We add a generic watch_link to every movie.
-          jq '[.[] | . + {watch_link: ("https://www.themoviedb.org/movie/" + (.id|tostring) + "/watch")}]' data/movies.json > data/movies.json.tmp
           
-          # Then we keep only the fields the website needs.
-          jq '[.[] | {id, title, release_date, poster_path, genre_ids, watch_link}]' data/movies.json.tmp > data/movies.json
-
-      - name: Create daily pool of 10 random movies using shuf
+          # Combine all pages and prune to necessary fields
+          jq -s 'flatten | .[0:800] | [.[] | {id, title, release_date, poster_path, genre_ids, watch_link}]' temp_page.json > data/movies.json
+          
+      # === THIS IS THE NEW, BULLETPROOF STEP ===
+      - name: Create instant-load JS pool file
         run: |
-          jq -c '.[]' data/movies.json | shuf | head -n 10 | jq -s '.' > data/daily-pool.json
+          # Take 10 random movies from the main list
+          daily_pool_json=$(jq 'shuffle | .[0:10]' data/movies.json)
+          # Create a JavaScript file that assigns this data to a variable
+          echo "const initialMoviePool = ${daily_pool_json};" > data/initial-pool.js
 
       - name: Commit updated movie files
         env:
@@ -57,6 +51,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/movies.json data/daily-pool.json
+          # We now commit the main list and the new JS file
+          git add data/movies.json data/initial-pool.js
           git commit -m "chore: update TMDb movie caches" || echo "No changes"
           git push
