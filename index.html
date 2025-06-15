@@ -22,39 +22,67 @@
     #genreOverlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);backdrop-filter:blur(4px)}
     #genreMenu{position:relative;background:var(--color-base);border-radius:var(--radius);width:90%;max-width:340px;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.5);opacity: 0;transform: translateY(100px);transition: transform 300ms cubic-bezier(0.21, 0.6, 0.35, 1), opacity 300ms ease;}
     #genreModalContainer.open #genreMenu{opacity: 1;transform: translateY(0);}
-    .genre-menu-header{padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.1);display:flex;justify-content:center;align-items:center;flex-shrink:0; position: relative;} /* <<< MODIFIED: Added position relative */
+    .genre-menu-header{padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.1);display:flex;justify-content:center;align-items:center;flex-shrink:0; position: relative;}
     .genre-menu-header h2{font-size:1rem;font-weight:600}
+    .genre-menu-close {display: block;position: absolute;top: 50%;right: 0.25rem;transform: translateY(-50%);background: transparent;border: none;color: var(--color-text-muted);font-size: 1.75rem;line-height: 1;padding: 0.25rem 0.5rem;cursor: pointer;}
+    .genre-menu-close:hover {color: var(--color-text);}
+    #genreList{overflow-y:auto;padding:.5rem}
+    .site-footer{width:100%;margin-top:auto;padding-top:1.5rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem 1rem;color:var(--color-text-muted);flex-shrink:0;font-size:clamp(.7rem,2.5vw,.75rem)}.site-footer a{color:var(--color-text-muted);text-decoration:none}.site-footer a:hover{color:var(--color-accent);text-decoration:underline}.footer-center{flex-basis:100%;text-align:center}
     
-    /* <<< NEW: Style for the mobile close button >>> */
-    .genre-menu-close {
-      display: block;
-      position: absolute;
-      top: 50%;
-      right: 0.25rem;
-      transform: translateY(-50%);
-      background: transparent;
-      border: none;
+    /* <<< NEW: Styles for the redesigned genre list, inspired by the screenshot >>> */
+    #genreList .item {
+      padding: .6rem 1rem; /* More vertical padding */
+      display: flex;
+      align-items: center;
+      gap: .75rem; /* More space for the checkmark */
+      font-size: 1rem;
+      font-weight: 400; /* Default to normal weight */
       color: var(--color-text-muted);
-      font-size: 1.75rem;
-      line-height: 1;
-      padding: 0.25rem 0.5rem;
       cursor: pointer;
+      position: relative;
+      border-radius: .25rem;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
-    .genre-menu-close:hover {
+    #genreList .item:not([data-genre="0"]):hover {
+      background-color: rgba(255, 255, 255, 0.05);
       color: var(--color-text);
     }
+    /* Style for the special "Any Genre" button */
+    #genreList .item[data-genre="0"] {
+      background-color: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 0.25rem;
+    }
+    /* Don't show a checkmark for "Any Genre" */
+    #genreList .item[data-genre="0"] .check {
+      display: none;
+    }
+    /* Styles for the checkmark itself */
+    #genreMenu .check {
+      visibility: hidden; /* Hide by default */
+      color: var(--color-accent);
+      font-weight: bold; /* Make the checkmark symbol bold */
+    }
+    /* When an item is selected... */
+    #genreMenu .item.selected {
+      font-weight: 600; /* Make text bold */
+      color: var(--color-text); /* Use the brighter text color */
+    }
+    /* And show its checkmark */
+    #genreMenu .item.selected .check {
+      visibility: visible;
+    }
 
-    #genreList{overflow-y:auto;padding:.5rem}#genreList .item{padding:.35rem .5rem;display:flex;align-items:center;gap:.5rem;font-size:.9rem;white-space:nowrap;cursor:pointer;position:relative;border-radius:.25rem}#genreMenu .check{visibility:hidden;color:#38a169}#genreMenu .item.selected .check{visibility:visible}.site-footer{width:100%;margin-top:auto;padding-top:1.5rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem 1rem;color:var(--color-text-muted);flex-shrink:0;font-size:clamp(.7rem,2.5vw,.75rem)}.site-footer a{color:var(--color-text-muted);text-decoration:none}.site-footer a:hover{color:var(--color-accent);text-decoration:underline}.footer-center{flex-basis:100%;text-align:center}
-    
     @media (min-width: 768px) {
-      .genre-menu-close {display: none;} /* <<< NEW: Hide close button on desktop */
+      .genre-menu-close {display: none;}
       #genreOverlay,.genre-menu-header{display:none}
       #genreModalContainer{position:static;opacity:1;pointer-events:auto;display:block}
       #genreMenu{position:absolute;bottom:100%;right:100%;transform-origin:bottom right;margin-right:1rem;max-height:60vh;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.5);opacity:0;transform:translateY(.5rem) scale(.95);pointer-events:none;transition:opacity 150ms ease,transform 150ms ease;width:auto;max-width:none;}
       #genreModalContainer.open #genreMenu{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
-      #genreList{padding:0;overflow-y:visible}
-      #genreList .item{padding:.15rem .4rem;gap:.3rem;font-size:.8125rem}
-      #genreList .item:hover{background:rgba(45,212,191,.1)}
+      #genreList{padding:0.25rem;} /* Add a little padding for desktop too */
+      #genreList .item{font-size: 0.9rem;} /* Slightly smaller font for the compact desktop view */
       #posterWrapper,.btn,.controls{max-width:320px}
       .site-footer {flex-wrap: nowrap;align-items: flex-end;}
       .site-footer .footer-center {flex-basis: auto;text-align: right;}
@@ -86,7 +114,6 @@
         <div id='genreMenu' role='menu'>
           <div class="genre-menu-header">
             <h2>Select Genres</h2>
-            <!-- <<< NEW: Close button for mobile >>> -->
             <button class="genre-menu-close">×</button>
           </div>
           <div id="genreList"></div>
@@ -105,7 +132,7 @@
   <script src="data/initial-pool.js" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-    // --- SETUP: Constants and Element Selectors ---
+    // --- SETUP ---
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
     const SEEN_MOVIES_CAP = 50;
     let movies = [];
@@ -125,31 +152,56 @@
     const genreMenu = document.getElementById('genreMenu');
     const genreList = document.getElementById('genreList');
     const genreOverlay = document.getElementById('genreOverlay');
-    const genreMenuCloseBtn = document.querySelector('.genre-menu-close'); // <<< NEW: Select the close button
+    const genreMenuCloseBtn = document.querySelector('.genre-menu-close');
 
-    // --- SETUP: Genre Menu Logic ---
-    const genreMap = {0:'Any Genre',28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Sci-Fi',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
+    // --- GENRE MENU LOGIC ---
+    const genreMap = {0:'Any Genre',28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',99:'Documentary',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Science Fiction',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
+    
+    // <<< MODIFIED: This loop now adds a checkmark span to every item for easier CSS styling >>>
     Object.entries(genreMap).forEach(([id,name]) => {
-      const el = document.createElement('div'); el.className = 'item'; el.dataset.genre = id; el.textContent = name;
-      const check = document.createElement('span'); check.className = 'check'; check.innerHTML = '✓ '; el.prepend(check);
+      const el = document.createElement('div');
+      el.className = 'item';
+      el.dataset.genre = id;
+      
+      const check = document.createElement('span');
+      check.className = 'check';
+      check.innerHTML = '✓'; // Use HTML entity for the checkmark
+      
+      const text = document.createElement('span');
+      text.textContent = name;
+      
+      el.appendChild(check);
+      el.appendChild(text);
+      
       el.addEventListener('click', (e) => {
         e.stopPropagation(); const genreId = +id;
-        if (genreId === 0) { selectedGenres.clear(); selectedGenres.add(0); } else {
-          selectedGenres.delete(0); if (selectedGenres.has(genreId)) { selectedGenres.delete(genreId); if (selectedGenres.size === 0) selectedGenres.add(0); } else { 
-            selectedGenres.add(genreId); 
-          }
+        if (genreId === 0) {
+            if (selectedGenres.has(0) && selectedGenres.size === 1) return; // Do nothing if Any Genre is already the only one selected
+            selectedGenres.clear();
+            selectedGenres.add(0);
+        } else {
+            selectedGenres.delete(0);
+            if (selectedGenres.has(genreId)) {
+                selectedGenres.delete(genreId);
+                if (selectedGenres.size === 0) selectedGenres.add(0);
+            } else { 
+                selectedGenres.add(genreId); 
+            }
         }
         updateGenreSelection();
         randomize();
-        closeGenreMenu();
+        if(window.innerWidth < 768) { // Only close on mobile for a better UX
+          closeGenreMenu();
+        }
       });
       genreList.appendChild(el);
     });
+
     function updateGenreSelection() { document.querySelectorAll('#genreList .item').forEach(i => { i.classList.toggle('selected', selectedGenres.has(+i.dataset.genre)); }); }
     function closeGenreMenu() { genreModalContainer.classList.remove('open'); }
     genreToggle.addEventListener('click', (e) => { e.stopPropagation(); genreModalContainer.classList.toggle('open'); });
     genreOverlay.addEventListener('click', closeGenreMenu);
-    genreMenuCloseBtn.addEventListener('click', closeGenreMenu); // <<< NEW: Add click listener to close button
+    genreMenuCloseBtn.addEventListener('click', closeGenreMenu);
     document.addEventListener('click', (e) => {
       if (window.innerWidth >= 768 && !genreMenu.contains(e.target) && e.target !== genreToggle) { closeGenreMenu(); }
     });
@@ -180,21 +232,11 @@
       } catch (err) {
         console.error('Could not load the full movie list. Sticking with initial pool.');
       }
-      updateGenreSelection(); // <<< MODIFIED: Call this to set the initial checkmark
+      updateGenreSelection();
     }
     initializeApp();
 
     // --- CORE APP FUNCTIONS (Unchanged) ---
-    btn.addEventListener('click', () => {
-        if (btn.textContent === 'Reset') {
-            selectedGenres.clear();
-            selectedGenres.add(0);
-            updateGenreSelection();
-            randomize();
-        } else {
-            randomize();
-        }
-    });
     function pickNewMovie(pool, movie) {
         loadingPlaceholder.style.display = 'none';
         if (!movie) {
@@ -284,6 +326,16 @@
       }));
       return Promise.all(promises);
     }
+    btn.addEventListener('click', () => {
+        if (btn.textContent === 'Reset') {
+            selectedGenres.clear();
+            selectedGenres.add(0);
+            updateGenreSelection();
+            randomize();
+        } else {
+            randomize();
+        }
+    });
   });
   </script>
 </body>
