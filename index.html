@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang='en'>
 <head>
@@ -19,6 +20,7 @@
       --color-card: #1F1F1F;
       --color-accent: #2DD4BF;
       --color-text: #E5E7EB;
+      --color-text-muted: #9CA3AF; /* Muted text color for footer */
       --radius: 0.5rem;
     }
 
@@ -31,10 +33,17 @@
       justify-content: center;
       padding: 1rem;
       margin: 0;
-      /* Always leave space at bottom so content isn't flush against edge */
-      padding-bottom: 2rem;
     }
-    h1 { font-size: 2.25rem; line-height: 1.1; font-weight: 700; margin-bottom: 1rem; letter-spacing: 0.025em; white-space: nowrap; }
+    /* --- MODIFIED --- Centered title and allow it to wrap on small screens */
+    h1 {
+      font-size: 2.25rem;
+      line-height: 1.1;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: 0.025em;
+      text-align: center; /* Center the title */
+      /* removed white-space: nowrap; to allow wrapping */
+    }
 
     .randomizer {
       background: var(--color-card);
@@ -43,20 +52,12 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
       width: 100%;
       max-width: clamp(240px, 90vw, 320px);
-      /* Limit card height to viewport for small screens */
       max-height: 80vh;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
       transition: max-width 0.2s, max-height 0.2s;
-      /* Reserve space beneath card for one line of title */
-      margin-bottom: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: max-width 0.2s;
-      /* Reserve space beneath card for one line of title */
       margin-bottom: 1.25rem;
     }
 
@@ -68,22 +69,12 @@
       aspect-ratio: 2/3;
       margin-bottom: 1rem;
     }
-    /* Ensure poster image always shows */
     #moviePoster {
       display: block !important;
       width: 100%;
       height: 100%;
       object-fit: contain;
     }
-    /* Hide poster until src is set */
-    #moviePoster {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-    }
-    #moviePoster { width: 100%; height: 100%; object-fit: contain;  }
 
     .btn {
       display: block;
@@ -97,29 +88,26 @@
       font-size: 0.875rem;
       transition: background 0.2s, transform 0.1s;
       cursor: pointer;
-      /* Match space above and below button */
-      margin-bottom: 1rem; }
+      margin-bottom: 1rem;
+    }
     .btn:disabled { opacity: 0.6; cursor: default; }
     .btn:hover:not(:disabled), .btn:focus:not(:disabled) {
-      /* Randomize button hover color */
       background: var(--color-accent);
       color: #121212;
       transform: translateY(-2px);
       outline: none;
-    } }
+    }
     .btn:active { transform: translateY(0); }
 
     #result {
       text-align: center;
-      /* reserve space for controls under title */
-      margin: 1rem 0 2rem; /* top 1rem, bottom 2rem */
+      margin: 1rem 0 2rem;
       min-height: 1.25rem;
       visibility: hidden;
     }
     #movieResult {
       font-weight: 600;
       font-size: 0.875rem;
-      /* Keep title on a single line with ellipsis for overflow */
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -134,54 +122,73 @@
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 0.5rem;
-      /* Ensure dropdown menu is positioned relative to this block */
       position: relative;
-      margin-top: 0;  /* no extra gap above */
-      margin-bottom: 1rem; /* minimal breathing room before footer */
+      margin-top: 0;
+      margin-bottom: 1rem;
     }
     #genreToggle, #streamLink { font-size: 0.875rem; font-weight: 600; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: var(--radius); }
 
-    /* Dropdown */
-    #genreMenu { position: absolute; bottom: 100%; right: calc(100% + 0.25rem); transform-origin: bottom right; max-height: 60vh; overflow-y: auto; background: var(--color-base); border-radius: var(--radius); box-shadow: 0 4px 12px rgba(0,0,0,0.5); opacity: 0; transform: translateY(0.5rem) scale(0.95); pointer-events: none; transition: opacity 150ms ease, transform 150ms ease; z-index: 1000; }
+    /* --- MODIFIED --- Adjusted dropdown position to be safer on mobile */
+    #genreMenu {
+      position: absolute;
+      bottom: 100%;
+      right: 0; /* Changed from 'right: calc(100% + 0.25rem)' to prevent going off-screen */
+      transform-origin: bottom right;
+      max-height: 60vh;
+      overflow-y: auto;
+      background: var(--color-base);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      opacity: 0;
+      transform: translateY(0.5rem) scale(0.95);
+      pointer-events: none;
+      transition: opacity 150ms ease, transform 150ms ease;
+      z-index: 1000;
+    }
     #genreMenu.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
     #genreMenu .item { padding: 0.2rem 0.4rem; display: flex; align-items: center; gap: 0.3rem; font-size: 0.8125rem; white-space: nowrap; cursor: pointer; position: relative; }
-    /* Elegant hover indicator */
-    #genreMenu .item:hover {
-      background: rgba(45, 212, 191, 0.1); /* subtle accent highlight */
-    }
-    /* Visual cue for "Where to stream" hover */
-    #streamLink:hover, #streamLink:focus {
-      background: rgba(45, 212, 191, 0.1);
-      border-radius: var(--radius);
-      outline: none;
-    }
+    #genreMenu .item:hover { background: rgba(45, 212, 191, 0.1); }
+    #streamLink:hover, #streamLink:focus { background: rgba(45, 212, 191, 0.1); border-radius: var(--radius); outline: none; }
     #genreMenu .check { visibility: hidden; color: #38A169; }
     #genreMenu .item.selected .check { visibility: visible; }
-      /* Handle tall card on small vertical screens */
+
+    /* --- NEW --- Added styles for a flexible, responsive footer */
+    .site-footer {
+      width: 100%;
+      max-width: 320px; /* Match the width of the main card */
+      margin-top: auto; /* Push footer to the bottom */
+      padding-top: 2rem;
+      display: flex;
+      flex-wrap: wrap; /* Allows items to wrap onto the next line on small screens */
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem 1.5rem; /* Provides space between links */
+      font-size: 0.75rem; /* 12px */
+      color: var(--color-text-muted);
+    }
+    .site-footer a {
+      color: var(--color-text-muted);
+      text-decoration: none;
+    }
+    .site-footer a:hover {
+      color: var(--color-accent);
+      text-decoration: underline;
+    }
+    .footer-center {
+      /* This will make the attribution text take up the full width and center itself when it wraps to a new line */
+      flex-basis: 100%;
+      text-align: center;
+    }
+
     @media (max-height: 700px) {
-      /* Increase bottom padding on very short viewports */
-      body {
-        padding-bottom: 4rem;
-      }
-      /* Reduce card height and allow internal scrolling */
-      .randomizer {
-        max-height: 60vh;
-        overflow-y: auto;
-        padding: 0.5rem;
-      }
-      /* Ensure body has room for controls at bottom */
-      body {
-        padding-top: 0.5rem;
-        padding-bottom: 3rem;
-      }
-      /* Controls remain below the title even on small screens */
+      body { padding-bottom: 2rem; }
+      .randomizer { max-height: 60vh; overflow-y: auto; padding: 0.5rem; }
     }
   </style>
 </head>
 <body>
-  <div class="page-wrapper">
-
   <h1>Randomly pick a top rated movie</h1>
+
   <div class='randomizer'>
     <div id='posterWrapper'><img id='moviePoster' alt='Movie poster'></div>
     <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
@@ -195,11 +202,12 @@
     <div id='genreMenu' role='menu'></div>
   </div>
 
-  <!-- Footer Links -->
-  <a href="#" class="privacy-policy text-xs text-gray-400" style="position:absolute; bottom:1.5rem; right:0.5rem;">Privacy Policy</a>
-  <div class="attribution text-xs text-gray-500" style="position:absolute; bottom:0.5rem; right:0.5rem;">Data provided by <a href="https://www.themoviedb.org" target="_blank" class="underline">TMDb</a></div>
-  <a href="mailto:movierandomizertool@gmail.com" class="contact-us text-xs text-gray-400" style="position:absolute; bottom:0.5rem; left:0.5rem;">Contact Us</a>
-  </div>
+  <!-- --- NEW --- Replaced absolute positioned links with a semantic footer -->
+  <footer class="site-footer">
+    <a href="mailto:movierandomizertool@gmail.com" class="footer-left">Contact Us</a>
+    <a href="#" class="footer-right">Privacy Policy</a>
+    <div class="footer-center">Data provided by <a href="https://www.themoviedb.org" target="_blank">TMDb</a></div>
+  </footer>
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -223,19 +231,38 @@
       const el = document.createElement('div');
       el.className = 'item'; el.dataset.genre = id;
       el.textContent = name;
-      el.addEventListener('click', () => {
-        if (+id === 0) selectedGenres = new Set([0]);
-        else {
-          selectedGenres.has(+id) ? selectedGenres.delete(+id) : selectedGenres.add(+id);
+      const check = document.createElement('span');
+      check.className = 'check';
+      check.innerHTML = '✓ '; // Checkmark
+      el.prepend(check);
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const genreId = +id;
+        if (genreId === 0) {
+          selectedGenres.clear();
+          selectedGenres.add(0);
+        } else {
           selectedGenres.delete(0);
+          if (selectedGenres.has(genreId)) {
+            selectedGenres.delete(genreId);
+            if (selectedGenres.size === 0) selectedGenres.add(0);
+          } else {
+            selectedGenres.add(genreId);
+          }
         }
-        document.querySelectorAll('#genreMenu .item').forEach(i => {
-          i.classList.toggle('selected', selectedGenres.has(+i.dataset.genre));
-        });
+        updateGenreSelection();
         randomize();
+        genreMenu.classList.remove('open');
       });
       genreMenu.appendChild(el);
     });
+
+    function updateGenreSelection() {
+      document.querySelectorAll('#genreMenu .item').forEach(i => {
+        i.classList.toggle('selected', selectedGenres.has(+i.dataset.genre));
+      });
+      document.querySelector('#genreMenu .item[data-genre="0"]').classList.toggle('selected', selectedGenres.has(0));
+    }
 
     // Toggle genre menu
     genreToggle.addEventListener('click', e => {
@@ -248,46 +275,79 @@
 
     // Fetch full movie list
     fetch('data/movies.json')
-      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(r => r.ok ? r.json() : Promise.reject('Failed to load movie data.'))
       .then(arr => {
         movies = arr.filter(m => m.poster_path).map(m => ({
           id: m.id,
           title: m.title,
-          year: m.release_date.slice(0,4),
+          year: m.release_date ? m.release_date.slice(0,4) : 'N/A',
           src: `https://image.tmdb.org/t/p/w342${m.poster_path}`,
           genre_ids: m.genre_ids,
           watch_link: m.watch_link
         }));
         btn.disabled = false;
-        // show initial
-        const m = movies[Math.floor(Math.random()*movies.length)];
+        updateGenreSelection();
+        // show initial movie
+        pickNewMovie(movies);
+      })
+      .catch(err => {
+        console.error(err);
+        txt.textContent = 'Could not load movies.';
+        res.style.visibility = 'visible';
+      });
+
+    btn.addEventListener('click', randomize);
+
+    function pickNewMovie(moviePool) {
+        if (!moviePool || moviePool.length === 0) {
+            img.src = ''; // A blank poster or placeholder
+            txt.textContent = 'No movies match the selected genres.';
+            streamLink.href = '#';
+            res.style.visibility = 'visible';
+            btn.disabled = true; // Disable button if no movies available
+            return null;
+        }
+
+        btn.disabled = false; // Re-enable if there are movies
+        const m = moviePool[Math.floor(Math.random() * moviePool.length)];
         img.src = m.src;
         txt.textContent = `${m.title} (${m.year})`;
         streamLink.href = m.watch_link || `${TMDB_BASE}/${m.id}/watch?locale=US`;
         res.style.visibility = 'visible';
-      })
-      .catch(console.error);
-
-    btn.addEventListener('click', randomize);
+        return m;
+    }
 
     function randomize() {
       if (!movies.length) return;
       let pool = movies;
       const fs = [...selectedGenres].filter(g => g !== 0);
-      if (fs.length) pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
+      if (fs.length > 0) {
+        pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
+      }
+
+      // Check if pool is empty after filtering
+      if (pool.length === 0) {
+          pickNewMovie(pool); // This will show the "no movies found" message
+          return;
+      }
+
       btn.disabled = true;
       let i = 0;
-      (function spin() {
-        const m = pool[Math.floor(Math.random()*pool.length)];
-        img.src = m.src;
-        txt.textContent = `${m.title} (${m.year})`;
-        streamLink.href = m.watch_link || `${TMDB_BASE}/${m.id}/watch?locale=US`;
-        res.style.visibility = 'visible';
-        if (++i < spinCount) setTimeout(spin, spinSpeed);
-        else btn.disabled = false;
-      })();
+      const spinInterval = setInterval(() => {
+        img.classList.add('slot-flip');
+        pickNewMovie(pool);
+        // Remove class after animation to allow it to be re-added
+        setTimeout(() => img.classList.remove('slot-flip'), 600);
+        if (++i >= spinCount) {
+          clearInterval(spinInterval);
+          btn.disabled = false;
+        }
+      }, spinSpeed + 50);
     }
   });
 </script>
 </body>
 </html>
+
+
+Just copy and paste this code, and your site will look and feel much better on phones and tablets. Let me know if you have any other ideas for your website
