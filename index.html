@@ -196,10 +196,11 @@
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
-    const spinCount = 30, spinSpeed = 50; // Increased spinSpeed slightly for smoother visual
+    const MIN_SPIN_DURATION = 1500; // Minimum spin time in milliseconds (1.5 seconds)
+    const FAKE_SPIN_SPEED = 60;
     let movies = [];
     let selectedGenres = new Set([0]);
-    let isSpinning = false; // --- NEW --- "Busy" flag to prevent multiple spins at once
+    let isSpinning = false;
 
     const btn = document.getElementById('randomizeBtn');
     const img = document.getElementById('moviePoster');
@@ -289,9 +290,9 @@
         return m;
     }
     
-    // --- MODIFIED --- This is the new, super-robust randomize function
+    // --- MODIFIED --- This is the new "Fake Spin" optimized function
     async function randomize() {
-      if (isSpinning || !movies.length) return; // Don't run if already spinning
+      if (isSpinning || !movies.length) return;
       
       isSpinning = true;
       btn.disabled = true;
@@ -305,41 +306,38 @@
 
         if (pool.length === 0) {
           pickNewMovie(pool);
-          return; // Exit early, the 'finally' block will still run
+          return;
         }
 
-        const moviesForSpin = [];
-        for (let i = 0; i < spinCount; i++) {
-          moviesForSpin.push(pool[Math.floor(Math.random() * pool.length)]);
-        }
-        
-        await preloadImages(moviesForSpin.map(m => m.src));
+        // 1. Pick the final winning movie immediately
+        const winner = pool[Math.floor(Math.random() * pool.length)];
 
-        // This wraps the animation in a Promise so we can wait for it to finish
-        await new Promise(resolve => {
-          let i = 0;
-          const spinInterval = setInterval(() => {
+        // 2. Create two promises: one for loading the winner's image, one for the minimum spin time
+        const imageLoadPromise = preloadImages([winner.src]);
+        const minSpinPromise = new Promise(resolve => setTimeout(resolve, MIN_SPIN_DURATION));
+
+        // 3. Start the "fake" animation instantly
+        const currentPosterSrc = img.src; // Cache the current poster
+        const spinInterval = setInterval(() => {
             img.classList.add('slot-flip');
-            const movie = moviesForSpin[i];
-            
-            img.src = movie.src;
-            txt.textContent = `${movie.title} (${movie.year})`;
-
-            if (++i >= spinCount) {
-              clearInterval(spinInterval);
-              streamLink.href = movie.watch_link || `${TMDB_BASE}/${movie.id}/watch?locale=US`;
-              resolve(); // Resolve the promise, signaling the animation is done
-            }
-            
+            // Flash between the current poster and a blank state to create a blur/shuffle effect
+            img.src = (img.src === currentPosterSrc) ? '' : currentPosterSrc;
+            txt.textContent = 'Finding a movie...';
             setTimeout(() => img.classList.remove('slot-flip'), 600);
-          }, spinSpeed);
-        });
+        }, FAKE_SPIN_SPEED);
 
+        // 4. Wait for BOTH the winner's image to be loaded AND the minimum spin time to pass
+        await Promise.all([imageLoadPromise, minSpinPromise]);
+
+        // 5. Stop the fake animation and reveal the winner
+        clearInterval(spinInterval);
+        img.classList.remove('slot-flip'); // Ensure flip class is removed
+        pickNewMovie(pool, winner);
+        
       } catch (error) {
         console.error("An error occurred during randomization:", error);
-        txt.textContent = "Oops! Something went wrong."; // Show a user-friendly error
+        txt.textContent = "Oops! Something went wrong.";
       } finally {
-        // This block is GUARANTEED to run, ensuring the button is always re-enabled
         isSpinning = false;
         btn.disabled = false;
       }
@@ -350,7 +348,7 @@
         return new Promise((resolve) => {
           const img = new Image();
           img.onload = resolve;
-          img.onerror = resolve; // Always resolve, even on error
+          img.onerror = resolve;
           img.src = src;
         });
       });
