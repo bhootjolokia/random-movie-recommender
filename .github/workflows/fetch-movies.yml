@@ -14,10 +14,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq curl
+      # === THIS IS THE CORRECTED DEPENDENCY INSTALLATION ===
+      - name: Install curl
+        run: sudo apt-get update && sudo apt-get install -y curl
+
+      - name: Install latest version of jq
+        uses: dcarbone/install-jq-action@v2.1.0
+      # === END OF CORRECTION ===
 
       - name: Fetch top-rated movies (pages 1–40)
         run: |
