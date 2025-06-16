@@ -158,10 +158,11 @@
       text.textContent = name;
       el.appendChild(check);
       el.appendChild(text);
+      // <<< MODIFICATION IS HERE
       el.addEventListener('click', (e) => {
         e.stopPropagation(); const genreId = +id;
         if (genreId === 0) {
-            if (selectedGenres.has(0) && selectedGenres.size === 1) return;
+            // The line that prevented re-randomization when 'Any Genre' was already selected has been removed from here.
             selectedGenres.clear();
             selectedGenres.add(0);
         } else {
@@ -177,6 +178,7 @@
         randomize();
         closeGenreMenu();
       });
+      // <<< END OF MODIFICATION
       genreList.appendChild(el);
     });
 
