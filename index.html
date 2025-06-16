@@ -145,7 +145,8 @@
     const genreList = document.getElementById('genreList');
     const genreOverlay = document.getElementById('genreOverlay');
     const genreMenuCloseBtn = document.querySelector('.genre-menu-close');
-    const genreMap = {0:'Any Genre',28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',99:'Documentary',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Science Fiction',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
+    // <<< MODIFICATION IS HERE: Removed '99:'Documentary'' from the list.
+    const genreMap = {0:'Any Genre',28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Science Fiction',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
     
     Object.entries(genreMap).forEach(([id,name]) => {
       const el = document.createElement('div');
@@ -158,11 +159,9 @@
       text.textContent = name;
       el.appendChild(check);
       el.appendChild(text);
-      // <<< MODIFICATION IS HERE
       el.addEventListener('click', (e) => {
         e.stopPropagation(); const genreId = +id;
         if (genreId === 0) {
-            // The line that prevented re-randomization when 'Any Genre' was already selected has been removed from here.
             selectedGenres.clear();
             selectedGenres.add(0);
         } else {
@@ -178,7 +177,6 @@
         randomize();
         closeGenreMenu();
       });
-      // <<< END OF MODIFICATION
       genreList.appendChild(el);
     });
 
