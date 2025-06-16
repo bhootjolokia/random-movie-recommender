@@ -4,7 +4,7 @@
   <!-- Head content remains the same -->
   <meta charset='UTF-8'>
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <meta name='viewport' content='width=device-width, initial-scale-1.0'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
   <title>Random Movie Generator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,9 +57,9 @@
       #genreMenu{position:absolute;bottom:100%;right:100%;transform-origin:bottom right;margin-right:1rem;max-height: 75vh;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.5);opacity:0;transform:translateY(.5rem) scale(.95);pointer-events:none;transition:opacity 150ms ease,transform 150ms ease;width:auto;max-width:none;}
       #genreModalContainer.open #genreMenu{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
       
-      /* <<< MODIFICATION IS HERE: Removing left/right padding on the body for desktop view */
       body {
-        padding: 1rem 0 0; /* Keep 1rem top padding, but remove right, bottom, and left padding */
+        /* No change needed here, we will keep the body padding */
+        padding-bottom: 0;
       }
       
       #genreList{padding:0.25rem;}
@@ -72,14 +72,22 @@
       
       #genreList .item:hover{background:rgba(45,212,191,.1)}
       #posterWrapper,.btn,.controls{max-width:320px}
+      
+      /* <<< MODIFICATION IS HERE */
       .site-footer {
         flex-wrap: nowrap;
         align-items: flex-end;
-        padding-top: 0.25rem;
-        /* <<< MODIFICATION IS HERE: Add padding to the footer to align it with the body's new padding */
+        
+        /* 1. Stretch the footer to cancel out body padding */
+        margin-left: -1rem;
+        margin-right: -1rem;
+        
+        /* 2. Add padding back so text isn't at the very edge */
         padding-left: 1rem;
         padding-right: 1rem;
-        padding-bottom: 1rem;
+        
+        /* 3. Add a small, reasonable amount of bottom padding */
+        padding-bottom: 0.5rem; 
       }
       .site-footer .footer-center {flex-basis: auto;text-align: right;}
       .footer-right-stack {display: flex;flex-direction: column;align-items: flex-end;gap: 0.25rem;}
@@ -87,6 +95,7 @@
   </style>
 </head>
 <body>
+  <!-- HTML and Javascript remain exactly the same as the last version -->
   <div class="page-container">
       <h1>Random Movie Generator</h1>
       <div id='posterWrapper'>
@@ -127,7 +136,6 @@
   </div>
   <script src="data/initial-pool.js" defer></script>
   <script>
-    // The Javascript is exactly the same as the last version
     document.addEventListener('DOMContentLoaded', () => {
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
     const SEEN_MOVIES_CAP = 50;
