@@ -65,7 +65,8 @@
       }
       h1 {
         position: relative;
-        top: 2rem;
+        top: 1rem; /* ADJUSTED: Creates a 1rem gap between title and poster */
+        display: inline-block;
         margin-bottom: 2rem;
       }
       #posterWrapper {
@@ -74,7 +75,7 @@
       }
       .btn {
         max-width: 320px;
-        margin-bottom: 1rem;
+        margin-bottom: 1.25rem;
       }
       #result {
         margin-bottom: 0.5rem;
@@ -92,6 +93,7 @@
         padding: 0;
       }
       
+      /* --- Unchanged Desktop Rules Below --- */
       .genre-menu-close {display: none;}
       #genreOverlay,.genre-menu-header{display:none}
       #genreModalContainer{position:static;opacity:1;pointer-events:auto;display:block}
@@ -302,10 +304,7 @@
       let stripHTML = '';
       const posterHeight = filmstrip.clientHeight;
       if (posterHeight === 0) return;
-
-      /* THIS IS THE FIX: Ensure movieSource always has data for the animation */
       const movieSource = fullMovieList.length > 0 ? fullMovieList : initialMoviePool.map(formatMovie);
-
       for (let i = 0; i < stripLength; i++) {
         const randomIndex = Math.floor(Math.random() * movieSource.length);
         const movieForStrip = movieSource[randomIndex];
