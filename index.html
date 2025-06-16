@@ -4,7 +4,7 @@
   <!-- Head content remains the same -->
   <meta charset='UTF-8'>
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <meta name='viewport' content='width=device-width, initial-scale-1.0'>
   <title>Random Movie Generator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -74,18 +74,15 @@
       #genreList .item:hover{background:rgba(45,212,191,.1)}
       #posterWrapper,.btn,.controls{max-width:320px}
       
-      /* <<< MODIFICATION IS HERE: Reduced padding to bring links closer to the corners */
+      /* <<< MODIFICATION IS HERE: Using a single padding rule for consistent spacing. */
       .site-footer {
         flex-wrap: nowrap;
         align-items: flex-end;
-        padding-top: 0.25rem;
-        padding-bottom: 0.5rem; /* Reduced for consistency */
         
         margin-left: -1rem;
         margin-right: -1rem;
-
-        padding-left: 0.5rem; /* Reduced from 1rem */
-        padding-right: 0.5rem; /* Reduced from 1rem */
+        
+        padding: 0.5rem; /* This sets top, right, bottom, and left padding to the same value */
       }
       .site-footer .footer-center {flex-basis: auto;text-align: right;}
       .footer-right-stack {display: flex;flex-direction: column;align-items: flex-end;gap: 0.25rem;}
