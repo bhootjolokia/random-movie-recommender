@@ -257,7 +257,7 @@
             id: movieData.id,
             title: movieData.title,
             year: movieData.release_date ? movieData.release_date.slice(0, 4) : 'N/A',
-            src: https://image.tmdb.org/t/p/w500${movieData.poster_path},
+            src: `https://image.tmdb.org/t/p/w500${movieData.poster_path}`,
             genre_ids: movieData.genre_ids,
             watch_link: movieData.watch_link
         };
@@ -293,10 +293,10 @@
         }
         btn.textContent = 'Randomize Movie';
         filmstrip.style.transition = 'none';
-        filmstrip.innerHTML = <img class="filmstrip-image" src="${movie.src}" alt="Poster for ${movie.title}" style="top: 0;">;
+        filmstrip.innerHTML = `<img class="filmstrip-image" src="${movie.src}" alt="Poster for ${movie.title}" style="top: 0;">`;
         filmstrip.style.transform = 'translateY(0)';
-        txt.textContent = ${movie.title} (${movie.year});
-        streamLink.href = movie.watch_link || ${TMDB_BASE}/${movie.id}/watch;
+        txt.textContent = `${movie.title} (${movie.year})`;
+        streamLink.href = movie.watch_link || `${TMDB_BASE}/${movie.id}/watch`;
         streamLink.classList.remove('hidden');
         res.style.visibility = 'visible';
         if (!seenMovies.some(sm => sm.id === movie.id)) {
@@ -349,9 +349,9 @@
       for (let i = 0; i < stripLength; i++) {
         const randomIndex = Math.floor(Math.random() * movieSource.length);
         const movieForStrip = movieSource[randomIndex];
-        stripHTML += <img class="filmstrip-image" src="${movieForStrip.src}" style="top: ${i * 100}%;" alt="">;
+        stripHTML += `<img class="filmstrip-image" src="${movieForStrip.src}" style="top: ${i * 100}%;" alt="">`;
       }
-      stripHTML += <img class="filmstrip-image" src="${winner.src}" style="top: ${stripLength * 100}%;" alt="Poster for ${winner.title}">;
+      stripHTML += `<img class="filmstrip-image" src="${winner.src}" style="top: ${stripLength * 100}%;" alt="Poster for ${winner.title}">`;
       filmstrip.style.transition = 'none';
       filmstrip.style.transform = 'translateY(0)';
       filmstrip.innerHTML = stripHTML;
@@ -359,7 +359,7 @@
       txt.textContent = 'Finding a movie...';
       const finalPosition = -posterHeight * stripLength;
       filmstrip.style.transition = 'transform 2.5s cubic-bezier(.25,.1,.25,1)';
-      filmstrip.style.transform = translateY(${finalPosition}px);
+      filmstrip.style.transform = `translateY(${finalPosition}px)`;
       await new Promise(resolve => {
         const fallback = setTimeout(() => {
           console.warn('Animation fallback timer fired.');
