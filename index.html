@@ -30,11 +30,12 @@
     #genreList{overflow-y:auto;padding:.5rem}
     .site-footer{width:100%;margin-top:auto;padding-top:1.5rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem 1rem;color:var(--color-text-muted);flex-shrink:0;font-size:clamp(.7rem,2.5vw,.75rem)}.site-footer a{color:var(--color-text-muted);text-decoration:none}.site-footer a:hover{color:var(--color-accent);text-decoration:underline}.footer-center{flex-basis:100%;text-align:center}
     
+    /* <<< MODIFICATION IS HERE: Reverting to tighter padding and gap for a cleaner mobile look. */
     #genreList .item {
-      padding: .45rem 1rem;
+      padding: .45rem .75rem;
       display: flex;
       align-items: center;
-      gap: .75rem; 
+      gap: .5rem; 
       font-size: 0.875rem;
       font-weight: 400;
       color: var(--color-text-muted);
@@ -66,6 +67,7 @@
       
       #genreList .item{
         white-space: nowrap;
+        /* Note: No change needed here, it already had the correct tighter padding */
         padding: .45rem .75rem;
         gap: .5rem; 
       }
@@ -146,16 +148,11 @@
     const genreMenuCloseBtn = document.querySelector('.genre-menu-close');
     const genreMap = {28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Science Fiction',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
     
-    // <<< MODIFICATION START: Alphabetically sorting the genre list
-    // 1. Convert the genre map object to an array of [id, name] pairs
     const sortedGenreList = Object.entries(genreMap)
-      // 2. Sort the array alphabetically based on the genre name (the second item in the pair)
       .sort(([, nameA], [, nameB]) => nameA.localeCompare(nameB));
 
-    // 3. Add "Any Genre" to the beginning of the sorted list
     sortedGenreList.unshift(['0', 'Any Genre']);
 
-    // 4. Loop over the newly sorted list to create the UI elements
     sortedGenreList.forEach(([id,name]) => {
       const el = document.createElement('div');
       el.className = 'item';
@@ -187,7 +184,6 @@
       });
       genreList.appendChild(el);
     });
-    // <<< MODIFICATION END
 
     function updateGenreSelection() { document.querySelectorAll('#genreList .item').forEach(i => { i.classList.toggle('selected', selectedGenres.has(+i.dataset.genre)); }); }
     function closeGenreMenu() { genreModalContainer.classList.remove('open'); }
