@@ -15,7 +15,8 @@
     
     .page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100vh;}
     
-    h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin:0;text-align:center;flex-shrink:0;padding:1rem 1rem .75rem;}
+    /* MODIFIED: Changed padding to margin for spacing below the title */
+    h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;text-align:center;flex-shrink:0;padding:1rem 1rem 0;margin:0 0 .75rem;}
 
     .main-content-wrapper {
       width: 100%;
@@ -37,7 +38,6 @@
     
     .btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;margin-bottom:1.5rem}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}
     
-    /* MODIFIED: Set a fixed height to prevent size changes */
     #result{text-align:center;height:2.5rem;visibility:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 
     #movieResult{font-weight:600;font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;max-width:clamp(240px,90vw,320px);box-sizing:border-box}
