@@ -15,23 +15,22 @@
     
     .page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100vh}
     
-    h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin-top:0;margin-bottom:.75rem;text-align:center;flex-shrink:0;padding:1rem 1rem 0;}
-
     .main-content {
       width: 100%;
       max-width: 320px;
-      padding: 0 1rem;
+      padding: 1rem 1rem 0; /* Container now handles top padding */
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      flex: 1; /* This is key: make this section flexible */
-      min-height: 0; /* Crucial flexbox fix for shrinking */
+      flex: 1;
+      min-height: 0;
     }
+
+    h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin-top:0;margin-bottom:.75rem;text-align:center;flex-shrink:0;}
 
     #posterWrapper{background:var(--color-bg);border-radius:var(--radius);margin-bottom:1rem;position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;aspect-ratio:2/3;flex:1;min-height:0;width:auto;max-width:100%;align-self:center;}
     #loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}
     
-    /* Protect non-flexible elements */
     .btn, #result, .controls {flex-shrink: 0;}
     
     .btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;margin-bottom:1.5rem}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}#result{text-align:center;min-height:1.25rem;visibility:hidden;}#movieResult{font-weight:600;font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;max-width:clamp(240px,90vw,320px);box-sizing:border-box}.controls{width:100%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;position:relative;margin-top:1rem;}
@@ -79,8 +78,7 @@
 
     @media (min-width: 768px) {
       .page-container {align-items:center;}
-      h1 {padding:0.25rem 0 0;}
-      .main-content {padding: 0 0.25rem;}
+      .main-content {padding: 0.25rem 0.25rem 0;}
       .genre-menu-close {display: none;}#genreOverlay,.genre-menu-header{display:none}#genreModalContainer{position:static;opacity:1;pointer-events:auto;display:block}#genreMenu{position:absolute;bottom:100%;right:100%;transform-origin:bottom right;margin-right:1rem;max-height: 75vh;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.5);opacity:0;transform:translateY(.5rem) scale(.95);pointer-events:none;transition:opacity 150ms ease,transform 150ms ease;width:auto;max-width:none;}#genreModalContainer.open #genreMenu{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
       #genreList{padding:0.25rem;}#genreList .item{white-space: nowrap;padding: .45rem .75rem;gap: .5rem;}#genreList .item:hover{background:rgba(45,212,191,.1)}
       
@@ -98,8 +96,8 @@
 </head>
 <body>
   <div class="page-container">
-      <h1>Random Movie Generator</h1>
       <div class="main-content">
+        <h1>Random Movie Generator</h1>
         <div id='posterWrapper'>
           <div id="loading-placeholder"><div>Loading movie...</div></div>
           <div id="filmstrip"></div>
@@ -113,7 +111,7 @@
           </button>
           <a id='streamLink' href='#' target='_blank' class='hidden'>
               <span>Stream</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              <svg xmlns="http://www.w3.org/in/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           </a>
           <div id="genreModalContainer">
             <div id="genreOverlay"></div>
