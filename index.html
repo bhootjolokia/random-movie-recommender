@@ -13,30 +13,35 @@
     :root{--font-sans:'Inter',system-ui,sans-serif;--color-bg:#121212;--color-base:#1E1E1E;--color-accent:#2DD4BF;--color-text:#E5E7EB;--color-text-muted:#9CA3AF;--radius:0.5rem}html{height:100%}
     body{height:100%;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans);margin:0;box-sizing:border-box;overflow:hidden}
     
-    /* "Flexible Sandwich" Part 1: The Page Container */
-    .page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100vh;}
+    /* MODIFIED: Use gap for consistent mobile spacing */
+    .page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100vh;padding:1rem;gap:0.75rem;}
     
-    h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin:0;text-align:center;flex-shrink:0;padding:1rem 1rem .75rem;}
-    
-    /* "Flexible Sandwich" Part 2: The Main Content "Filling" */
+    /* MODIFIED: Remove vertical margins, gap handles it now */
+    h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin:0;text-align:center;flex-shrink:0;}
+
     .main-content-wrapper {
       width: 100%;
       max-width: 320px;
-      padding: 0 1rem;
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      flex: 1; /* Key: This block grows/shrinks to fill space */
-      min-height: 0; /* A critical fix for flexbox shrinking */
+      flex: 1; 
+      min-height: 0;
+      gap: 0.75rem; /* Key: Consistent gap for inner elements */
     }
 
-    /* "Flexible Sandwich" Part 3: The Flexible Poster */
-    #posterWrapper{background:var(--color-bg);border-radius:var(--radius);margin-bottom:0.75rem;position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;aspect-ratio:2/3;flex:1;min-height:0;width:auto;max-width:100%;align-self:center;}
+    /* MODIFIED: Remove margin, make it flexible */
+    #posterWrapper{background:var(--color-bg);border-radius:var(--radius);position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;aspect-ratio:2/3;flex:1;min-height:0;width:auto;max-width:100%;align-self:center;margin:0;}
     
-    /* Protect non-flexible elements from being squashed */
     .btn, #result, .controls {flex-shrink: 0;}
-
-    #loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}.btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;margin-bottom:1.5rem}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}#result{text-align:center;min-height:1.25rem;visibility:hidden;}#movieResult{font-weight:600;font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;max-width:clamp(240px,90vw,320px);box-sizing:border-box}.controls{width:100%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;position:relative;margin-top:0.75rem;}
+    
+    .btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;margin:0;}
+    .controls{width:100%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;position:relative;margin:0;}
+    .site-footer{width:100%;margin:auto 0 0;padding:0;box-sizing:border-box;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:.5rem 1rem;color:var(--color-text-muted);flex-shrink:0;font-size:clamp(.7rem, 2.5vw, .75rem);}
+    
+    #loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}#result{text-align:center;min-height:1.25rem;visibility:hidden;}#movieResult{font-weight:600;font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;max-width:clamp(240px,90vw,320px);box-sizing:border-box}
     #genreToggle, #streamLink {display: inline-flex;align-items: center;gap: 0.5rem;padding: 0.5rem 0.8rem;background: var(--color-base);border: 1px solid rgba(255, 255, 255, 0.1);transition: all 0.2s ease;font-size:.875rem;font-weight:600;cursor:pointer;border-radius:var(--radius);color:var(--color-text);text-decoration:none;}
     #streamLink.hidden { visibility: hidden; }
     #genreToggle:hover, #streamLink:hover {background: rgba(45, 212, 191, 0.1);border-color: rgba(45, 212, 191, 0.5);transform: translateY(-2px);outline:none;}
@@ -52,23 +57,7 @@
     .genre-menu-close {display: block;position: absolute;top: 50%;right: 0.25rem;transform: translateY(-50%);background: transparent;border: none;color: var(--color-text-muted);font-size: 1.75rem;line-height: 1;padding: 0.25rem 0.5rem;cursor: pointer;}
     .genre-menu-close:hover {color: var(--color-text);}
     #genreList{overflow-y:auto;padding:.5rem}
-    
-    .site-footer {
-        width: 100%;
-        margin: 0;
-        padding: 0.25rem 1rem;
-        box-sizing: border-box;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        align-items: flex-end;
-        gap: .5rem 1rem;
-        color: var(--color-text-muted);
-        flex-shrink: 0;
-        font-size: clamp(.7rem, 2.5vw, .75rem);
-    }
     .site-footer a{color:var(--color-text-muted);text-decoration:none}.site-footer a:hover{color:var(--color-accent);text-decoration:underline}.footer-center{flex-basis:100%;text-align:center}
-    
     #genreList .item {padding: .45rem .75rem; display: flex; align-items: center; gap: .5rem; font-size: 0.875rem; font-weight: 400; color: var(--color-text-muted); cursor: pointer; position: relative; border-radius: .25rem; transition: background-color 0.2s ease, color 0.2s ease;}
     #genreList .item:not([data-genre="0"]):hover {background-color: rgba(255, 255, 255, 0.05);color: var(--color-text);}
     #genreList .item[data-genre="0"] {background-color: rgba(255, 255, 255, 0.03);border-bottom: 1px solid rgba(255, 255, 255, 0.1);font-weight: 600;color: var(--color-text);margin-bottom: 0.25rem;}
@@ -78,7 +67,7 @@
     #genreMenu .item.selected .check {visibility: visible;}
 
     @media (min-width: 768px) {
-      /* Revert to the original desktop layout */
+      /* Revert to original desktop layout */
       body {
         padding: 2rem;
         height: 100%;
@@ -86,34 +75,32 @@
       .page-container {
         justify-content: flex-start;
         height: 100%;
+        gap: 0; /* Turn off mobile gap */
+        padding: 0;
       }
       h1 {
         position: relative;
         top: 1rem;
         display: inline-block;
         margin-bottom: 2rem;
-        padding: 0;
       }
       .main-content-wrapper {
-        flex: initial; /* Turn off mobile flex scaling */
-        padding: 0;
+        flex: initial; /* Turn off mobile flex behavior */
+        gap: 0;
       }
       #posterWrapper {
-        flex: initial; /* Turn off mobile flex scaling */
+        flex: initial; /* Turn off mobile flex behavior */
         width: 100%;
         max-width: 320px;
-        margin-bottom: 1.5rem; /* Use desktop spacing */
+        margin-bottom: 1.5rem;
       }
       .btn {
-        max-width: 320px;
         margin-bottom: 1.25rem;
       }
       #result {
         margin-bottom: 1rem;
       }
       .controls {
-        width: 100%;
-        max-width: 320px;
         margin-top: 0;
       }
       .site-footer {
@@ -122,7 +109,6 @@
         width: 100%;
         max-width: 320px;
         margin: auto auto 0;
-        padding: 0;
       }
       
       .genre-menu-close {display: none;}
@@ -176,6 +162,7 @@
   </div>
   <script src="data/initial-pool.js" defer></script>
   <script>
+    // Javascript is unchanged
     document.addEventListener('DOMContentLoaded', () => {
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
     const SEEN_MOVIES_CAP = 50;
