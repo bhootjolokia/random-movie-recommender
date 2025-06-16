@@ -15,8 +15,9 @@
     
     .page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100vh;}
     
-    h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin:0;text-align:center;flex-shrink:0;padding:2.5rem 1rem .75rem;}
+    h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin:0;text-align:center;flex-shrink:0;padding:1.5rem 1rem .75rem;}
 
+    /* MODIFIED: This wrapper now only holds the poster and is the main flexible element */
     .main-content-wrapper {
       width: 100%;
       max-width: 320px;
@@ -25,20 +26,25 @@
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      flex: 1;
+      flex: 1; /* This makes the poster area grow */
       min-height: 0;
     }
 
-    #posterWrapper{background:var(--color-bg);border-radius:var(--radius);margin-bottom:-1rem;position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;aspect-ratio:2/3;flex:1;min-height:0;width:auto;max-width:100%;align-self:center;}
+    /* MODIFIED: The poster now fills its parent. Removed margin-bottom */
+    #posterWrapper{background:var(--color-bg);border-radius:var(--radius);position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;aspect-ratio:2/3;flex:1;min-height:0;width:auto;max-width:100%;align-self:center;}
     
     #loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}
     
-    /* NEW: Container for the action buttons/controls */
+    /* MODIFIED: This is now a top-level block, needs alignment and spacing */
     .actions-container {
         display: flex;
         flex-direction: column;
         width: 100%;
         flex-shrink: 0;
+        max-width: 320px;
+        padding: 0 1rem;
+        box-sizing: border-box;
+        margin-top: 0.75rem; /* Creates space between poster and this block */
     }
 
     .btn, #result, .controls {flex-shrink: 0;}
@@ -116,14 +122,20 @@
         padding: 0;
       }
       .main-content-wrapper {
-        flex: initial;
+        flex: initial; /* Reverts flex: 1 */
         padding: 0;
       }
       #posterWrapper {
-        flex: initial;
+        flex: initial; /* Reverts flex: 1 */
         width: 100%;
         max-width: 320px;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.5rem; /* Restore original desktop margin */
+      }
+      .actions-container {
+          flex: initial;
+          max-width: 320px;
+          padding: 0;
+          margin-top: 0;
       }
       .btn {
         max-width: 320px;
@@ -173,28 +185,28 @@
           <div id="loading-placeholder"><div>Loading movie...</div></div>
           <div id="filmstrip"></div>
         </div>
-        <!-- MODIFIED: Wrapped the button, result, and controls in a new container -->
-        <div class="actions-container">
-            <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
-            <div id='result'><div id='movieResult'></div></div>
-            <div class='controls'>
-              <button id='genreToggle'>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/></svg>
-                  <span>Genres</span>
-              </button>
-              <a id='streamLink' href='#' target='_blank' class='hidden'>
-                  <span>Stream</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              </a>
-              <div id="genreModalContainer">
-                <div id="genreOverlay"></div>
-                <div id='genreMenu' role='menu'>
-                  <div class="genre-menu-header"><h2>Select Genres</h2><button class="genre-menu-close">×</button></div>
-                  <div id="genreList"></div>
-                </div>
+      </div>
+      <!-- MODIFIED: actions-container is now a sibling to main-content-wrapper -->
+      <div class="actions-container">
+          <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
+          <div id='result'><div id='movieResult'></div></div>
+          <div class='controls'>
+            <button id='genreToggle'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/></svg>
+                <span>Genres</span>
+            </button>
+            <a id='streamLink' href='#' target='_blank' class='hidden'>
+                <span>Stream</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+            <div id="genreModalContainer">
+              <div id="genreOverlay"></div>
+              <div id='genreMenu' role='menu'>
+                <div class="genre-menu-header"><h2>Select Genres</h2><button class="genre-menu-close">×</button></div>
+                <div id="genreList"></div>
               </div>
             </div>
-        </div>
+          </div>
       </div>
     <footer class="site-footer">
       <a href="mailto:movierandomizertool@gmail.com" class="footer-left">Contact Us</a>
