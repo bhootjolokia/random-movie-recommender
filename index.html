@@ -11,10 +11,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css" />
   <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'>
   <style>
-    /* All CSS is correct and unchanged */
+    /* All CSS is correct and unchanged up to the desktop styles */
     :root{--font-sans:'Inter',system-ui,sans-serif;--color-bg:#121212;--color-base:#1E1E1E;--color-accent:#2DD4BF;--color-text:#E5E7EB;--color-text-muted:#9CA3AF;--radius:0.5rem}html{height:100%}body{height:100%;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans);padding:1rem;margin:0;box-sizing:border-box;overflow:hidden}.page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100%}h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin-top:0;margin-bottom:.75rem;text-align:center;flex-shrink:0}#posterWrapper{background:var(--color-bg);border-radius:var(--radius);width:100%;margin-bottom:1rem;position:relative;overflow:hidden;display:flex;aspect-ratio:2/3}#loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}.btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;flex-shrink:0;margin-bottom:1.5rem}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}#result{text-align:center;min-height:1.25rem;visibility:hidden;flex-shrink:0}#movieResult{font-weight:600;font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;max-width:clamp(240px,90vw,320px);box-sizing:border-box}.controls{width:100%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;position:relative;margin-top:1rem;flex-shrink:0}
     #genreToggle, #streamLink {display: inline-flex;align-items: center;gap: 0.5rem;padding: 0.5rem 0.8rem;background: var(--color-base);border: 1px solid rgba(255, 255, 255, 0.1);transition: all 0.2s ease;font-size:.875rem;font-weight:600;cursor:pointer;border-radius:var(--radius);color:var(--color-text);text-decoration:none;}
-    /* <!-- MODIFICATION: Added rule to hide the stream link initially --> */
     #streamLink.hidden { visibility: hidden; }
     #genreToggle:hover, #streamLink:hover {background: rgba(45, 212, 191, 0.1);border-color: rgba(45, 212, 191, 0.5);transform: translateY(-2px);outline:none;}
     #genreToggle svg, #streamLink svg {stroke: var(--color-text-muted);transition: stroke 0.2s ease;}
@@ -58,6 +57,12 @@
       #genreModalContainer{position:static;opacity:1;pointer-events:auto;display:block}
       #genreMenu{position:absolute;bottom:100%;right:100%;transform-origin:bottom right;margin-right:1rem;max-height: 75vh;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.5);opacity:0;transform:translateY(.5rem) scale(.95);pointer-events:none;transition:opacity 150ms ease,transform 150ms ease;width:auto;max-width:none;}
       #genreModalContainer.open #genreMenu{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+      
+      /* <!-- MODIFICATION: This new rule removes the space below the footer on desktop --> */
+      body {
+        padding-bottom: 0;
+      }
+      
       #genreList{padding:0.25rem;}
       
       #genreList .item{
@@ -66,13 +71,17 @@
       
       #genreList .item:hover{background:rgba(45,212,191,.1)}
       #posterWrapper,.btn,.controls{max-width:320px}
-      .site-footer {flex-wrap: nowrap;align-items: flex-end;}
+      .site-footer {
+        flex-wrap: nowrap;
+        align-items: flex-end;
+      }
       .site-footer .footer-center {flex-basis: auto;text-align: right;}
       .footer-right-stack {display: flex;flex-direction: column;align-items: flex-end;gap: 0.25rem;}
     }
   </style>
 </head>
 <body>
+  <!-- The rest of the HTML Body and Javascript is exactly the same as before -->
   <div class="page-container">
       <h1>Random Movie Generator</h1>
       <div id='posterWrapper'>
@@ -87,7 +96,6 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/></svg>
             <span>Genres</span>
         </button>
-        <!-- MODIFICATION: Added 'hidden' class to hide the link on page load -->
         <a id='streamLink' href='#' target='_blank' class='hidden'>
             <span>Stream</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -114,6 +122,7 @@
   </div>
   <script src="data/initial-pool.js" defer></script>
   <script>
+    // The Javascript remains exactly the same as the last version.
     document.addEventListener('DOMContentLoaded', () => {
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
     const SEEN_MOVIES_CAP = 50;
@@ -209,11 +218,9 @@
     function pickNewMovie(movie) {
         loadingPlaceholder.style.display = 'none';
         if (!movie) {
-            // This block is now reverted to the original behavior as requested.
             filmstrip.innerHTML = '';
             txt.textContent = 'No movies match the selected genres.';
             streamLink.href = '#';
-            // MODIFICATION: Still hide the stream link for consistency.
             streamLink.classList.add('hidden');
             res.style.visibility = 'visible';
             btn.textContent = 'Reset';
@@ -224,9 +231,7 @@
         filmstrip.innerHTML = `<img class="filmstrip-image" src="${movie.src}" alt="Poster for ${movie.title}" style="top: 0;">`;
         filmstrip.style.transform = 'translateY(0)';
         txt.textContent = `${movie.title} (${movie.year})`;
-        // MODIFICATION: Removed `?locale=US` for a more universal link.
         streamLink.href = movie.watch_link || `${TMDB_BASE}/${movie.id}/watch`;
-        // MODIFICATION: Make the stream link visible now that we have a movie.
         streamLink.classList.remove('hidden');
         res.style.visibility = 'visible';
         if (!seenMovies.some(sm => sm.id === movie.id)) {
@@ -275,11 +280,8 @@
       let stripHTML = '';
       const posterHeight = filmstrip.clientHeight;
       if (posterHeight === 0) return; 
-      // MODIFICATION: Use the biggest available movie list for the animation visuals
-      // to make the spin look more dynamic, regardless of genre selection.
       const movieSource = fullMovieList.length > 0 ? fullMovieList : movies;
       for (let i = 0; i < stripLength; i++) {
-        // Use shuf-like behavior by getting a random index each time
         const randomIndex = Math.floor(Math.random() * movieSource.length);
         const movieForStrip = movieSource[randomIndex];
         stripHTML += `<img class="filmstrip-image" src="${movieForStrip.src}" style="top: ${i * 100}%;" alt="">`;
