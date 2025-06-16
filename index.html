@@ -15,8 +15,8 @@
     
     .page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100vh;}
     
-    /* MODIFIED: Changed top padding to 4rem to move the title down */
-    h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin:0;text-align:center;flex-shrink:0;padding:3rem 1rem .75rem;}
+    /* MODIFIED: Reduced top padding for top/bottom balance */
+    h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin:0;text-align:center;flex-shrink:0;padding:1.5rem 1rem .75rem;}
 
     .main-content-wrapper {
       width: 100%;
@@ -30,18 +30,22 @@
       min-height: 0;
     }
 
-    #posterWrapper{background:var(--color-bg);border-radius:var(--radius);margin-bottom:-2rem;position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;aspect-ratio:2/3;flex:1;min-height:0;width:auto;max-width:100%;align-self:center;}
+    /* MODIFIED: Reduced margin to compress the middle section */
+    #posterWrapper{background:var(--color-bg);border-radius:var(--radius);margin-bottom:0.75rem;position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;aspect-ratio:2/3;flex:1;min-height:0;width:auto;max-width:100%;align-self:center;}
     
     #loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}
     
     .btn, #result, .controls {flex-shrink: 0;}
     
-    .btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;margin-bottom:1.5rem}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}
+    /* MODIFIED: Reduced margin to compress the middle section */
+    .btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;margin-bottom:1.25rem}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}
     
     #result{text-align:center;height:2.5rem;visibility:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 
     #movieResult{font-weight:600;font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;max-width:clamp(240px,90vw,320px);box-sizing:border-box}
-    .controls{width:100%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;position:relative;margin-top:0.75rem;}
+    
+    /* MODIFIED: Reduced margin to move controls up */
+    .controls{width:100%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;position:relative;margin-top:0.5rem;}
     
     #genreToggle, #streamLink {display: inline-flex;align-items: center;gap: 0.5rem;padding: 0.5rem 0.8rem;background: var(--color-base);border: 1px solid rgba(255, 255, 255, 0.1);transition: all 0.2s ease;font-size:.875rem;font-weight:600;cursor:pointer;border-radius:var(--radius);color:var(--color-text);text-decoration:none;}
     #streamLink.hidden { visibility: hidden; }
@@ -59,9 +63,10 @@
     .genre-menu-close:hover {color: var(--color-text);}
     #genreList{overflow-y:auto;padding:.5rem}
     
+    /* MODIFIED: Added margin-bottom to create breathing room at the bottom */
     .site-footer {
         width: 100%;
-        margin: 0;
+        margin: 0 0 1.25rem 0;
         padding: 0.25rem 1rem;
         box-sizing: border-box;
         display: flex;
