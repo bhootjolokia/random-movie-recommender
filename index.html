@@ -33,9 +33,16 @@
     
     #loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}
     
+    /* NEW: Container for the action buttons/controls */
+    .actions-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        flex-shrink: 0;
+    }
+
     .btn, #result, .controls {flex-shrink: 0;}
     
-    /* MODIFIED: Changed margin-bottom from 1.25rem to .75rem */
     .btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;margin-bottom:0.75rem}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}
     
     #result{text-align:center;height:2.5rem;visibility:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
@@ -118,7 +125,6 @@
         max-width: 320px;
         margin-bottom: 1.5rem;
       }
-      /* REVERT: Restore original desktop button margin */
       .btn {
         max-width: 320px;
         margin-bottom: 1.25rem;
@@ -167,24 +173,27 @@
           <div id="loading-placeholder"><div>Loading movie...</div></div>
           <div id="filmstrip"></div>
         </div>
-        <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
-        <div id='result'><div id='movieResult'></div></div>
-        <div class='controls'>
-          <button id='genreToggle'>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/></svg>
-              <span>Genres</span>
-          </button>
-          <a id='streamLink' href='#' target='_blank' class='hidden'>
-              <span>Stream</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          </a>
-          <div id="genreModalContainer">
-            <div id="genreOverlay"></div>
-            <div id='genreMenu' role='menu'>
-              <div class="genre-menu-header"><h2>Select Genres</h2><button class="genre-menu-close">×</button></div>
-              <div id="genreList"></div>
+        <!-- MODIFIED: Wrapped the button, result, and controls in a new container -->
+        <div class="actions-container">
+            <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
+            <div id='result'><div id='movieResult'></div></div>
+            <div class='controls'>
+              <button id='genreToggle'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/></svg>
+                  <span>Genres</span>
+              </button>
+              <a id='streamLink' href='#' target='_blank' class='hidden'>
+                  <span>Stream</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+              <div id="genreModalContainer">
+                <div id="genreOverlay"></div>
+                <div id='genreMenu' role='menu'>
+                  <div class="genre-menu-header"><h2>Select Genres</h2><button class="genre-menu-close">×</button></div>
+                  <div id="genreList"></div>
+                </div>
+              </div>
             </div>
-          </div>
         </div>
       </div>
     <footer class="site-footer">
