@@ -35,7 +35,8 @@
     
     .btn, #result, .controls {flex-shrink: 0;}
     
-    .btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;margin-bottom:1.25rem}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}
+    /* MODIFIED: Changed margin-bottom from 1.25rem to .75rem */
+    .btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;margin-bottom:0.75rem}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}
     
     #result{text-align:center;height:2.5rem;visibility:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 
@@ -59,26 +60,23 @@
     .genre-menu-close:hover {color: var(--color-text);}
     #genreList{overflow-y:auto;padding:.5rem}
     
-    /* MODIFIED: Changed footer for single-row mobile layout */
     .site-footer {
         width: 100%;
         margin: 0 0 1.25rem 0;
         padding: 0.25rem 1rem;
         box-sizing: border-box;
         display: flex;
-        justify-content: space-between; /* Pushes left and right items to edges */
-        align-items: center; /* Vertically aligns all items */
-        position: relative; /* Needed for absolute positioning of the center item */
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
         color: var(--color-text-muted);
         flex-shrink: 0;
         font-size: clamp(.7rem, 2.5vw, .75rem);
     }
     .site-footer a{color:var(--color-text-muted);text-decoration:none}.site-footer a:hover{color:var(--color-accent);text-decoration:underline}
     
-    /* MODIFIED: Remove rule that forces TMDb link to a new line on mobile */
     .footer-center{flex-basis:auto;text-align:right;}
     
-    /* MODIFIED: Added rules to absolutely center the Privacy Policy link */
     .footer-right {
       position: absolute;
       left: 50%;
@@ -120,6 +118,7 @@
         max-width: 320px;
         margin-bottom: 1.5rem;
       }
+      /* REVERT: Restore original desktop button margin */
       .btn {
         max-width: 320px;
         margin-bottom: 1.25rem;
@@ -133,7 +132,6 @@
         max-width: 320px;
         margin-top: 0;
       }
-      /* REVERT: Restore original desktop footer layout */
       .site-footer {
         flex-wrap: nowrap;
         align-items: flex-end;
@@ -141,10 +139,9 @@
         max-width: 320px;
         margin: auto auto 0;
         padding: 0;
-        position: static; /* Revert position for desktop */
+        position: static;
       }
       .footer-center {flex-basis: auto;text-align: right;}
-      /* REVERT: Restore original desktop "Privacy Policy" layout */
       .footer-right {
           position: static;
           transform: none;
@@ -192,7 +189,6 @@
       </div>
     <footer class="site-footer">
       <a href="mailto:movierandomizertool@gmail.com" class="footer-left">Contact Us</a>
-      <!-- HTML structure is unchanged -->
       <div class="footer-right-stack">
         <a href="#" class="footer-right">Privacy Policy</a>
         <div class="footer-center">Data provided by <a href="https://www.themoviedb.org" target="_blank">TMDb</a></div>
