@@ -4,7 +4,7 @@
   <!-- Head content remains the same -->
   <meta charset='UTF-8'>
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <meta name='viewport' content='width=device-width, initial-scale-1.0'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
   <title>Random Movie Generator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,7 +29,8 @@
     .genre-menu-close {display: block;position: absolute;top: 50%;right: 0.25rem;transform: translateY(-50%);background: transparent;border: none;color: var(--color-text-muted);font-size: 1.75rem;line-height: 1;padding: 0.25rem 0.5rem;cursor: pointer;}
     .genre-menu-close:hover {color: var(--color-text);}
     #genreList{overflow-y:auto;padding:.5rem}
-    .site-footer{width:100%;margin-top:auto;padding-top:1.5rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem 1rem;color:var(--color-text-muted);flex-shrink:0;font-size:clamp(.7rem,2.5vw,.75rem)}.site-footer a{color:var(--color-text-muted);text-decoration:none}.site-footer a:hover{color:var(--color-accent);text-decoration:underline}.footer-center{flex-basis:100%;text-align:center}
+    /* <<< MODIFICATION 1: Setting a tight, consistent padding for the base/mobile view. */
+    .site-footer{width:100%;margin-top:auto;padding:0.25rem;box-sizing: border-box;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem 1rem;color:var(--color-text-muted);flex-shrink:0;font-size:clamp(.7rem,2.5vw,.75rem)}.site-footer a{color:var(--color-text-muted);text-decoration:none}.site-footer a:hover{color:var(--color-accent);text-decoration:underline}.footer-center{flex-basis:100%;text-align:center}
     
     #genreList .item {
       padding: .45rem .75rem;
@@ -74,7 +75,7 @@
       #genreList .item:hover{background:rgba(45,212,191,.1)}
       #posterWrapper,.btn,.controls{max-width:320px}
       
-      /* <<< MODIFICATION IS HERE: Using a single padding rule for consistent spacing. */
+      /* <<< MODIFICATION 2: Setting the same tight, consistent padding for the desktop view. */
       .site-footer {
         flex-wrap: nowrap;
         align-items: flex-end;
@@ -82,7 +83,7 @@
         margin-left: -1rem;
         margin-right: -1rem;
         
-        padding: 0.5rem; /* This sets top, right, bottom, and left padding to the same value */
+        padding: 0.25rem;
       }
       .site-footer .footer-center {flex-basis: auto;text-align: right;}
       .footer-right-stack {display: flex;flex-direction: column;align-items: flex-end;gap: 0.25rem;}
