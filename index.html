@@ -13,12 +13,11 @@
     :root{--font-sans:'Inter',system-ui,sans-serif;--color-bg:#121212;--color-base:#1E1E1E;--color-accent:#2DD4BF;--color-text:#E5E7EB;--color-text-muted:#9CA3AF;--radius:0.5rem}html{height:100%}
     body{height:100%;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans);margin:0;box-sizing:border-box;overflow:hidden}
     
-    /* MODIFIED: Removed justify-content. Page should flow from the top. */
     .page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100vh;}
     
     h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin:0;text-align:center;flex-shrink:0;padding:1.5rem 1rem .75rem;}
 
-    /* MODIFIED: Restored flex: 1 and added justify-content: center. This is the correct fix. */
+    /* MODIFIED: This is the flexible container for the poster area */
     .main-content-wrapper {
       width: 100%;
       max-width: 320px;
@@ -29,11 +28,10 @@
       flex-direction: column;
       flex: 1; /* Makes this container grow */
       min-height: 0;
-      justify-content: center; /* Centers the poster vertically within it */
     }
 
-    /* MODIFIED: Removed flex: 1 from poster, as its parent is now the flex container */
-    #posterWrapper{background:var(--color-bg);border-radius:var(--radius);position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;aspect-ratio:2/3;width:auto;max-width:100%;align-self:center;}
+    /* MODIFIED: Restored flex: 1 so the poster fills its parent container */
+    #posterWrapper{background:var(--color-bg);border-radius:var(--radius);position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;aspect-ratio:2/3;flex:1;min-height:0;width:auto;max-width:100%;align-self:center;}
     
     #loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}
     
@@ -123,9 +121,9 @@
       .main-content-wrapper {
         flex: initial;
         padding: 0;
-        justify-content: flex-start;
       }
       #posterWrapper {
+        flex: initial;
         width: 100%;
         max-width: 320px;
         margin-bottom: 1.5rem;
