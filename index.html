@@ -64,8 +64,8 @@
         padding: 2rem;
       }
       h1 {
-        position: relative; /* Add relative positioning */
-        top: 2rem;          /* Visually move ONLY the title down */
+        position: relative;
+        top: 2rem;
         margin-bottom: 2rem;
       }
       #posterWrapper {
@@ -92,7 +92,6 @@
         padding: 0;
       }
       
-      /* --- Unchanged Desktop Rules Below --- */
       .genre-menu-close {display: none;}
       #genreOverlay,.genre-menu-header{display:none}
       #genreModalContainer{position:static;opacity:1;pointer-events:auto;display:block}
@@ -142,7 +141,6 @@
   </div>
   <script src="data/initial-pool.js" defer></script>
   <script>
-    // Javascript is unchanged
     document.addEventListener('DOMContentLoaded', () => {
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
     const SEEN_MOVIES_CAP = 50;
@@ -303,14 +301,17 @@
       const stripLength = 30;
       let stripHTML = '';
       const posterHeight = filmstrip.clientHeight;
-      if (posterHeight === 0) return; 
-      const movieSource = fullMovieList.length > 0 ? fullMovieList : movies;
+      if (posterHeight === 0) return;
+
+      /* THIS IS THE FIX: Ensure movieSource always has data for the animation */
+      const movieSource = fullMovieList.length > 0 ? fullMovieList : initialMoviePool.map(formatMovie);
+
       for (let i = 0; i < stripLength; i++) {
         const randomIndex = Math.floor(Math.random() * movieSource.length);
         const movieForStrip = movieSource[randomIndex];
         stripHTML += `<img class="filmstrip-image" src="${movieForStrip.src}" style="top: ${i * 100}%;" alt="">`;
       }
-      stripHTML += `<img class="filmstrip-image" src="${winner.src}" style="top: ${stripLength * 100}%;" alt="Poster for ${movie.title}">`;
+      stripHTML += `<img class="filmstrip-image" src="${winner.src}" style="top: ${stripLength * 100}%;" alt="Poster for ${winner.title}">`;
       filmstrip.style.transition = 'none';
       filmstrip.style.transform = 'translateY(0)';
       filmstrip.innerHTML = stripHTML;
