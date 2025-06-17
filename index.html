@@ -17,20 +17,17 @@
     
     h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin:0;text-align:center;flex-shrink:0;padding:0.5rem 1rem .75rem;}
 
+    /* FIX PART 1: Simplified the wrapper to prevent mobile collapse */
     .main-content-wrapper {
       width: 100%;
       max-width: 320px;
       margin: 0 auto;
       padding: 0 1rem;
       box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      flex: 1; 
-      min-height: 0;
-      justify-content: center;
+      /* The problematic flex properties that caused the collapse have been removed. */
     }
 
-    #posterWrapper{background:var(--color-bg);border-radius:var(--radius);position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;aspect-ratio:2/3;width:auto;max-width:100%;align-self:center;}
+    #posterWrapper{background:var(--color-bg);border-radius:var(--radius);position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;aspect-ratio:2/3;width:100%;}
     
     #loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}
     
@@ -120,13 +117,12 @@
         padding: 0;
       }
       .main-content-wrapper {
-        flex: initial;
         padding: 0;
         display: block;
       }
       #posterWrapper {
         width: 320px;
-        height: 480px; /* Explicit size to prevent layout shift */
+        height: 480px;
         margin-bottom: 1.5rem;
       }
       .actions-container {
@@ -206,9 +202,9 @@
   </div>
   <script src="data/initial-pool.js" defer></script>
   <script>
-    // Javascript is unchanged
     document.addEventListener('DOMContentLoaded', () => {
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
+    const IMG_BASE = 'https://image.tmdb.org/t/p/';
     const SEEN_MOVIES_CAP = 50;
     let movies = [];
     let fullMovieList = [];
@@ -232,37 +228,17 @@
     
     const sortedGenreList = Object.entries(genreMap)
       .sort(([, nameA], [, nameB]) => nameA.localeCompare(nameB));
-
     sortedGenreList.unshift(['0', 'Any Genre']);
-
     sortedGenreList.forEach(([id,name]) => {
-      const el = document.createElement('div');
-      el.className = 'item';
-      el.dataset.genre = id;
-      const check = document.createElement('span');
-      check.className = 'check';
-      check.innerHTML = '✓';
-      const text = document.createElement('span');
-      text.textContent = name;
-      el.appendChild(check);
-      el.appendChild(text);
+      const el = document.createElement('div'); el.className = 'item'; el.dataset.genre = id;
+      const check = document.createElement('span'); check.className = 'check'; check.innerHTML = '✓';
+      const text = document.createElement('span'); text.textContent = name;
+      el.appendChild(check); el.appendChild(text);
       el.addEventListener('click', (e) => {
         e.stopPropagation(); const genreId = +id;
-        if (genreId === 0) {
-            selectedGenres.clear();
-            selectedGenres.add(0);
-        } else {
-            selectedGenres.delete(0);
-            if (selectedGenres.has(genreId)) {
-                selectedGenres.delete(genreId);
-                if (selectedGenres.size === 0) selectedGenres.add(0);
-            } else { 
-                selectedGenres.add(genreId); 
-            }
-        }
-        updateGenreSelection();
-        randomize();
-        closeGenreMenu();
+        if (genreId === 0) { selectedGenres.clear(); selectedGenres.add(0); }
+        else { selectedGenres.delete(0); if (selectedGenres.has(genreId)) { selectedGenres.delete(genreId); if (selectedGenres.size === 0) selectedGenres.add(0); } else { selectedGenres.add(genreId); } }
+        updateGenreSelection(); randomize(); closeGenreMenu();
       });
       genreList.appendChild(el);
     });
@@ -272,23 +248,32 @@
     genreToggle.addEventListener('click', (e) => { e.stopPropagation(); genreModalContainer.classList.toggle('open'); });
     genreOverlay.addEventListener('click', closeGenreMenu);
     genreMenuCloseBtn.addEventListener('click', closeGenreMenu);
-    document.addEventListener('click', (e) => {
-      if (window.innerWidth >= 768 && !genreMenu.contains(e.target) && e.target !== genreToggle) { closeGenreMenu(); }
-    });
+    document.addEventListener('click', (e) => { if (window.innerWidth >= 768 && !genreMenu.contains(e.target) && e.target !== genreToggle) { closeGenreMenu(); } });
+    
+    // FIX PART 2: Updated formatMovie to keep the poster_path
     function formatMovie(movieData) {
         return {
             id: movieData.id,
             title: movieData.title,
             year: movieData.release_date ? movieData.release_date.slice(0, 4) : 'N/A',
-            src: `https://image.tmdb.org/t/p/w500${movieData.poster_path}`,
+            poster_path: movieData.poster_path, // Keep the path
             genre_ids: movieData.genre_ids,
             watch_link: movieData.watch_link
         };
     }
+    
+    // FIX PART 2: Helper function to generate responsive image HTML
+    function createResponsiveImage(path, alt) {
+        const src = `${IMG_BASE}w500${path}`;
+        const srcset = `${IMG_BASE}w342${path} 342w, ${IMG_BASE}w500${path} 500w`;
+        const sizes = `(max-width: 400px) 90vw, 320px`; // Defines how wide the image is in the layout
+        return `<img class="filmstrip-image" src="${src}" srcset="${srcset}" sizes="${sizes}" alt="${alt}">`;
+    }
+
     async function initializeApp() {
       movies = initialMoviePool.map(formatMovie);
       const firstMovie = movies[Math.floor(Math.random() * movies.length)];
-      await preloadImages([firstMovie.src]);
+      await preloadImages([`${IMG_BASE}w500${firstMovie.poster_path}`]);
       pickNewMovie(firstMovie);
       seenMovies.push(firstMovie);
       btn.disabled = false;
@@ -297,115 +282,81 @@
         if (!response.ok) throw new Error('Main movie list failed to load');
         const fullList = await response.json();
         fullMovieList = fullList.map(formatMovie);
-      } catch (err) {
-        console.error('Could not load the full movie list. Sticking with initial pool.');
-      }
+      } catch (err) { console.error('Could not load the full movie list. Sticking with initial pool.'); }
       updateGenreSelection();
     }
     initializeApp();
+
     function pickNewMovie(movie) {
         loadingPlaceholder.style.display = 'none';
         if (!movie) {
             filmstrip.innerHTML = '';
             txt.textContent = 'No movies match the selected genres.';
-            streamLink.href = '#';
-            streamLink.classList.add('hidden');
-            res.style.visibility = 'visible';
-            btn.textContent = 'Reset';
-            return;
+            streamLink.href = '#'; streamLink.classList.add('hidden'); res.style.visibility = 'visible'; btn.textContent = 'Reset'; return;
         }
         btn.textContent = 'Randomize Movie';
         filmstrip.style.transition = 'none';
-        filmstrip.innerHTML = `<img class="filmstrip-image" src="${movie.src}" alt="Poster for ${movie.title}" style="top: 0;">`;
+        // FIX PART 2: Use the new responsive image helper
+        filmstrip.innerHTML = createResponsiveImage(movie.poster_path, `Poster for ${movie.title}`);
         filmstrip.style.transform = 'translateY(0)';
         txt.textContent = `${movie.title} (${movie.year})`;
         streamLink.href = movie.watch_link || `${TMDB_BASE}/${movie.id}/watch`;
-        streamLink.classList.remove('hidden');
-        res.style.visibility = 'visible';
-        if (!seenMovies.some(sm => sm.id === movie.id)) {
-            seenMovies.unshift(movie);
-            if (seenMovies.length > SEEN_MOVIES_CAP) seenMovies.pop();
-        }
+        streamLink.classList.remove('hidden'); res.style.visibility = 'visible';
+        if (!seenMovies.some(sm => sm.id === movie.id)) { seenMovies.unshift(movie); if (seenMovies.length > SEEN_MOVIES_CAP) seenMovies.pop(); }
     }
+
     async function randomize() {
       if (isSpinning || movies.length === 0) return;
-      isSpinning = true;
-      btn.disabled = true;
-      
+      isSpinning = true; btn.disabled = true;
       try {
-        spinCount++;
-        if (spinCount >= 3 && fullMovieList.length > 0) {
-            movies = fullMovieList;
-        }
+        spinCount++; if (spinCount >= 3 && fullMovieList.length > 0) { movies = fullMovieList; }
         let pool = movies.filter(m => !seenMovies.some(sm => sm.id === m.id));
-        if (pool.length === 0) { 
-          const currentMovieId = seenMovies[0]?.id;
-          seenMovies = currentMovieId ? [{ id: currentMovieId }] : [];
-          pool = movies.filter(m => m.id !== currentMovieId);
-        }
+        if (pool.length === 0) { const currentMovieId = seenMovies[0]?.id; seenMovies = currentMovieId ? [{ id: currentMovieId }] : []; pool = movies.filter(m => m.id !== currentMovieId); }
         const fs = [...selectedGenres].filter(g => g !== 0);
-        if (fs.length > 0) {
-          pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
-        }
-        if (pool.length === 0) { 
-            pickNewMovie(null);
-            return; 
-        }
+        if (fs.length > 0) { pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g))); }
+        if (pool.length === 0) { pickNewMovie(null); return; }
         const winner = pool[Math.floor(Math.random() * pool.length)];
         await performFastSpin(winner);
-        await preloadImages([winner.src]);
+        await preloadImages([`${IMG_BASE}w500${winner.poster_path}`]);
         pickNewMovie(winner);
-      } catch (error) {
-        console.error("An error occurred during randomization:", error);
-        txt.textContent = "Oops! Something went wrong.";
-      } finally {
-        isSpinning = false;
-        btn.disabled = false;
-      }
+      } catch (error) { console.error("An error occurred during randomization:", error); txt.textContent = "Oops! Something went wrong."; }
+      finally { isSpinning = false; btn.disabled = false; }
     }
+
     async function performFastSpin(winner) {
-      const stripLength = 30;
-      let stripHTML = '';
-      const posterHeight = filmstrip.clientHeight;
-      if (posterHeight === 0) return;
+      const stripLength = 30; let stripHTML = '';
+      const posterHeight = filmstrip.clientHeight; if (posterHeight === 0) return;
       const movieSource = fullMovieList.length > 0 ? fullMovieList : initialMoviePool.map(formatMovie);
       for (let i = 0; i < stripLength; i++) {
-        const randomIndex = Math.floor(Math.random() * movieSource.length);
-        const movieForStrip = movieSource[randomIndex];
-        stripHTML += `<img class="filmstrip-image" src="${movieForStrip.src}" style="top: ${i * 100}%;" alt="">`;
+        const movieForStrip = movieSource[Math.floor(Math.random() * movieSource.length)];
+        // FIX PART 2: Create responsive images for the spin animation too
+        const imgHTML = createResponsiveImage(movieForStrip.poster_path, '');
+        stripHTML += imgHTML.replace('<img', `<img style="top: ${i * 100}%;"`);
       }
-      stripHTML += `<img class="filmstrip-image" src="${winner.src}" style="top: ${stripLength * 100}%;" alt="Poster for ${winner.title}">`;
-      filmstrip.style.transition = 'none';
-      filmstrip.style.transform = 'translateY(0)';
-      filmstrip.innerHTML = stripHTML;
+      const winnerImgHTML = createResponsiveImage(winner.poster_path, `Poster for ${winner.title}`);
+      stripHTML += winnerImgHTML.replace('<img', `<img style="top: ${stripLength * 100}%;"`);
+      filmstrip.style.transition = 'none'; filmstrip.style.transform = 'translateY(0)'; filmstrip.innerHTML = stripHTML;
       await new Promise(r => requestAnimationFrame(() => r()));
       txt.textContent = 'Finding a movie...';
       const finalPosition = -posterHeight * stripLength;
       filmstrip.style.transition = 'transform 2.5s cubic-bezier(.25,.1,.25,1)';
       filmstrip.style.transform = `translateY(${finalPosition}px)`;
       await new Promise(resolve => {
-        const fallback = setTimeout(() => {
-          console.warn('Animation fallback timer fired.');
-          resolve();
-        }, 2600); 
+        const fallback = setTimeout(() => { console.warn('Animation fallback timer fired.'); resolve(); }, 2600); 
         filmstrip.addEventListener('transitionend', () => { clearTimeout(fallback); resolve(); }, { once: true });
       });
     }
+
     function preloadImages(srcArray) {
       const promises = srcArray.map(src => new Promise((resolve) => {
         const img = new Image(); img.onload = resolve; img.onerror = resolve; img.src = src;
       }));
       return Promise.all(promises);
     }
+
     btn.addEventListener('click', () => {
-        if (btn.textContent === 'Reset') {
-            selectedGenres.clear();
-            selectedGenres.add(0);
-            updateGenreSelection();
-            randomize();
-        } else {
-            randomize();
-        }
+        if (btn.textContent === 'Reset') { selectedGenres.clear(); selectedGenres.add(0); updateGenreSelection(); randomize(); }
+        else { randomize(); }
     });
   });
   </script>
