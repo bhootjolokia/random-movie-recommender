@@ -11,50 +11,18 @@
   <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'>
   <style>
     :root{--font-sans:'Inter',system-ui,sans-serif;--color-bg:#121212;--color-base:#1E1E1E;--color-accent:#2DD4BF;--color-text:#E5E7EB;--color-text-muted:#9CA3AF;--radius:0.5rem}html{height:100%}
-    
-    /* UPDATED: Added horizontal padding to the body for a consistent mobile gutter */
     body{height:100%;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans);margin:0;box-sizing:border-box;overflow:hidden;padding:0 1rem}
-    
     .page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100vh;}
-    
-    /* UPDATED: Removed horizontal padding */
     h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin:0;text-align:center;flex-shrink:0;padding:0.5rem 0 .75rem;}
-
-    /* UPDATED: Removed horizontal padding */
-    .main-content-wrapper {
-      width: 100%;
-      max-width: 320px;
-      margin: 0 auto;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    .main-content-wrapper {width: 100%;max-width: 320px;margin: 0 auto;padding: 0;box-sizing: border-box;}
     #posterWrapper{background:var(--color-bg);border-radius:var(--radius);position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;aspect-ratio:2/3;width:100%;}
-    
     #loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}
-    
-    /* UPDATED: Removed horizontal padding */
-    .actions-container {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        flex-shrink: 0;
-        max-width: 320px;
-        padding: 0;
-        box-sizing: border-box;
-        margin-top: 0.75rem;
-    }
-
+    .actions-container {display: flex;flex-direction: column;width: 100%;flex-shrink: 0;max-width: 320px;padding: 0;box-sizing: border-box;margin-top: 0.75rem;}
     .btn, #result, .controls {flex-shrink: 0;}
-    
     .btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;margin-bottom:0.75rem}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}
-    
     #result{text-align:center;height:2.5rem;visibility:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-
     #movieResult{font-weight:600;font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;max-width:clamp(240px,90vw,320px);box-sizing:border-box}
-    
     .controls{width:100%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;position:relative;margin-top:0.5rem;}
-    
     #genreToggle, #streamLink {display: inline-flex;align-items: center;gap: 0.5rem;padding: 0.5rem 0.8rem;background: var(--color-base);border: 1px solid rgba(255, 255, 255, 0.1);transition: all 0.2s ease;font-size:.875rem;font-weight:600;cursor:pointer;border-radius:var(--radius);color:var(--color-text);text-decoration:none;}
     #streamLink.hidden { visibility: hidden; }
     #genreToggle:hover, #streamLink:hover {background: rgba(45, 212, 191, 0.1);border-color: rgba(45, 212, 191, 0.5);transform: translateY(-2px);outline:none;}
@@ -70,25 +38,11 @@
     .genre-menu-close {display: block;position: absolute;top: 50%;right: 0.25rem;transform: translateY(-50%);background: transparent;border: none;color: var(--color-text-muted);font-size: 1.75rem;line-height: 1;padding: 0.25rem 0.5rem;cursor: pointer;}
     .genre-menu-close:hover {color: var(--color-text);}
     #genreList{overflow-y:auto;padding:.5rem}
-    
-    /* UPDATED: Removed horizontal padding */
-    .site-footer {
-        width: 100%;
-        margin: auto 0 0.5rem 0;
-        padding: 0.25rem 0;
-        box-sizing: border-box;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: var(--color-text-muted);
-        flex-shrink: 0;
-        font-size: clamp(.7rem, 2.5vw, .75rem);
-    }
+    .site-footer {width: 100%;margin: auto 0 0.5rem 0;padding: 0.25rem 0;box-sizing: border-box;display: flex;justify-content: space-between;align-items: center;color: var(--color-text-muted);flex-shrink: 0;font-size: clamp(.7rem, 2.5vw, .75rem);}
     .site-footer a { color: var(--color-text-muted); text-decoration: none; }
     .site-footer a:hover { color: var(--color-accent); text-decoration: underline; }
     .footer-col-center { text-align: center; }
     .footer-col-right { text-align: right; }
-
     #genreList .item {padding: .45rem .75rem; display: flex; align-items: center; gap: .5rem; font-size: 0.875rem; font-weight: 400; color: var(--color-text-muted); cursor: pointer; position: relative; border-radius: .25rem; transition: background-color 0.2s ease, color 0.2s ease;}
     #genreList .item:not([data-genre="0"]):hover {background-color: rgba(255, 255, 255, 0.05);color: var(--color-text);}
     #genreList .item[data-genre="0"] {background-color: rgba(255, 255, 255, 0.03);border-bottom: 1px solid rgba(255, 255, 255, 0.1);font-weight: 600;color: var(--color-text);margin-bottom: 0.25rem;}
@@ -96,64 +50,18 @@
     #genreMenu .check {visibility: hidden;color: var(--color-accent);font-weight: bold;}
     #genreMenu .item.selected {font-weight: 600;color: var(--color-text);}
     #genreMenu .item.selected .check {visibility: visible;}
-
     @media (min-width: 768px) {
-      /* Overrides mobile body padding for desktop */
-      body {
-        padding: 2rem;
-      }
-      .page-container {
-        height: 100%;
-        padding-bottom: 1rem;
-        box-sizing: border-box;
-      }
-      
-      .main-content-block {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        flex-grow: 1;
-        justify-content: center;
-      }
-      
-      h1 {
-        display: inline-block;
-        margin-bottom: 1.5rem;
-        padding: 0; /* Ensures no extra padding on desktop */
-      }
-      .main-content-wrapper {
-        padding: 0;
-        display: block;
-      }
-      #posterWrapper {
-        width: 320px;
-        height: 480px;
-        margin-bottom: 1.5rem;
-      }
-      .actions-container {
-          max-width: 320px;
-          padding: 0;
-          margin-top: 0;
-      }
-      .btn {
-        max-width: 320px;
-        margin-bottom: 1.25rem;
-      }
-      #result {
-        margin-bottom: 1rem;
-        height: auto;
-      }
-      .controls {
-        width: 100%;
-        max-width: 320px;
-        margin-top: 0;
-      }
-      .site-footer {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      
+      body {padding: 2rem;}
+      .page-container {height: 100%;padding-bottom: 1rem;box-sizing: border-box;}
+      .main-content-block {display: flex;flex-direction: column;align-items: center;flex-grow: 1;justify-content: center;}
+      h1 {display: inline-block;margin-bottom: 1.5rem;padding: 0;}
+      .main-content-wrapper {padding: 0;display: block;}
+      #posterWrapper {width: 320px;height: 480px;margin-bottom: 1.5rem;}
+      .actions-container {max-width: 320px;padding: 0;margin-top: 0;}
+      .btn {max-width: 320px;margin-bottom: 1.25rem;}
+      #result {margin-bottom: 1rem;height: auto;}
+      .controls {width: 100%;max-width: 320px;margin-top: 0;}
+      .site-footer {width: 100%;margin: 0;padding: 0;}
       .genre-menu-close {display: none;}
       #genreOverlay,.genre-menu-header{display:none}
       #genreModalContainer{position:static;opacity:1;pointer-events:auto;display:block}
@@ -167,7 +75,6 @@
 </head>
 <body>
   <div class="page-container">
-    
     <div class="main-content-block">
       <h1>Random Movie Generator</h1>
       <div class="main-content-wrapper">
@@ -198,7 +105,6 @@
           </div>
       </div>
     </div>
-    
     <footer class="site-footer">
       <a href="#" class="footer-col-left">Privacy Policy</a>
       <a href="mailto:movierandomizertool@gmail.com" class="footer-col-center">Contact Us</a>
@@ -208,31 +114,11 @@
   <script src="data/initial-pool.js" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-    const TMDB_BASE = 'https://www.themoviedb.org/movie';
-    const IMG_BASE = 'https://image.tmdb.org/t/p/';
-    const SEEN_MOVIES_CAP = 50;
-    let movies = [];
-    let fullMovieList = [];
-    let spinCount = 0;
-    let selectedGenres = new Set([0]);
-    let isSpinning = false;
-    let seenMovies = [];
-    const btn = document.getElementById('randomizeBtn');
-    const res = document.getElementById('result');
-    const txt = document.getElementById('movieResult');
-    const genreToggle = document.getElementById('genreToggle');
-    const streamLink = document.getElementById('streamLink');
-    const filmstrip = document.getElementById('filmstrip');
-    const loadingPlaceholder = document.getElementById('loading-placeholder');
-    const genreModalContainer = document.getElementById('genreModalContainer');
-    const genreMenu = document.getElementById('genreMenu');
-    const genreList = document.getElementById('genreList');
-    const genreOverlay = document.getElementById('genreOverlay');
-    const genreMenuCloseBtn = document.querySelector('.genre-menu-close');
+    const TMDB_BASE = 'https://www.themoviedb.org/movie'; const IMG_BASE = 'https://image.tmdb.org/t/p/'; const SEEN_MOVIES_CAP = 50;
+    let movies = []; let fullMovieList = []; let spinCount = 0; let selectedGenres = new Set([0]); let isSpinning = false; let seenMovies = [];
+    const btn = document.getElementById('randomizeBtn'); const res = document.getElementById('result'); const txt = document.getElementById('movieResult'); const genreToggle = document.getElementById('genreToggle'); const streamLink = document.getElementById('streamLink'); const filmstrip = document.getElementById('filmstrip'); const loadingPlaceholder = document.getElementById('loading-placeholder'); const genreModalContainer = document.getElementById('genreModalContainer'); const genreMenu = document.getElementById('genreMenu'); const genreList = document.getElementById('genreList'); const genreOverlay = document.getElementById('genreOverlay'); const genreMenuCloseBtn = document.querySelector('.genre-menu-close');
     const genreMap = {28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Science Fiction',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
-    
-    const sortedGenreList = Object.entries(genreMap)
-      .sort(([, nameA], [, nameB]) => nameA.localeCompare(nameB));
+    const sortedGenreList = Object.entries(genreMap).sort(([, nameA], [, nameB]) => nameA.localeCompare(nameB));
     sortedGenreList.unshift(['0', 'Any Genre']);
     sortedGenreList.forEach(([id,name]) => {
       const el = document.createElement('div'); el.className = 'item'; el.dataset.genre = id;
@@ -247,44 +133,40 @@
       });
       genreList.appendChild(el);
     });
-
     function updateGenreSelection() { document.querySelectorAll('#genreList .item').forEach(i => { i.classList.toggle('selected', selectedGenres.has(+i.dataset.genre)); }); }
     function closeGenreMenu() { genreModalContainer.classList.remove('open'); }
     genreToggle.addEventListener('click', (e) => { e.stopPropagation(); genreModalContainer.classList.toggle('open'); });
     genreOverlay.addEventListener('click', closeGenreMenu);
     genreMenuCloseBtn.addEventListener('click', closeGenreMenu);
     document.addEventListener('click', (e) => { if (window.innerWidth >= 768 && !genreMenu.contains(e.target) && e.target !== genreToggle) { closeGenreMenu(); } });
-    
-    function formatMovie(movieData) {
-        return {
-            id: movieData.id,
-            title: movieData.title,
-            year: movieData.release_date ? movieData.release_date.slice(0, 4) : 'N/A',
-            poster_path: movieData.poster_path,
-            genre_ids: movieData.genre_ids,
-            watch_link: movieData.watch_link
-        };
-    }
-    
+    function formatMovie(movieData) { return { id: movieData.id, title: movieData.title, year: movieData.release_date ? movieData.release_date.slice(0, 4) : 'N/A', poster_path: movieData.poster_path, genre_ids: movieData.genre_ids, watch_link: movieData.watch_link }; }
     function createResponsiveImage(path, alt) {
         const src = `${IMG_BASE}w500${path}`;
         const srcset = `${IMG_BASE}w342${path} 342w, ${IMG_BASE}w500${path} 500w`;
-        const sizes = `(max-width: 400px) 90vw, 320px`;
+        const sizes = `(max-width: 767px) calc(100vw - 2rem), 320px`;
         return `<img class="filmstrip-image" src="${src}" srcset="${srcset}" sizes="${sizes}" alt="${alt}">`;
     }
-
+    
+    // THIS IS THE FIX: This function now filters out movies without posters
     async function initializeApp() {
-      movies = initialMoviePool.map(formatMovie);
+      // Filter the initial pool
+      movies = initialMoviePool
+        .map(formatMovie)
+        .filter(m => m.poster_path); 
+
       const firstMovie = movies[Math.floor(Math.random() * movies.length)];
       await preloadImages([`${IMG_BASE}w500${firstMovie.poster_path}`]);
-      pickNewMovie(firstMovie);
-      seenMovies.push(firstMovie);
-      btn.disabled = false;
+      pickNewMovie(firstMovie); seenMovies.push(firstMovie); btn.disabled = false;
+      
       try {
-        const response = await fetch('data/movies.json');
-        if (!response.ok) throw new Error('Main movie list failed to load');
-        const fullList = await response.json();
-        fullMovieList = fullList.map(formatMovie);
+        const response = await fetch('data/movies.json'); if (!response.ok) throw new Error('Main movie list failed to load');
+        const fullList = await response.json(); 
+        
+        // Also filter the fetched list
+        fullMovieList = fullList
+          .map(formatMovie)
+          .filter(m => m.poster_path);
+
       } catch (err) { console.error('Could not load the full movie list. Sticking with initial pool.'); }
       updateGenreSelection();
     }
@@ -292,13 +174,8 @@
 
     function pickNewMovie(movie) {
         loadingPlaceholder.style.display = 'none';
-        if (!movie) {
-            filmstrip.innerHTML = '';
-            txt.textContent = 'No movies match the selected genres.';
-            streamLink.href = '#'; streamLink.classList.add('hidden'); res.style.visibility = 'visible'; btn.textContent = 'Reset'; return;
-        }
-        btn.textContent = 'Randomize Movie';
-        filmstrip.style.transition = 'none';
+        if (!movie) { filmstrip.innerHTML = ''; txt.textContent = 'No movies match the selected genres.'; streamLink.href = '#'; streamLink.classList.add('hidden'); res.style.visibility = 'visible'; btn.textContent = 'Reset'; return; }
+        btn.textContent = 'Randomize Movie'; filmstrip.style.transition = 'none';
         filmstrip.innerHTML = createResponsiveImage(movie.poster_path, `Poster for ${movie.title}`);
         filmstrip.style.transform = 'translateY(0)';
         txt.textContent = `${movie.title} (${movie.year})`;
@@ -306,7 +183,6 @@
         streamLink.classList.remove('hidden'); res.style.visibility = 'visible';
         if (!seenMovies.some(sm => sm.id === movie.id)) { seenMovies.unshift(movie); if (seenMovies.length > SEEN_MOVIES_CAP) seenMovies.pop(); }
     }
-
     async function randomize() {
       if (isSpinning || movies.length === 0) return;
       isSpinning = true; btn.disabled = true;
@@ -324,11 +200,10 @@
       } catch (error) { console.error("An error occurred during randomization:", error); txt.textContent = "Oops! Something went wrong."; }
       finally { isSpinning = false; btn.disabled = false; }
     }
-
     async function performFastSpin(winner) {
       const stripLength = 30; let stripHTML = '';
       const posterHeight = filmstrip.clientHeight; if (posterHeight === 0) return;
-      const movieSource = fullMovieList.length > 0 ? fullMovieList : initialMoviePool.map(formatMovie);
+      const movieSource = fullMovieList.length > 0 ? fullMovieList : movies; // Use filtered movies list
       for (let i = 0; i < stripLength; i++) {
         const movieForStrip = movieSource[Math.floor(Math.random() * movieSource.length)];
         const imgHTML = createResponsiveImage(movieForStrip.poster_path, '');
@@ -347,14 +222,12 @@
         filmstrip.addEventListener('transitionend', () => { clearTimeout(fallback); resolve(); }, { once: true });
       });
     }
-
     function preloadImages(srcArray) {
       const promises = srcArray.map(src => new Promise((resolve) => {
         const img = new Image(); img.onload = resolve; img.onerror = resolve; img.src = src;
       }));
       return Promise.all(promises);
     }
-
     btn.addEventListener('click', () => {
         if (btn.textContent === 'Reset') { selectedGenres.clear(); selectedGenres.add(0); updateGenreSelection(); randomize(); }
         else { randomize(); }
