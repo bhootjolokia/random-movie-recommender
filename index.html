@@ -53,23 +53,21 @@
     #genreMenu .check {visibility: hidden;color: var(--color-accent);font-weight: bold;}
     #genreMenu .item.selected {font-weight: 600;color: var(--color-text);}
     #genreMenu .item.selected .check {visibility: visible;}
+    
+    /* ACCESSIBILITY: Add a clear, on-brand focus outline for keyboard users. */
+    .btn:focus-visible,
+    #genreToggle:focus-visible,
+    #streamLink:focus-visible,
+    .genre-menu-close:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+    
     @media (min-width: 768px) {
       body {padding: 2rem;}
       .page-container {padding-bottom: 1rem;}
-      .main-content-block {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        flex-grow: 1;
-        justify-content: center; /* This centers the block */
-      }
-      h1 {
-        display: inline-block;
-        margin-bottom: 1.5rem;
-        padding: 0;
-        position: relative; /* This allows us to move it */
-        top: 0.75rem;          /* This pushes ONLY the title down */
-      }
+      .main-content-block {display: flex;flex-direction: column;align-items: center;flex-grow: 1;justify-content: center;}
+      h1 {display: inline-block;margin-bottom: 1.5rem;padding: 0;position: relative;top: 0.75rem;}
       .main-content-wrapper {padding: 0;display: block;}
       #posterWrapper {width: 320px;height: 480px;margin-bottom: 1.5rem;padding-bottom: 0;}
       .actions-container {max-width: 320px;padding: 0;margin-top: 0;}
@@ -100,9 +98,10 @@
       </div>
       <div class="actions-container">
           <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
-          <div id='result'><div id='movieResult'></div></div>
+          <div id='result' aria-live="polite"><div id='movieResult'></div></div>
           <div class='controls'>
-            <button id='genreToggle'>
+            <!-- ACCESSIBILITY: Added ARIA attributes to communicate state to screen readers -->
+            <button id='genreToggle' aria-haspopup="true" aria-expanded="false" aria-controls="genreMenu">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/></svg>
                 <span>Genres</span>
             </button>
@@ -113,7 +112,11 @@
             <div id="genreModalContainer">
               <div id="genreOverlay"></div>
               <div id='genreMenu' role='menu'>
-                <div class="genre-menu-header"><h2>Select Genres</h2><button class="genre-menu-close">×</button></div>
+                <div class="genre-menu-header">
+                  <h2>Select Genres</h2>
+                  <!-- ACCESSIBILITY: Added a descriptive label for the close button -->
+                  <button class="genre-menu-close" aria-label="Close">×</button>
+                </div>
                 <div id="genreList"></div>
               </div>
             </div>
@@ -136,7 +139,7 @@
     const sortedGenreList = Object.entries(genreMap).sort(([, nameA], [, nameB]) => nameA.localeCompare(nameB));
     sortedGenreList.unshift(['0', 'Any Genre']);
     sortedGenreList.forEach(([id,name]) => {
-      const el = document.createElement('div'); el.className = 'item'; el.dataset.genre = id;
+      const el = document.createElement('div'); el.className = 'item'; el.dataset.genre = id; el.setAttribute('role', 'menuitemradio');
       const check = document.createElement('span'); check.className = 'check'; check.innerHTML = '✓';
       const text = document.createElement('span'); text.textContent = name;
       el.appendChild(check); el.appendChild(text);
@@ -148,9 +151,29 @@
       });
       genreList.appendChild(el);
     });
-    function updateGenreSelection() { document.querySelectorAll('#genreList .item').forEach(i => { i.classList.toggle('selected', selectedGenres.has(+i.dataset.genre)); }); }
-    function closeGenreMenu() { genreModalContainer.classList.remove('open'); }
-    genreToggle.addEventListener('click', (e) => { e.stopPropagation(); genreModalContainer.classList.toggle('open'); });
+
+    function updateGenreSelection() { 
+      document.querySelectorAll('#genreList .item').forEach(i => { 
+        const isSelected = selectedGenres.has(+i.dataset.genre);
+        i.classList.toggle('selected', isSelected);
+        i.setAttribute('aria-checked', isSelected);
+      }); 
+    }
+    
+    // ACCESSIBILITY: This function now also handles ARIA attributes
+    function closeGenreMenu() { 
+      genreModalContainer.classList.remove('open'); 
+      genreToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    // ACCESSIBILITY: This event listener now also handles ARIA attributes
+    genreToggle.addEventListener('click', (e) => { 
+      e.stopPropagation(); 
+      const isOpening = !genreModalContainer.classList.contains('open');
+      genreToggle.setAttribute('aria-expanded', isOpening);
+      genreModalContainer.classList.toggle('open');
+    });
+
     genreOverlay.addEventListener('click', closeGenreMenu);
     genreMenuCloseBtn.addEventListener('click', closeGenreMenu);
     document.addEventListener('click', (e) => { if (window.innerWidth >= 768 && !genreMenu.contains(e.target) && e.target !== genreToggle) { closeGenreMenu(); } });
