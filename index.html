@@ -71,7 +71,6 @@
     .genre-menu-close:hover {color: var(--color-text);}
     #genreList{overflow-y:auto;padding:.5rem}
     
-    /* UPDATED FOOTER STYLES FOR ALL SCREENS */
     .site-footer {
         width: 100%;
         margin: auto 0 0.5rem 0;
@@ -84,17 +83,10 @@
         flex-shrink: 0;
         font-size: clamp(.7rem, 2.5vw, .75rem);
     }
-    .site-footer a {
-        color: var(--color-text-muted);
-        text-decoration: none;
-    }
-    .site-footer a:hover {
-        color: var(--color-accent);
-        text-decoration: underline;
-    }
+    .site-footer a { color: var(--color-text-muted); text-decoration: none; }
+    .site-footer a:hover { color: var(--color-accent); text-decoration: underline; }
     .footer-col-center { text-align: center; }
     .footer-col-right { text-align: right; }
-    /* REMOVED old .footer-right and .footer-center rules */
 
     #genreList .item {padding: .45rem .75rem; display: flex; align-items: center; gap: .5rem; font-size: 0.875rem; font-weight: 400; color: var(--color-text-muted); cursor: pointer; position: relative; border-radius: .25rem; transition: background-color 0.2s ease, color 0.2s ease;}
     #genreList .item:not([data-genre="0"]):hover {background-color: rgba(255, 255, 255, 0.05);color: var(--color-text);}
@@ -106,15 +98,25 @@
 
     @media (min-width: 768px) {
       body {
-        padding: 2rem;
+        padding: 2rem; /* This creates the space at the top and bottom edges */
       }
       .page-container {
-        justify-content: flex-start;
         height: 100%;
+        padding-bottom: 1rem; /* Space for the footer */
+        box-sizing: border-box;
       }
+      
+      /* NEW WRAPPER TO CONTROL CENTERING */
+      .main-content-block {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex-grow: 1; /* Takes up all available space, pushing footer down */
+        justify-content: center; /* This is the key: it centers the content vertically */
+      }
+      
       h1 {
-        position: relative;
-        top: 1rem;
+        /* position: relative; top: 1rem; <-- REMOVED */
         display: inline-block;
         margin-bottom: 2rem;
         padding: 0;
@@ -147,13 +149,11 @@
         max-width: 320px;
         margin-top: 0;
       }
-      /* UPDATED DESKTOP FOOTER STYLES */
       .site-footer {
-        width: 100%; /* Spans full width inside the body padding */
-        margin: auto auto 0;
-        padding: 0; /* Let body padding handle spacing */
+        width: 100%;
+        margin: 0; /* Let the new layout handle positioning */
+        padding: 0;
       }
-      /* REMOVED all old desktop-specific footer rules like .footer-right-stack, etc. */
       
       .genre-menu-close {display: none;}
       #genreOverlay,.genre-menu-header{display:none}
@@ -168,6 +168,9 @@
 </head>
 <body>
   <div class="page-container">
+    
+    <!-- NEW WRAPPER added for PC layout -->
+    <div class="main-content-block">
       <h1>Random Movie Generator</h1>
       <div class="main-content-wrapper">
         <div id='posterWrapper'>
@@ -196,8 +199,8 @@
             </div>
           </div>
       </div>
+    </div> <!-- End of NEW WRAPPER -->
     
-    <!-- UPDATED FOOTER HTML -->
     <footer class="site-footer">
       <a href="#" class="footer-col-left">Privacy Policy</a>
       <a href="mailto:movierandomizertool@gmail.com" class="footer-col-center">Contact Us</a>
