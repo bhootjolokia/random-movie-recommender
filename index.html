@@ -119,15 +119,14 @@
         margin-bottom: 1.5rem;
         padding: 0;
       }
-      /* THIS IS THE FIX */
       .main-content-wrapper {
         flex: initial;
         padding: 0;
-        display: block; /* Revert to a normal block element on desktop */
+        display: block;
       }
       #posterWrapper {
-        width: 100%;
-        max-width: 320px;
+        width: 320px;
+        height: 480px; /* Explicit size to prevent layout shift */
         margin-bottom: 1.5rem;
       }
       .actions-container {
