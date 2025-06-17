@@ -98,27 +98,25 @@
 
     @media (min-width: 768px) {
       body {
-        padding: 2rem; /* This creates the space at the top and bottom edges */
+        padding: 2rem;
       }
       .page-container {
         height: 100%;
-        padding-bottom: 1rem; /* Space for the footer */
+        padding-bottom: 1rem;
         box-sizing: border-box;
       }
       
-      /* NEW WRAPPER TO CONTROL CENTERING */
       .main-content-block {
         display: flex;
         flex-direction: column;
         align-items: center;
-        flex-grow: 1; /* Takes up all available space, pushing footer down */
-        justify-content: center; /* This is the key: it centers the content vertically */
+        flex-grow: 1;
+        justify-content: center;
       }
       
       h1 {
-        /* position: relative; top: 1rem; <-- REMOVED */
         display: inline-block;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem; /* THIS VALUE WAS REDUCED from 2rem to 1.5rem */
         padding: 0;
       }
       .main-content-wrapper {
@@ -151,7 +149,7 @@
       }
       .site-footer {
         width: 100%;
-        margin: 0; /* Let the new layout handle positioning */
+        margin: 0;
         padding: 0;
       }
       
@@ -169,7 +167,6 @@
 <body>
   <div class="page-container">
     
-    <!-- NEW WRAPPER added for PC layout -->
     <div class="main-content-block">
       <h1>Random Movie Generator</h1>
       <div class="main-content-wrapper">
@@ -199,7 +196,7 @@
             </div>
           </div>
       </div>
-    </div> <!-- End of NEW WRAPPER -->
+    </div>
     
     <footer class="site-footer">
       <a href="#" class="footer-col-left">Privacy Policy</a>
