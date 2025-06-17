@@ -13,12 +13,11 @@
     :root{--font-sans:'Inter',system-ui,sans-serif;--color-bg:#121212;--color-base:#1E1E1E;--color-accent:#2DD4BF;--color-text:#E5E7EB;--color-text-muted:#9CA3AF;--radius:0.5rem}html{height:100%}
     body{height:100%;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans);margin:0;box-sizing:border-box;overflow:hidden}
     
-    /* Layer 1: The Page. Stacks the Title, Main Content, and Footer. */
     .page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100vh;}
     
-    h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin:0;text-align:center;flex-shrink:0;padding:1rem 1rem .75rem;}
+    h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin:0;text-align:center;flex-shrink:0;padding:1.5rem 1rem .75rem;}
 
-    /* Layer 2: The Main Content. This is the ONLY element that grows. */
+    /* THIS IS THE FIX: This makes the poster container stretch AND centers the poster inside it. */
     .main-content-wrapper {
       width: 100%;
       max-width: 320px;
@@ -27,22 +26,24 @@
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      flex: 1; /* This is the key: makes this wrapper grow. */
+      flex: 1; 
       min-height: 0;
+      justify-content: center; /* This centers the poster vertically to solve the gap issue */
     }
 
-    /* Layer 3: The Poster. It grows to fill the space inside Layer 2. */
-    #posterWrapper{background:var(--color-bg);border-radius:var(--radius);position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;aspect-ratio:2/3;flex:1;min-height:0;width:auto;max-width:100%;align-self:center;}
+    #posterWrapper{background:var(--color-bg);border-radius:var(--radius);position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;aspect-ratio:2/3;width:auto;max-width:100%;align-self:center;}
     
     #loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}
     
-    /* Layer 3: The Actions. They have a fixed size and do not grow. */
     .actions-container {
         display: flex;
         flex-direction: column;
         width: 100%;
-        flex-shrink: 0; /* Prevents this from shrinking */
-        margin-top: 0.75rem; /* Space between poster and this block */
+        flex-shrink: 0;
+        max-width: 320px;
+        padding: 0 1rem;
+        box-sizing: border-box;
+        margin-top: 0.75rem;
     }
 
     .btn, #result, .controls {flex-shrink: 0;}
@@ -73,7 +74,7 @@
     
     .site-footer {
         width: 100%;
-        margin: auto 0 0.5rem 0; /* Pushes footer to the bottom */
+        margin: auto 0 0.5rem 0;
         padding: 0.25rem 1rem;
         box-sizing: border-box;
         display: flex;
@@ -103,7 +104,6 @@
     #genreMenu .item.selected .check {visibility: visible;}
 
     @media (min-width: 768px) {
-      /* Revert to the original desktop layout */
       body {
         padding: 2rem;
       }
@@ -117,17 +117,19 @@
         margin-bottom: 2rem;
         padding: 0;
       }
+      /* Reverting the mobile-only centering fix */
       .main-content-wrapper {
         flex: initial;
         padding: 0;
+        justify-content: flex-start; 
       }
       #posterWrapper {
-        flex: initial;
         width: 100%;
         max-width: 320px;
         margin-bottom: 1.5rem;
       }
       .actions-container {
+          max-width: 320px;
           padding: 0;
           margin-top: 0;
       }
@@ -174,13 +176,13 @@
 <body>
   <div class="page-container">
       <h1>Random Movie Generator</h1>
-      <!-- HTML is now back to a simple, logical structure -->
       <div class="main-content-wrapper">
         <div id='posterWrapper'>
           <div id="loading-placeholder"><div>Loading movie...</div></div>
           <div id="filmstrip"></div>
         </div>
-        <div class="actions-container">
+      </div>
+      <div class="actions-container">
           <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
           <div id='result'><div id='movieResult'></div></div>
           <div class='controls'>
@@ -200,7 +202,6 @@
               </div>
             </div>
           </div>
-        </div>
       </div>
     <footer class="site-footer">
       <a href="mailto:movierandomizertool@gmail.com" class="footer-left">Contact Us</a>
