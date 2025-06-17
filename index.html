@@ -11,9 +11,15 @@
   <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'>
   <style>
     :root{--font-sans:'Inter',system-ui,sans-serif;--color-bg:#121212;--color-base:#1E1E1E;--color-accent:#2DD4BF;--color-text:#E5E7EB;--color-text-muted:#9CA3AF;--radius:0.5rem}html{height:100%}
-    body{height:100%;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans);margin:0;box-sizing:border-box;overflow:hidden;padding:0 1rem}
-    .page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100vh;}
-    h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin:0;text-align:center;flex-shrink:0;padding:0.5rem 0 .75rem;}
+    
+    /* UPDATED: Added 1rem padding on all sides for a consistent gutter */
+    body{height:100%;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans);margin:0;box-sizing:border-box;overflow:hidden;padding:1rem}
+    
+    /* UPDATED: Height is now 100% to fit inside the padded body */
+    .page-container{display:flex;flex-direction:column;align-items:center;width:100%;height:100%;}
+    
+    h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin:0;text-align:center;flex-shrink:0;padding:0 0 .75rem;}
+
     .main-content-wrapper {width: 100%;max-width: 320px;margin: 0 auto;padding: 0;box-sizing: border-box;}
     #posterWrapper{background:var(--color-bg);border-radius:var(--radius);position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;aspect-ratio:2/3;width:100%;}
     #loading-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;position:absolute;top:0;left:0}#filmstrip{position:absolute;top:0;left:0;width:100%;height:100%;transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}#filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}
@@ -38,7 +44,7 @@
     .genre-menu-close {display: block;position: absolute;top: 50%;right: 0.25rem;transform: translateY(-50%);background: transparent;border: none;color: var(--color-text-muted);font-size: 1.75rem;line-height: 1;padding: 0.25rem 0.5rem;cursor: pointer;}
     .genre-menu-close:hover {color: var(--color-text);}
     #genreList{overflow-y:auto;padding:.5rem}
-    .site-footer {width: 100%;margin: auto 0 0.5rem 0;padding: 0.25rem 0;box-sizing: border-box;display: flex;justify-content: space-between;align-items: center;color: var(--color-text-muted);flex-shrink: 0;font-size: clamp(.7rem, 2.5vw, .75rem);}
+    .site-footer {width: 100%;margin: auto 0 0;padding: 0.25rem 0;box-sizing: border-box;display: flex;justify-content: space-between;align-items: center;color: var(--color-text-muted);flex-shrink: 0;font-size: clamp(.7rem, 2.5vw, .75rem);}
     .site-footer a { color: var(--color-text-muted); text-decoration: none; }
     .site-footer a:hover { color: var(--color-accent); text-decoration: underline; }
     .footer-col-center { text-align: center; }
@@ -52,7 +58,7 @@
     #genreMenu .item.selected .check {visibility: visible;}
     @media (min-width: 768px) {
       body {padding: 2rem;}
-      .page-container {height: 100%;padding-bottom: 1rem;box-sizing: border-box;}
+      .page-container {padding-bottom: 1rem;}
       .main-content-block {display: flex;flex-direction: column;align-items: center;flex-grow: 1;justify-content: center;}
       h1 {display: inline-block;margin-bottom: 1.5rem;padding: 0;}
       .main-content-wrapper {padding: 0;display: block;}
@@ -146,32 +152,19 @@
         const sizes = `(max-width: 767px) calc(100vw - 2rem), 320px`;
         return `<img class="filmstrip-image" src="${src}" srcset="${srcset}" sizes="${sizes}" alt="${alt}">`;
     }
-    
-    // THIS IS THE FIX: This function now filters out movies without posters
     async function initializeApp() {
-      // Filter the initial pool
-      movies = initialMoviePool
-        .map(formatMovie)
-        .filter(m => m.poster_path); 
-
+      movies = initialMoviePool.map(formatMovie).filter(m => m.poster_path); 
       const firstMovie = movies[Math.floor(Math.random() * movies.length)];
       await preloadImages([`${IMG_BASE}w500${firstMovie.poster_path}`]);
       pickNewMovie(firstMovie); seenMovies.push(firstMovie); btn.disabled = false;
-      
       try {
         const response = await fetch('data/movies.json'); if (!response.ok) throw new Error('Main movie list failed to load');
         const fullList = await response.json(); 
-        
-        // Also filter the fetched list
-        fullMovieList = fullList
-          .map(formatMovie)
-          .filter(m => m.poster_path);
-
+        fullMovieList = fullList.map(formatMovie).filter(m => m.poster_path);
       } catch (err) { console.error('Could not load the full movie list. Sticking with initial pool.'); }
       updateGenreSelection();
     }
     initializeApp();
-
     function pickNewMovie(movie) {
         loadingPlaceholder.style.display = 'none';
         if (!movie) { filmstrip.innerHTML = ''; txt.textContent = 'No movies match the selected genres.'; streamLink.href = '#'; streamLink.classList.add('hidden'); res.style.visibility = 'visible'; btn.textContent = 'Reset'; return; }
@@ -203,7 +196,7 @@
     async function performFastSpin(winner) {
       const stripLength = 30; let stripHTML = '';
       const posterHeight = filmstrip.clientHeight; if (posterHeight === 0) return;
-      const movieSource = fullMovieList.length > 0 ? fullMovieList : movies; // Use filtered movies list
+      const movieSource = fullMovieList.length > 0 ? fullMovieList : movies;
       for (let i = 0; i < stripLength; i++) {
         const movieForStrip = movieSource[Math.floor(Math.random() * movieSource.length)];
         const imgHTML = createResponsiveImage(movieForStrip.poster_path, '');
