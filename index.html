@@ -17,7 +17,6 @@
     
     h1{font-size:clamp(1.25rem,4vw,1.5rem);line-height:1.2;font-weight:400;color:var(--color-text);text-transform:none;letter-spacing:normal;margin:0;text-align:center;flex-shrink:0;padding:1.5rem 1rem .75rem;}
 
-    /* THIS IS THE FIX: This makes the poster container stretch AND centers the poster inside it. */
     .main-content-wrapper {
       width: 100%;
       max-width: 320px;
@@ -28,7 +27,7 @@
       flex-direction: column;
       flex: 1; 
       min-height: 0;
-      justify-content: center; /* This centers the poster vertically to solve the gap issue */
+      justify-content: center;
     }
 
     #posterWrapper{background:var(--color-bg);border-radius:var(--radius);position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;aspect-ratio:2/3;width:auto;max-width:100%;align-self:center;}
@@ -109,6 +108,7 @@
       }
       .page-container {
         justify-content: flex-start;
+        height: 100%; /* <-- FIX IS HERE */
       }
       h1 {
         position: relative;
@@ -117,7 +117,6 @@
         margin-bottom: 2rem;
         padding: 0;
       }
-      /* Reverting the mobile-only centering fix */
       .main-content-wrapper {
         flex: initial;
         padding: 0;
