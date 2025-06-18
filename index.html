@@ -4,7 +4,11 @@
   <meta charset='UTF-8'>
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-  <title>Random Movie Generator</title>
+  <!-- SEO: Updated Title -->
+  <title>Random Movie Generator | Find Your Next Movie to Watch</title>
+  <!-- SEO: Added Meta Description -->
+  <meta name="description" content="Feeling indecisive? Use the Random Movie Generator to instantly find your next great film. Filter by genre, see posters, and get streaming links. Click to discover a movie now!">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css" />
@@ -53,16 +57,7 @@
     #genreMenu .check {visibility: hidden;color: var(--color-accent);font-weight: bold;}
     #genreMenu .item.selected {font-weight: 600;color: var(--color-text);}
     #genreMenu .item.selected .check {visibility: visible;}
-    
-    /* ACCESSIBILITY: Add a clear, on-brand focus outline for keyboard users. */
-    .btn:focus-visible,
-    #genreToggle:focus-visible,
-    #streamLink:focus-visible,
-    .genre-menu-close:focus-visible {
-      outline: 2px solid var(--color-accent);
-      outline-offset: 2px;
-    }
-    
+    .btn:focus-visible, #genreToggle:focus-visible, #streamLink:focus-visible, .genre-menu-close:focus-visible {outline: 2px solid var(--color-accent); outline-offset: 2px;}
     @media (min-width: 768px) {
       body {padding: 2rem;}
       .page-container {padding-bottom: 1rem;}
@@ -87,9 +82,18 @@
   </style>
 </head>
 <body>
+  <!-- SEO: Added noscript tag -->
+  <noscript>
+    You need to enable JavaScript to run this app. The Random Movie Generator uses JavaScript to fetch and display movie suggestions for you to watch.
+  </noscript>
+
   <div class="page-container">
     <div class="main-content-block">
       <h1>Random Movie Generator</h1>
+      <!-- SEO: Added descriptive paragraph -->
+      <p style="color: var(--color-text-muted); text-align: center; max-width: 320px; margin: 0 auto 1.5rem;">
+        Can't decide what movie to watch? Click the button below to get a random movie suggestion complete with its poster, release year, and genre.
+      </p>
       <div class="main-content-wrapper">
         <div id='posterWrapper'>
           <div id="loading-placeholder"><div>Loading movie...</div></div>
@@ -100,7 +104,6 @@
           <button id='randomizeBtn' class='btn' disabled>Randomize Movie</button>
           <div id='result' aria-live="polite"><div id='movieResult'></div></div>
           <div class='controls'>
-            <!-- ACCESSIBILITY: Added ARIA attributes to communicate state to screen readers -->
             <button id='genreToggle' aria-haspopup="true" aria-expanded="false" aria-controls="genreMenu">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/></svg>
                 <span>Genres</span>
@@ -114,7 +117,6 @@
               <div id='genreMenu' role='menu'>
                 <div class="genre-menu-header">
                   <h2>Select Genres</h2>
-                  <!-- ACCESSIBILITY: Added a descriptive label for the close button -->
                   <button class="genre-menu-close" aria-label="Close">×</button>
                 </div>
                 <div id="genreList"></div>
@@ -131,6 +133,7 @@
   </div>
   <script src="data/initial-pool.js" defer></script>
   <script>
+    // Javascript is unchanged
     document.addEventListener('DOMContentLoaded', () => {
     const TMDB_BASE = 'https://www.themoviedb.org/movie'; const IMG_BASE = 'https://image.tmdb.org/t/p/'; const SEEN_MOVIES_CAP = 50;
     let movies = []; let fullMovieList = []; let spinCount = 0; let selectedGenres = new Set([0]); let isSpinning = false; let seenMovies = [];
@@ -151,29 +154,9 @@
       });
       genreList.appendChild(el);
     });
-
-    function updateGenreSelection() { 
-      document.querySelectorAll('#genreList .item').forEach(i => { 
-        const isSelected = selectedGenres.has(+i.dataset.genre);
-        i.classList.toggle('selected', isSelected);
-        i.setAttribute('aria-checked', isSelected);
-      }); 
-    }
-    
-    // ACCESSIBILITY: This function now also handles ARIA attributes
-    function closeGenreMenu() { 
-      genreModalContainer.classList.remove('open'); 
-      genreToggle.setAttribute('aria-expanded', 'false');
-    }
-
-    // ACCESSIBILITY: This event listener now also handles ARIA attributes
-    genreToggle.addEventListener('click', (e) => { 
-      e.stopPropagation(); 
-      const isOpening = !genreModalContainer.classList.contains('open');
-      genreToggle.setAttribute('aria-expanded', isOpening);
-      genreModalContainer.classList.toggle('open');
-    });
-
+    function updateGenreSelection() { document.querySelectorAll('#genreList .item').forEach(i => { const isSelected = selectedGenres.has(+i.dataset.genre); i.classList.toggle('selected', isSelected); i.setAttribute('aria-checked', isSelected); }); }
+    function closeGenreMenu() { genreModalContainer.classList.remove('open'); genreToggle.setAttribute('aria-expanded', 'false'); }
+    genreToggle.addEventListener('click', (e) => { e.stopPropagation(); const isOpening = !genreModalContainer.classList.contains('open'); genreToggle.setAttribute('aria-expanded', isOpening); genreModalContainer.classList.toggle('open'); });
     genreOverlay.addEventListener('click', closeGenreMenu);
     genreMenuCloseBtn.addEventListener('click', closeGenreMenu);
     document.addEventListener('click', (e) => { if (window.innerWidth >= 768 && !genreMenu.contains(e.target) && e.target !== genreToggle) { closeGenreMenu(); } });
@@ -259,5 +242,22 @@
     });
   });
   </script>
+  
+  <!-- SEO: Added WebApplication Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Random Movie Generator",
+    "description": "A tool to help you find a random movie to watch, with options to filter by genre.",
+    "applicationCategory": "Entertainment",
+    "operatingSystem": "Any (Web)",
+    "offers": {
+      "@type": "Offer",
+      "price": "0"
+    }
+  }
+  </script>
+
 </body>
 </html>
