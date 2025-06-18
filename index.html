@@ -4,11 +4,8 @@
   <meta charset='UTF-8'>
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-  <!-- SEO: Updated Title -->
   <title>Random Movie Generator | Find Your Next Movie to Watch</title>
-  <!-- SEO: Added Meta Description -->
   <meta name="description" content="Feeling indecisive? Use the Random Movie Generator to instantly find your next great film. Filter by genre, see posters, and get streaming links. Click to discover a movie now!">
-  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css" />
@@ -82,7 +79,6 @@
   </style>
 </head>
 <body>
-  <!-- SEO: Added noscript tag -->
   <noscript>
     You need to enable JavaScript to run this app. The Random Movie Generator uses JavaScript to fetch and display movie suggestions for you to watch.
   </noscript>
@@ -90,10 +86,7 @@
   <div class="page-container">
     <div class="main-content-block">
       <h1>Random Movie Generator</h1>
-      <!-- SEO: Added descriptive paragraph -->
-      <p style="color: var(--color-text-muted); text-align: center; max-width: 320px; margin: 0 auto 1.5rem;">
-        Can't decide what movie to watch? Click the button below to get a random movie suggestion complete with its poster, release year, and genre.
-      </p>
+      <!-- The descriptive paragraph has been removed -->
       <div class="main-content-wrapper">
         <div id='posterWrapper'>
           <div id="loading-placeholder"><div>Loading movie...</div></div>
@@ -131,9 +124,8 @@
       <div class="footer-col-right">Data by <a href="https://www.themoviedb.org" target="_blank">TMDb</a></div>
     </footer>
   </div>
-  <script src="data/initial-pool.js" defer></script>
+  
   <script>
-    // Javascript is unchanged
     document.addEventListener('DOMContentLoaded', () => {
     const TMDB_BASE = 'https://www.themoviedb.org/movie'; const IMG_BASE = 'https://image.tmdb.org/t/p/'; const SEEN_MOVIES_CAP = 50;
     let movies = []; let fullMovieList = []; let spinCount = 0; let selectedGenres = new Set([0]); let isSpinning = false; let seenMovies = [];
@@ -168,15 +160,28 @@
         return `<img class="filmstrip-image" src="${src}" srcset="${srcset}" sizes="${sizes}" alt="${alt}">`;
     }
     async function initializeApp() {
-      movies = initialMoviePool.map(formatMovie).filter(m => m.poster_path); 
-      const firstMovie = movies[Math.floor(Math.random() * movies.length)];
-      await preloadImages([`${IMG_BASE}w500${firstMovie.poster_path}`]);
-      pickNewMovie(firstMovie); seenMovies.push(firstMovie); btn.disabled = false;
+      btn.disabled = true;
+      loadingPlaceholder.style.display = 'flex';
       try {
-        const response = await fetch('data/movies.json'); if (!response.ok) throw new Error('Main movie list failed to load');
-        const fullList = await response.json(); 
-        fullMovieList = fullList.map(formatMovie).filter(m => m.poster_path);
-      } catch (err) { console.error('Could not load the full movie list. Sticking with initial pool.'); }
+        const response = await fetch('data/movies.json');
+        if (!response.ok) throw new Error('Could not load the movie list.');
+        const rawMovieList = await response.json();
+        
+        movies = rawMovieList.map(formatMovie).filter(m => m.poster_path);
+        fullMovieList = movies;
+
+        if (movies.length === 0) { throw new Error('No movies with posters found.'); }
+
+        const firstMovie = movies[Math.floor(Math.random() * movies.length)];
+        await preloadImages([`${IMG_BASE}w500${firstMovie.poster_path}`]);
+        pickNewMovie(firstMovie);
+        seenMovies.push(firstMovie);
+        btn.disabled = false;
+        
+      } catch (err) {
+        console.error(err);
+        loadingPlaceholder.innerHTML = `<div>Oops! Could not load movies.</div>`;
+      }
       updateGenreSelection();
     }
     initializeApp();
@@ -195,9 +200,8 @@
       if (isSpinning || movies.length === 0) return;
       isSpinning = true; btn.disabled = true;
       try {
-        spinCount++; if (spinCount >= 3 && fullMovieList.length > 0) { movies = fullMovieList; }
-        let pool = movies.filter(m => !seenMovies.some(sm => sm.id === m.id));
-        if (pool.length === 0) { const currentMovieId = seenMovies[0]?.id; seenMovies = currentMovieId ? [{ id: currentMovieId }] : []; pool = movies.filter(m => m.id !== currentMovieId); }
+        let pool = fullMovieList.filter(m => !seenMovies.some(sm => sm.id === m.id));
+        if (pool.length === 0) { const currentMovieId = seenMovies[0]?.id; seenMovies = currentMovieId ? [{ id: currentMovieId }] : []; pool = fullMovieList.filter(m => m.id !== currentMovieId); }
         const fs = [...selectedGenres].filter(g => g !== 0);
         if (fs.length > 0) { pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g))); }
         if (pool.length === 0) { pickNewMovie(null); return; }
@@ -211,7 +215,7 @@
     async function performFastSpin(winner) {
       const stripLength = 30; let stripHTML = '';
       const posterHeight = filmstrip.clientHeight; if (posterHeight === 0) return;
-      const movieSource = fullMovieList.length > 0 ? fullMovieList : movies;
+      const movieSource = fullMovieList;
       for (let i = 0; i < stripLength; i++) {
         const movieForStrip = movieSource[Math.floor(Math.random() * movieSource.length)];
         const imgHTML = createResponsiveImage(movieForStrip.poster_path, '');
@@ -243,7 +247,6 @@
   });
   </script>
   
-  <!-- SEO: Added WebApplication Schema -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
