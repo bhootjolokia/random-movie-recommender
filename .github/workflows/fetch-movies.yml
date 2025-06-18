@@ -12,7 +12,8 @@ jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      # <<< MODIFIED: Updated to the latest version for best practice
+      - uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
@@ -29,17 +30,11 @@ jobs:
               | jq '.results' >> temp_all_movies.json
           done
           
-          # Now process the combined file
-          # <<< MODIFIED: Added map(select(.poster_path != null)) to remove movies without posters
+          # This command is already excellent. It correctly filters out movies without posters.
           jq -s 'flatten | map(select(.poster_path != null)) | .[0:800] | [.[] | . + {watch_link: ("https://www.themoviedb.org/movie/" + (.id|tostring) + "/watch")}] | [.[] | {id, title, release_date, poster_path, genre_ids, watch_link}]' temp_all_movies.json > data/movies.json
 
-      - name: Create instant-load JS pool file
-        run: |
-          # <<< MODIFIED: Changed head -n 10 to head -n 30 for a bigger initial pool
-          # Take 30 random movies from the main list using shuf
-          daily_pool_json=$(jq -c '.[]' data/movies.json | shuf | head -n 30 | jq -s '.')
-          # Create a JavaScript file that assigns this data to a variable
-          echo "const initialMoviePool = ${daily_pool_json};" > data/initial-pool.js
+      # <<< REMOVED: The entire step for creating 'initial-pool.js' is gone.
+      # This block has been deleted as it is no longer needed.
 
       - name: Commit updated movie files
         env:
@@ -47,6 +42,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/movies.json data/initial-pool.js
-          git commit -m "chore: update TMDb movie caches" || echo "No changes"
+          # <<< MODIFIED: Only adds the single, essential movies.json file
+          git add data/movies.json
+          git commit -m "chore(data): update TMDb movie cache" || echo "No changes"
           git push
