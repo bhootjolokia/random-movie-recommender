@@ -1,191 +1,210 @@
 const initialMoviePool = [
   {
-    "id": 430424,
-    "title": "See You Up There",
-    "release_date": "2017-10-25",
-    "poster_path": "/pkO5YoznMR9neuHVzhxHK9JJpAj.jpg",
+    "id": 400608,
+    "title": "Bo Burnham: Make Happy",
+    "release_date": "2016-06-03",
+    "poster_path": "/A580BbHTvQbbFgbmf9CkWNhbLzb.jpg",
     "genre_ids": [
-      18,
-      80,
-      10752
+      35,
+      10402
     ],
-    "watch_link": "https://www.themoviedb.org/movie/430424/watch"
+    "watch_link": "https://www.themoviedb.org/movie/400608/watch"
   },
   {
-    "id": 20139,
-    "title": "The Children's Hour",
-    "release_date": "1961-12-19",
-    "poster_path": "/goyEWixvULM2IRN4KsKibyrJE4J.jpg",
+    "id": 293299,
+    "title": "Feast",
+    "release_date": "2014-10-25",
+    "poster_path": "/6hAgSxgd2YIK5pYhwowtnlGpwbe.jpg",
+    "genre_ids": [
+      16,
+      35,
+      18,
+      10751
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/293299/watch"
+  },
+  {
+    "id": 404378,
+    "title": "A Street Cat Named Bob",
+    "release_date": "2016-11-04",
+    "poster_path": "/nBYG0D2FcbL1m926sIj7RN4m0sb.jpg",
+    "genre_ids": [
+      10751,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/404378/watch"
+  },
+  {
+    "id": 696,
+    "title": "Manhattan",
+    "release_date": "1979-04-25",
+    "poster_path": "/k4eT3EvfxW1L9Wmt04UqJqCvCR6.jpg",
+    "genre_ids": [
+      35,
+      18,
+      10749
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/696/watch"
+  },
+  {
+    "id": 372754,
+    "title": "Dou kyu sei – Classmates",
+    "release_date": "2016-02-20",
+    "poster_path": "/cIfRCA5wEvj9tApca4UDUagQEiM.jpg",
+    "genre_ids": [
+      10749,
+      16
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/372754/watch"
+  },
+  {
+    "id": 11005,
+    "title": "Awakenings",
+    "release_date": "1990-12-04",
+    "poster_path": "/9gztZXuHLG6AJ0fgqGd7Q43cWRI.jpg",
     "genre_ids": [
       18
     ],
-    "watch_link": "https://www.themoviedb.org/movie/20139/watch"
+    "watch_link": "https://www.themoviedb.org/movie/11005/watch"
   },
   {
-    "id": 792,
-    "title": "Platoon",
-    "release_date": "1986-12-19",
-    "poster_path": "/m3mmFkPQKvPZq5exmh0bDuXlD9T.jpg",
-    "genre_ids": [
-      18,
-      10752,
-      28
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/792/watch"
-  },
-  {
-    "id": 492188,
-    "title": "Marriage Story",
-    "release_date": "2019-09-28",
-    "poster_path": "/2JRyCKaRKyJAVpsIHeLvPw5nHmw.jpg",
+    "id": 7345,
+    "title": "There Will Be Blood",
+    "release_date": "2007-12-26",
+    "poster_path": "/fa0RDkAlCec0STeMNAhPaF89q6U.jpg",
     "genre_ids": [
       18
     ],
-    "watch_link": "https://www.themoviedb.org/movie/492188/watch"
+    "watch_link": "https://www.themoviedb.org/movie/7345/watch"
   },
   {
-    "id": 42269,
-    "title": "We All Loved Each Other So Much",
-    "release_date": "1974-12-21",
-    "poster_path": "/zGGWYpiKNwjpKxelPxOMqJnUgDs.jpg",
+    "id": 673,
+    "title": "Harry Potter and the Prisoner of Azkaban",
+    "release_date": "2004-05-31",
+    "poster_path": "/aWxwnYoe8p2d2fcxOqtvAtJ72Rw.jpg",
+    "genre_ids": [
+      12,
+      14
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/673/watch"
+  },
+  {
+    "id": 25538,
+    "title": "Yi Yi",
+    "release_date": "2000-09-20",
+    "poster_path": "/mR8dSQZI8X6Z1NClJhFrtJp636z.jpg",
+    "genre_ids": [
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/25538/watch"
+  },
+  {
+    "id": 273248,
+    "title": "The Hateful Eight",
+    "release_date": "2015-12-25",
+    "poster_path": "/jIywvdPjia2t3eKYbjVTcwBQlG8.jpg",
     "genre_ids": [
       18,
-      35
+      9648,
+      37
     ],
-    "watch_link": "https://www.themoviedb.org/movie/42269/watch"
+    "watch_link": "https://www.themoviedb.org/movie/273248/watch"
   },
   {
-    "id": 166428,
-    "title": "How to Train Your Dragon: The Hidden World",
-    "release_date": "2019-01-03",
-    "poster_path": "/xvx4Yhf0DVH8G4LzNISpMfFBDy2.jpg",
+    "id": 140420,
+    "title": "Paperman",
+    "release_date": "2012-11-02",
+    "poster_path": "/9tvF744hwTm2Bn9hkDjMfEsysKz.jpg",
     "genre_ids": [
       16,
       10751,
-      12
+      10749
     ],
-    "watch_link": "https://www.themoviedb.org/movie/166428/watch"
+    "watch_link": "https://www.themoviedb.org/movie/140420/watch"
   },
   {
-    "id": 205,
-    "title": "Hotel Rwanda",
-    "release_date": "2004-12-22",
-    "poster_path": "/p3pHw85UMZPegfMZBA6dZ06yarm.jpg",
+    "id": 86837,
+    "title": "Amour",
+    "release_date": "2012-09-20",
+    "poster_path": "/19hyCudualHxCD0GrEngqsi0wBF.jpg",
     "genre_ids": [
       18,
-      36,
-      10752
+      10749
     ],
-    "watch_link": "https://www.themoviedb.org/movie/205/watch"
+    "watch_link": "https://www.themoviedb.org/movie/86837/watch"
   },
   {
-    "id": 52629,
-    "title": "El Infierno",
-    "release_date": "2010-09-03",
-    "poster_path": "/vry7NyLM6I0fL53H2KxCX4uAz5H.jpg",
+    "id": 177572,
+    "title": "Big Hero 6",
+    "release_date": "2014-10-24",
+    "poster_path": "/2mxS4wUimwlLmI1xp6QW6NSU361.jpg",
+    "genre_ids": [
+      12,
+      10751,
+      16,
+      28,
+      35
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/177572/watch"
+  },
+  {
+    "id": 18079,
+    "title": "Nine Queens",
+    "release_date": "2000-08-31",
+    "poster_path": "/tabMRXUTTBmprGax6ON2r9yBN0D.jpg",
+    "genre_ids": [
+      80,
+      53,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/18079/watch"
+  },
+  {
+    "id": 24,
+    "title": "Kill Bill: Vol. 1",
+    "release_date": "2003-10-10",
+    "poster_path": "/v7TaX8kXMXs5yFFGR41guUDNcnB.jpg",
     "genre_ids": [
       28,
-      80,
-      37,
+      80
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/24/watch"
+  },
+  {
+    "id": 539,
+    "title": "Psycho",
+    "release_date": "1960-06-22",
+    "poster_path": "/yz4QVqPx3h1hD1DfqqQkCq3rmxW.jpg",
+    "genre_ids": [
+      27,
+      53,
+      9648
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/539/watch"
+  },
+  {
+    "id": 783675,
+    "title": "The First Slam Dunk",
+    "release_date": "2022-12-03",
+    "poster_path": "/7i3EBXY87HdHagCoFbmjHQ8DlkG.jpg",
+    "genre_ids": [
+      16,
       35,
       18
     ],
-    "watch_link": "https://www.themoviedb.org/movie/52629/watch"
+    "watch_link": "https://www.themoviedb.org/movie/783675/watch"
   },
   {
-    "id": 472454,
-    "title": "Ayla: The Daughter of War",
-    "release_date": "2017-10-27",
-    "poster_path": "/8RELLU0RK9hRIteLzHFZ0dK8YSi.jpg",
+    "id": 437068,
+    "title": "A Taxi Driver",
+    "release_date": "2017-08-02",
+    "poster_path": "/iXVaWbxmyPk4KZGZk5GGDGFieMX.jpg",
     "genre_ids": [
+      28,
       18,
-      10752,
       36
     ],
-    "watch_link": "https://www.themoviedb.org/movie/472454/watch"
-  },
-  {
-    "id": 504253,
-    "title": "I Want to Eat Your Pancreas",
-    "release_date": "2018-09-01",
-    "poster_path": "/qDWA7fB4cZ4sBP6YgwlxvraDHi7.jpg",
-    "genre_ids": [
-      16,
-      18,
-      10749
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/504253/watch"
-  },
-  {
-    "id": 770,
-    "title": "Gone with the Wind",
-    "release_date": "1939-12-15",
-    "poster_path": "/lNz2Ow0wGCAvzckW7EOjE03KcYv.jpg",
-    "genre_ids": [
-      18,
-      10752,
-      10749
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/770/watch"
-  },
-  {
-    "id": 712454,
-    "title": "The Summit of the Gods",
-    "release_date": "2021-09-22",
-    "poster_path": "/iowz7MwaTWMYlfLUE6GeM0m3Hze.jpg",
-    "genre_ids": [
-      16,
-      12,
-      9648
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/712454/watch"
-  },
-  {
-    "id": 640,
-    "title": "Catch Me If You Can",
-    "release_date": "2002-12-16",
-    "poster_path": "/ctjEj2xM32OvBXCq8zAdK3ZrsAj.jpg",
-    "genre_ids": [
-      18,
-      80
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/640/watch"
-  },
-  {
-    "id": 238,
-    "title": "The Godfather",
-    "release_date": "1972-03-14",
-    "poster_path": "/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
-    "genre_ids": [
-      18,
-      80
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/238/watch"
-  },
-  {
-    "id": 572154,
-    "title": "Rascal Does Not Dream of a Dreaming Girl",
-    "release_date": "2019-06-15",
-    "poster_path": "/AtFnN4OztDJy8IFwYd5JfU0jlEM.jpg",
-    "genre_ids": [
-      16,
-      10749,
-      18,
-      14
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/572154/watch"
-  },
-  {
-    "id": 106646,
-    "title": "The Wolf of Wall Street",
-    "release_date": "2013-12-25",
-    "poster_path": "/kW9LmvYHAaS9iA0tHmZVq8hQYoq.jpg",
-    "genre_ids": [
-      80,
-      18,
-      35
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/106646/watch"
+    "watch_link": "https://www.themoviedb.org/movie/437068/watch"
   },
   {
     "id": 96721,
@@ -199,151 +218,128 @@ const initialMoviePool = [
     "watch_link": "https://www.themoviedb.org/movie/96721/watch"
   },
   {
-    "id": 393,
-    "title": "Kill Bill: Vol. 2",
-    "release_date": "2004-04-16",
-    "poster_path": "/2yhg0mZQMhDyvUQ4rG1IZ4oIA8L.jpg",
+    "id": 25364,
+    "title": "Ace in the Hole",
+    "release_date": "1951-06-29",
+    "poster_path": "/gPVPzHEsJBX02HtBtIQgYnfeqNQ.jpg",
     "genre_ids": [
-      28,
-      80,
-      53
+      18
     ],
-    "watch_link": "https://www.themoviedb.org/movie/393/watch"
+    "watch_link": "https://www.themoviedb.org/movie/25364/watch"
   },
   {
-    "id": 37257,
-    "title": "Witness for the Prosecution",
-    "release_date": "1957-12-17",
-    "poster_path": "/bCj4EfuehAlgBwVd3diyWyhuuau.jpg",
-    "genre_ids": [
-      18,
-      9648,
-      80
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/37257/watch"
-  },
-  {
-    "id": 33320,
-    "title": "Millennium Actress",
-    "release_date": "2002-09-14",
-    "poster_path": "/p44UXOFBCY5xbpCKEsWpi4filCD.jpg",
-    "genre_ids": [
-      16,
-      18,
-      10749,
-      14
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/33320/watch"
-  },
-  {
-    "id": 634649,
-    "title": "Spider-Man: No Way Home",
-    "release_date": "2021-12-15",
-    "poster_path": "/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg",
-    "genre_ids": [
-      28,
-      12,
-      878
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/634649/watch"
-  },
-  {
-    "id": 680,
-    "title": "Pulp Fiction",
-    "release_date": "1994-09-10",
-    "poster_path": "/vQWk5YBFWF4bZaofAbv0tShwBvQ.jpg",
+    "id": 567,
+    "title": "Rear Window",
+    "release_date": "1954-08-01",
+    "poster_path": "/ILVF0eJxHMddjxeQhswFtpMtqx.jpg",
     "genre_ids": [
       53,
-      80
+      9648
     ],
-    "watch_link": "https://www.themoviedb.org/movie/680/watch"
+    "watch_link": "https://www.themoviedb.org/movie/567/watch"
   },
   {
-    "id": 1162,
-    "title": "The Miracle Worker",
-    "release_date": "1962-05-23",
-    "poster_path": "/dXbQE7t9JlLad0dSprWJ3jOiTua.jpg",
+    "id": 424,
+    "title": "Schindler's List",
+    "release_date": "1993-12-15",
+    "poster_path": "/sF1U4EUQS8YHUYjNl3pMGNIQyr0.jpg",
     "genre_ids": [
-      18
+      18,
+      36,
+      10752
     ],
-    "watch_link": "https://www.themoviedb.org/movie/1162/watch"
+    "watch_link": "https://www.themoviedb.org/movie/424/watch"
   },
   {
-    "id": 118340,
-    "title": "Guardians of the Galaxy",
-    "release_date": "2014-07-30",
-    "poster_path": "/jPrJPZKJVhvyJ4DmUTrDgmFN0yG.jpg",
+    "id": 562,
+    "title": "Die Hard",
+    "release_date": "1988-07-15",
+    "poster_path": "/aJCpHDC6RoGz7d1Fzayl019xnxX.jpg",
     "genre_ids": [
       28,
-      878,
-      12
+      53
     ],
-    "watch_link": "https://www.themoviedb.org/movie/118340/watch"
+    "watch_link": "https://www.themoviedb.org/movie/562/watch"
   },
   {
-    "id": 31442,
-    "title": "Ivan's Childhood",
-    "release_date": "1962-05-09",
-    "poster_path": "/vmRWSLP1DE9WTta0hfzIafJ0dID.jpg",
-    "genre_ids": [
-      18,
-      10752
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/31442/watch"
-  },
-  {
-    "id": 585,
-    "title": "Monsters, Inc.",
-    "release_date": "2001-11-01",
-    "poster_path": "/qjlbN6aK1qgeg3SspFVovT2D1Me.jpg",
+    "id": 916224,
+    "title": "Suzume",
+    "release_date": "2022-11-11",
+    "poster_path": "/yStW1TXF5s7Tbtu9KjIZEaWl6HL.jpg",
     "genre_ids": [
       16,
-      35,
-      10751
+      18,
+      12,
+      14
     ],
-    "watch_link": "https://www.themoviedb.org/movie/585/watch"
+    "watch_link": "https://www.themoviedb.org/movie/916224/watch"
   },
   {
-    "id": 7345,
-    "title": "There Will Be Blood",
-    "release_date": "2007-12-26",
-    "poster_path": "/fa0RDkAlCec0STeMNAhPaF89q6U.jpg",
+    "id": 12444,
+    "title": "Harry Potter and the Deathly Hallows: Part 1",
+    "release_date": "2010-11-17",
+    "poster_path": "/iGoXIpQb7Pot00EEdwpwPajheZ5.jpg",
     "genre_ids": [
+      12,
+      14
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/12444/watch"
+  },
+  {
+    "id": 406997,
+    "title": "Wonder",
+    "release_date": "2017-11-13",
+    "poster_path": "/sONh3LYGFcVDTy8pm1tbSOB13Li.jpg",
+    "genre_ids": [
+      10751,
       18
     ],
-    "watch_link": "https://www.themoviedb.org/movie/7345/watch"
+    "watch_link": "https://www.themoviedb.org/movie/406997/watch"
   },
   {
-    "id": 678580,
-    "title": "El mesero",
-    "release_date": "2021-07-15",
-    "poster_path": "/zvGC5jX5wQmU1GgPc0VGZz7Mtcs.jpg",
+    "id": 30959,
+    "title": "Kwaidan",
+    "release_date": "1965-01-06",
+    "poster_path": "/vmYhFcA2YC15hoL44hQziba75Ij.jpg",
     "genre_ids": [
-      35
+      27,
+      14,
+      18
     ],
-    "watch_link": "https://www.themoviedb.org/movie/678580/watch"
+    "watch_link": "https://www.themoviedb.org/movie/30959/watch"
   },
   {
-    "id": 453,
-    "title": "A Beautiful Mind",
-    "release_date": "2001-12-14",
-    "poster_path": "/rEIg5yJdNOt9fmX4P8gU9LeNoTQ.jpg",
+    "id": 101,
+    "title": "Léon: The Professional",
+    "release_date": "1994-09-14",
+    "poster_path": "/bxB2q91nKYp8JNzqE7t7TWBVupB.jpg",
     "genre_ids": [
+      80,
       18,
-      10749
+      28
     ],
-    "watch_link": "https://www.themoviedb.org/movie/453/watch"
+    "watch_link": "https://www.themoviedb.org/movie/101/watch"
   },
   {
-    "id": 887,
-    "title": "The Best Years of Our Lives",
-    "release_date": "1946-12-25",
-    "poster_path": "/gd5EoAU4MM57sW3vlWxJ0NMM8cV.jpg",
+    "id": 3083,
+    "title": "Mr. Smith Goes to Washington",
+    "release_date": "1939-10-19",
+    "poster_path": "/nDjg1fbNyq15excNDl3acd2IqAk.jpg",
     "genre_ids": [
-      18,
-      10749,
-      10752
+      35,
+      18
     ],
-    "watch_link": "https://www.themoviedb.org/movie/887/watch"
+    "watch_link": "https://www.themoviedb.org/movie/3083/watch"
+  },
+  {
+    "id": 937746,
+    "title": "Io Capitano",
+    "release_date": "2023-09-07",
+    "poster_path": "/kGlZFwUQI5gAUdySNFfqGIkAF9n.jpg",
+    "genre_ids": [
+      12,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/937746/watch"
   }
 ];
