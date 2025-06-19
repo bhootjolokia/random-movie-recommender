@@ -20,7 +20,17 @@
     #loading-placeholder, #filmstrip {position: absolute;top: 0;left: 0;width: 100%;height: 100%;}
     #loading-placeholder{display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;}
     #filmstrip{transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}
-    #filmstrip .filmstrip-image{width:100%;height:100%;object-fit:contain;position:absolute}
+    
+    /* UPDATED: Styles now target a div with a background-image */
+    .filmstrip-image {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
     .actions-container {display: flex;flex-direction: column;width: 100%;flex-shrink: 0;max-width: 320px;padding: 0;box-sizing: border-box;margin-top: 0.75rem;}
     .btn, #result, .controls {flex-shrink: 0;}
     .btn{display:block;width:100%;padding:.75rem;background:var(--color-accent);color:#121212;font-weight:600;border:none;border-radius:var(--radius);font-size:.875rem;transition:filter .2s,transform .1s;cursor:pointer;margin-bottom:0.75rem}.btn:disabled{opacity:.6;cursor:default}.btn:active,.btn:hover:not(:disabled),.btn:focus:not(:disabled){filter:brightness(.9);transform:translateY(-2px);outline:none}.btn:active{transform:translateY(0)}
@@ -129,7 +139,6 @@
     const btn = document.getElementById('randomizeBtn'); const res = document.getElementById('result'); const txt = document.getElementById('movieResult'); const genreToggle = document.getElementById('genreToggle'); const streamLink = document.getElementById('streamLink'); const filmstrip = document.getElementById('filmstrip'); const loadingPlaceholder = document.getElementById('loading-placeholder'); const genreModalContainer = document.getElementById('genreModalContainer'); const genreMenu = document.getElementById('genreMenu'); const genreList = document.getElementById('genreList'); const genreOverlay = document.getElementById('genreOverlay'); const genreMenuCloseBtn = document.querySelector('.genre-menu-close');
     const genreMap = {28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Science Fiction',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
     
-    // PERFORMANCE: Defer building the genre menu until it's needed
     let isGenreMenuBuilt = false;
     function buildGenreMenu() {
       if (isGenreMenuBuilt) return;
@@ -156,7 +165,6 @@
     
     genreToggle.addEventListener('click', (e) => { 
       e.stopPropagation();
-      // PERFORMANCE: Build the menu only on the first click
       buildGenreMenu();
       const isOpening = !genreModalContainer.classList.contains('open');
       genreToggle.setAttribute('aria-expanded', isOpening);
@@ -167,12 +175,14 @@
     genreMenuCloseBtn.addEventListener('click', closeGenreMenu);
     document.addEventListener('click', (e) => { if (window.innerWidth >= 768 && !genreMenu.contains(e.target) && e.target !== genreToggle) { closeGenreMenu(); } });
     function formatMovie(movieData) { return { id: movieData.id, title: movieData.title, year: movieData.release_date ? movieData.release_date.slice(0, 4) : 'N/A', poster_path: movieData.poster_path, genre_ids: movieData.genre_ids, watch_link: movieData.watch_link }; }
-    function createResponsiveImage(path, alt) {
-        const src = `${IMG_BASE}w500${path}`;
-        const srcset = `${IMG_BASE}w342${path} 342w, ${IMG_BASE}w500${path} 500w`;
-        const sizes = `(max-width: 767px) calc(100vw - 2rem), 320px`;
-        return `<img class="filmstrip-image" src="${src}" srcset="${srcset}" sizes="${sizes}" alt="${alt}">`;
+    
+    // UPDATED: This function now returns a div with an inline style, not an img tag.
+    function createResponsivePosterHtml(path) {
+        // We still use w500 for quality on high-res screens
+        const imageUrl = `${IMG_BASE}w500${path}`;
+        return `<div class="filmstrip-image" style="background-image: url('${imageUrl}')" role="img" aria-label="Movie poster"></div>`;
     }
+
     async function initializeApp() {
       btn.disabled = true;
       loadingPlaceholder.style.display = 'flex';
@@ -192,14 +202,14 @@
         console.error(err);
         loadingPlaceholder.innerHTML = `<div>Oops! Could not load movies.</div>`;
       }
-      // We don't call updateGenreSelection here anymore, as the menu isn't built yet
     }
     initializeApp();
     function pickNewMovie(movie) {
         loadingPlaceholder.style.display = 'none';
         if (!movie) { filmstrip.innerHTML = ''; txt.textContent = 'No movies match the selected genres.'; streamLink.href = '#'; streamLink.classList.add('hidden'); res.style.visibility = 'visible'; btn.textContent = 'Reset'; return; }
         btn.textContent = 'Randomize Movie'; filmstrip.style.transition = 'none';
-        filmstrip.innerHTML = createResponsiveImage(movie.poster_path, `Poster for ${movie.title}`);
+        // UPDATED: Use the new background-image based function
+        filmstrip.innerHTML = createResponsivePosterHtml(movie.poster_path);
         filmstrip.style.transform = 'translateY(0)';
         txt.textContent = `${movie.title} (${movie.year})`;
         streamLink.href = movie.watch_link || `${TMDB_BASE}/${movie.id}/watch`;
@@ -228,11 +238,12 @@
       const movieSource = fullMovieList;
       for (let i = 0; i < stripLength; i++) {
         const movieForStrip = movieSource[Math.floor(Math.random() * movieSource.length)];
-        const imgHTML = createResponsiveImage(movieForStrip.poster_path, '');
-        stripHTML += imgHTML.replace('<img', `<img style="top: ${i * 100}%;"`);
+        // UPDATED: Use the new background-image based function
+        const divHTML = createResponsivePosterHtml(movieForStrip.poster_path);
+        stripHTML += divHTML.replace('style="', `style="top: ${i * 100}%; `);
       }
-      const winnerImgHTML = createResponsiveImage(winner.poster_path, `Poster for ${winner.title}`);
-      stripHTML += winnerImgHTML.replace('<img', `<img style="top: ${stripLength * 100}%;"`);
+      const winnerDivHTML = createResponsivePosterHtml(winner.poster_path);
+      stripHTML += winnerDivHTML.replace('style="', `style="top: ${stripLength * 100}%; `);
       filmstrip.style.transition = 'none'; filmstrip.style.transform = 'translateY(0)'; filmstrip.innerHTML = stripHTML;
       await new Promise(r => requestAnimationFrame(() => r()));
       txt.textContent = 'Finding a movie...';
