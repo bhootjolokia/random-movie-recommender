@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://image.tmdb.org">
   
-  <!-- PERFORMANCE CHANGE 1: Preload the initial poster image for a fast LCP -->
+  <!-- This preload hint is still critical for performance -->
   <link rel="preload" as="image" href="https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8Yav5cK1m2.jpg">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css" />
@@ -24,9 +24,8 @@
     #posterWrapper {background: var(--color-bg);border-radius: var(--radius);position: relative;overflow: hidden;width: 100%;height: 0;padding-bottom: 150%;}
     #loading-placeholder, #filmstrip {position: absolute;top: 0;left: 0;width: 100%;height: 100%;}
     
-    /* PERFORMANCE CHANGE 2: Make placeholder visible by default for a fast FCP. JS will hide it. */
-    #loading-placeholder{display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;z-index:10;opacity:1;transition:opacity .3s ease-in-out;}
-    #loading-placeholder.hidden{opacity:0;pointer-events:none}
+    /* FIX: Reverted to your original, simple, and correct style for the placeholder. */
+    #loading-placeholder{display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:.875rem;font-weight:600;}
     
     #filmstrip{transition:transform 2.5s cubic-bezier(.25,.1,.25,1)}
     .filmstrip-image {width: 100%;height: 100%;position: absolute;background-size: contain;background-repeat: no-repeat;background-position: center;}
@@ -133,32 +132,13 @@
   </div>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-    // --- PERFORMANCE CHANGE 3: The rest of the changes are in this script block ---
-    
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
     const IMG_BASE = 'https://image.tmdb.org/t/p/';
     const SEEN_MOVIES_CAP = 50;
-    const DEFAULT_MOVIE_ID = 693134; // This is the ID for Dune: Part Two, which we are preloading
+    const DEFAULT_MOVIE_ID = 693134; // Dune: Part Two
 
-    let movies = [];
-    let fullMovieList = [];
-    let isSpinning = false;
-    let seenMovies = [];
-    let selectedGenres = new Set([0]);
-
-    const btn = document.getElementById('randomizeBtn');
-    const res = document.getElementById('result');
-    const txt = document.getElementById('movieResult');
-    const genreToggle = document.getElementById('genreToggle');
-    const streamLink = document.getElementById('streamLink');
-    const filmstrip = document.getElementById('filmstrip');
-    const loadingPlaceholder = document.getElementById('loading-placeholder');
-    const genreModalContainer = document.getElementById('genreModalContainer');
-    const genreMenu = document.getElementById('genreMenu');
-    const genreList = document.getElementById('genreList');
-    const genreOverlay = document.getElementById('genreOverlay');
-    const genreMenuCloseBtn = document.querySelector('.genre-menu-close');
-    
+    let movies = [], fullMovieList = [], selectedGenres = new Set([0]), isSpinning = false, seenMovies = [];
+    const btn = document.getElementById('randomizeBtn'), res = document.getElementById('result'), txt = document.getElementById('movieResult'), genreToggle = document.getElementById('genreToggle'), streamLink = document.getElementById('streamLink'), filmstrip = document.getElementById('filmstrip'), loadingPlaceholder = document.getElementById('loading-placeholder'), genreModalContainer = document.getElementById('genreModalContainer'), genreMenu = document.getElementById('genreMenu'), genreList = document.getElementById('genreList'), genreOverlay = document.getElementById('genreOverlay'), genreMenuCloseBtn = document.querySelector('.genre-menu-close');
     const genreMap = {28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Science Fiction',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western'};
     
     let isGenreMenuBuilt = false;
@@ -186,17 +166,13 @@
     function closeGenreMenu() { genreModalContainer.classList.remove('open'); genreToggle.setAttribute('aria-expanded', 'false'); }
     
     genreToggle.addEventListener('click', (e) => { 
-      e.stopPropagation();
-      buildGenreMenu();
-      const isOpening = !genreModalContainer.classList.contains('open');
-      genreToggle.setAttribute('aria-expanded', isOpening);
-      genreModalContainer.classList.toggle('open'); 
+      e.stopPropagation(); buildGenreMenu(); const isOpening = !genreModalContainer.classList.contains('open');
+      genreToggle.setAttribute('aria-expanded', isOpening); genreModalContainer.classList.toggle('open'); 
     });
 
     genreOverlay.addEventListener('click', closeGenreMenu);
     genreMenuCloseBtn.addEventListener('click', closeGenreMenu);
     document.addEventListener('click', (e) => { if (window.innerWidth >= 768 && !genreMenu.contains(e.target) && e.target !== genreToggle) { closeGenreMenu(); } });
-
     function formatMovie(movieData) { return { id: movieData.id, title: movieData.title, year: movieData.release_date ? movieData.release_date.slice(0, 4) : 'N/A', poster_path: movieData.poster_path, genre_ids: movieData.genre_ids, watch_link: movieData.watch_link }; }
     
     function createResponsivePosterHtml(path) {
@@ -206,7 +182,8 @@
 
     async function initializeApp() {
       btn.disabled = true;
-      // No longer need to show placeholder here, it's visible by default in CSS
+      // FIX: Set display to 'flex' so the loading message is always visible on startup.
+      loadingPlaceholder.style.display = 'flex';
       try {
         const response = await fetch('data/movies.json');
         if (!response.ok) throw new Error('Could not load the movie list.');
@@ -215,36 +192,29 @@
         fullMovieList = movies;
         if (movies.length === 0) { throw new Error('No movies with posters found.'); }
         
-        // Find our default preloaded movie, with a random fallback
         let firstMovie = movies.find(m => m.id === DEFAULT_MOVIE_ID);
-        if (!firstMovie) {
-            firstMovie = movies[Math.floor(Math.random() * movies.length)];
-        }
+        if (!firstMovie) { firstMovie = movies[Math.floor(Math.random() * movies.length)]; }
 
-        // We don't need to preload the image in JS, the <link> tag already did it.
         pickNewMovie(firstMovie);
         seenMovies.push(firstMovie);
         btn.disabled = false;
       } catch (err) {
         console.error(err);
         loadingPlaceholder.innerHTML = `<div>Oops! Could not load movies.</div>`;
-        btn.disabled = true;
       }
     }
     
     initializeApp();
 
     function pickNewMovie(movie) {
-        // Now we just add/remove a class to hide the placeholder
-        loadingPlaceholder.classList.add('hidden');
-
+        // FIX: Set display to 'none' to completely hide the placeholder and reveal the poster.
+        loadingPlaceholder.style.display = 'none';
+        
         if (!movie) { 
-            filmstrip.innerHTML = '';
-            txt.textContent = 'No movies match the selected genres.';
-            streamLink.href = '#';
-            streamLink.classList.add('hidden');
-            res.style.visibility = 'visible';
-            btn.textContent = 'Reset';
+            filmstrip.innerHTML = ''; txt.textContent = 'No movies match the selected genres.'; streamLink.href = '#'; streamLink.classList.add('hidden'); res.style.visibility = 'visible'; btn.textContent = 'Reset'; 
+            // Show the loading text again if no movie is found, but change the message.
+            loadingPlaceholder.innerHTML = '<div>No movies found for this genre.</div>';
+            loadingPlaceholder.style.display = 'flex';
             return;
         }
         btn.textContent = 'Randomize Movie';
@@ -253,8 +223,7 @@
         filmstrip.style.transform = 'translateY(0)';
         txt.textContent = `${movie.title} (${movie.year})`;
         streamLink.href = movie.watch_link || `${TMDB_BASE}/${movie.id}/watch`;
-        streamLink.classList.remove('hidden');
-        res.style.visibility = 'visible';
+        streamLink.classList.remove('hidden'); res.style.visibility = 'visible';
         if (!seenMovies.some(sm => sm.id === movie.id)) {
             seenMovies.unshift(movie);
             if (seenMovies.length > SEEN_MOVIES_CAP) seenMovies.pop();
@@ -267,85 +236,42 @@
       try {
         let pool = fullMovieList.filter(m => !seenMovies.some(sm => sm.id === m.id));
         if (pool.length === 0) {
-            const currentMovieId = seenMovies[0]?.id;
-            seenMovies = currentMovieId ? [{ id: currentMovieId }] : [];
-            pool = fullMovieList.filter(m => m.id !== currentMovieId);
+            const currentMovieId = seenMovies[0]?.id; seenMovies = currentMovieId ? [{ id: currentMovieId }] : []; pool = fullMovieList.filter(m => m.id !== currentMovieId);
         }
         const fs = [...selectedGenres].filter(g => g !== 0);
-        if (fs.length > 0) {
-            pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g)));
-        }
-        if (pool.length === 0) {
-            pickNewMovie(null);
-            return;
-        }
+        if (fs.length > 0) { pool = pool.filter(m => fs.every(g => m.genre_ids.includes(g))); }
+        if (pool.length === 0) { pickNewMovie(null); return; }
         const winner = pool[Math.floor(Math.random() * pool.length)];
         await performFastSpin(winner);
-        // Preloading here is no longer as critical since the spin takes time
         pickNewMovie(winner);
       } catch (error) {
-          console.error("An error occurred during randomization:", error);
-          txt.textContent = "Oops! Something went wrong.";
-          pickNewMovie(seenMovies[0] || null);
+          console.error("An error occurred during randomization:", error); txt.textContent = "Oops! Something went wrong."; pickNewMovie(seenMovies[0] || null);
       } finally {
-          isSpinning = false;
-          btn.disabled = false;
+          isSpinning = false; btn.disabled = false;
       }
     }
 
     async function performFastSpin(winner) {
-      const stripLength = 30;
-      const poolSize = 15; // Use a smaller pool of posters for efficiency
-      let stripHTML = '';
-      const posterHeight = filmstrip.clientHeight;
-      if (posterHeight === 0) return;
-
+      const stripLength = 30, poolSize = 15; let stripHTML = ''; const posterHeight = filmstrip.clientHeight; if (posterHeight === 0) return;
       const animationPool = [];
-      for (let i = 0; i < poolSize; i++) {
-          animationPool.push(fullMovieList[Math.floor(Math.random() * fullMovieList.length)]);
-      }
-
+      for (let i = 0; i < poolSize; i++) { animationPool.push(fullMovieList[Math.floor(Math.random() * fullMovieList.length)]); }
       for (let i = 0; i < stripLength; i++) {
         const movieForStrip = animationPool[i % poolSize];
         const divHTML = createResponsivePosterHtml(movieForStrip.poster_path);
         stripHTML += divHTML.replace('style="', `style="top: ${i * 100}%; `);
       }
-
       const winnerDivHTML = createResponsivePosterHtml(winner.poster_path);
       stripHTML += winnerDivHTML.replace('style="', `style="top: ${stripLength * 100}%; `);
-
-      filmstrip.style.transition = 'none';
-      filmstrip.style.transform = 'translateY(0)';
-      filmstrip.innerHTML = stripHTML;
-      
+      filmstrip.style.transition = 'none'; filmstrip.style.transform = 'translateY(0)'; filmstrip.innerHTML = stripHTML;
       await new Promise(r => requestAnimationFrame(() => r()));
-      
       txt.textContent = 'Finding a movie...';
       const finalPosition = -posterHeight * stripLength;
       filmstrip.style.transition = 'transform 2.5s cubic-bezier(.25,.1,.25,1)';
       filmstrip.style.transform = `translateY(${finalPosition}px)`;
-      
       await new Promise(resolve => {
-        const fallback = setTimeout(() => {
-          console.warn('Animation fallback timer fired.');
-          resolve();
-        }, 2600);
-        filmstrip.addEventListener('transitionend', () => {
-          clearTimeout(fallback);
-          resolve();
-        }, { once: true });
+        const fallback = setTimeout(() => { console.warn('Animation fallback timer fired.'); resolve(); }, 2600);
+        filmstrip.addEventListener('transitionend', () => { clearTimeout(fallback); resolve(); }, { once: true });
       });
-    }
-
-    // This function is no longer needed for initialization but can be kept if desired
-    function preloadImages(srcArray) {
-      const promises = srcArray.map(src => new Promise((resolve) => {
-        const img = new Image();
-        img.onload = resolve;
-        img.onerror = resolve; // Resolve on error so it doesn't block
-        img.src = src;
-      }));
-      return Promise.all(promises);
     }
     
     btn.addEventListener('click', () => {
