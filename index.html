@@ -5,20 +5,16 @@
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
   <title>Random Movie Generator | Find Your Next Movie to Watch</title>
-  <meta name="description" content="Feeling indecisive? Use the Random Movie Generator to instantly find your next great film. Filter by genre, see posters, and get streaming links. Click to discover a movie now!">
+  <meta name="description" content="Can't decide what to watch? The Random Film Picker is a free tool that gives you an instant movie suggestion. Filter by genre, get streaming links, and find your next movie to watch now!">
   
-  <!-- We only need to preconnect to the server that delivers the *font files*, not the CSS file. -->
+  <!-- SEO CHANGE: Canonical tag added to specify the master URL -->
+  <link rel="canonical" href="https://randomfilmpicker.com/" />
+
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://image.tmdb.org">
   
-  <!-- Preload the initial poster image for a fast LCP -->
   <link rel="preload" as="image" href="https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8Yav5cK1m2.jpg">
 
-  <!--
-    PERFORMANCE FIX: 
-    The render-blocking CSS from modern-normalize and Google Fonts has been moved directly into this <style> block.
-    This eliminates two network requests that were blocking the page from rendering, saving ~1.8 seconds of load time.
-  -->
   <style>
     /* --- Inlined modern-normalize.min.css v2.0.0 --- */
     :root{--color-accent:#2DD4BF;--color-base:#1E1E1E;--color-bg:#121212;--color-text:#E5E7EB;--color-text-muted:#9CA3AF;--font-sans:'Inter',system-ui,sans-serif;--radius:.5rem}*,::before,::after{box-sizing:border-box}html{font-family:system-ui,sans-serif;line-height:1.15;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4}body{margin:0}hr{height:0;color:inherit}abbr[title]{text-decoration:underline dotted}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:monospace,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}button,select{text-transform:none}[type=button],[type=reset],[type=submit],button{-webkit-appearance:button}::-moz-focus-inner{border-style:none;padding:0}:-moz-focusring{outline:1px dotted ButtonText}:-moz-ui-invalid{box-shadow:none}legend{padding:0}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}
@@ -106,13 +102,15 @@
   </style>
 </head>
 <body>
-  <!-- The rest of the body and script are identical to the last version that was working correctly for you -->
   <noscript>
     You need to enable JavaScript to run this app. The Random Movie Generator uses JavaScript to fetch and display movie suggestions for you to watch.
   </noscript>
   <div class="page-container">
     <div class="main-content-block">
       <h1>Random Movie Generator</h1>
+      <p style="text-align: center; max-width: 340px; margin: 0 auto 1rem; color: var(--color-text-muted); font-size: 0.875rem; line-height: 1.5;">
+        Struggling with what movie to watch? Our free <strong>Random Film Picker</strong> tool ends your indecision. Just click the button for an instant <strong>movie suggestion</strong>, complete with its poster and genre. Find your next favorite film now!
+      </p>
       <div class="main-content-wrapper">
         <div id='posterWrapper'>
           <div id="loading-placeholder"><div>Loading movie...</div></div>
@@ -151,7 +149,6 @@
     </footer>
   </div>
   <script>
-    // The JavaScript from the previous working version is unchanged and correct.
     document.addEventListener('DOMContentLoaded', () => {
     const TMDB_BASE = 'https://www.themoviedb.org/movie';
     const IMG_BASE = 'https://image.tmdb.org/t/p/';
