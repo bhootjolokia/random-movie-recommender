@@ -575,19 +575,6 @@
     "watch_link": "https://www.themoviedb.org/movie/73/watch"
   },
   {
-    "id": 1218925,
-    "title": "Chainsaw Man - The Movie: Reze Arc",
-    "release_date": "2025-09-19",
-    "poster_path": "/pHyxb2RV5wLlboAwm9ZJ9qTVEDw.jpg",
-    "genre_ids": [
-      16,
-      28,
-      10749,
-      14
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/1218925/watch"
-  },
-  {
     "id": 128,
     "title": "Princess Mononoke",
     "release_date": "1997-07-12",
@@ -620,6 +607,19 @@
       18
     ],
     "watch_link": "https://www.themoviedb.org/movie/1058694/watch"
+  },
+  {
+    "id": 1218925,
+    "title": "Chainsaw Man - The Movie: Reze Arc",
+    "release_date": "2025-09-19",
+    "poster_path": "/pHyxb2RV5wLlboAwm9ZJ9qTVEDw.jpg",
+    "genre_ids": [
+      16,
+      28,
+      10749,
+      14
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/1218925/watch"
   },
   {
     "id": 820067,
@@ -791,7 +791,8 @@
     "genre_ids": [
       16,
       10751,
-      14
+      14,
+      18
     ],
     "watch_link": "https://www.themoviedb.org/movie/1139087/watch"
   },
@@ -1006,18 +1007,6 @@
     "watch_link": "https://www.themoviedb.org/movie/603/watch"
   },
   {
-    "id": 630566,
-    "title": "Clouds",
-    "release_date": "2020-10-09",
-    "poster_path": "/2YvT3pdGngzpbAuxamTz4ZlabnT.jpg",
-    "genre_ids": [
-      10402,
-      18,
-      10749
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/630566/watch"
-  },
-  {
     "id": 670,
     "title": "Oldboy",
     "release_date": "2003-11-21",
@@ -1031,6 +1020,18 @@
     "watch_link": "https://www.themoviedb.org/movie/670/watch"
   },
   {
+    "id": 630566,
+    "title": "Clouds",
+    "release_date": "2020-10-09",
+    "poster_path": "/2YvT3pdGngzpbAuxamTz4ZlabnT.jpg",
+    "genre_ids": [
+      10402,
+      18,
+      10749
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/630566/watch"
+  },
+  {
     "id": 1356039,
     "title": "Counterattack",
     "release_date": "2025-02-27",
@@ -1041,6 +1042,18 @@
       53
     ],
     "watch_link": "https://www.themoviedb.org/movie/1356039/watch"
+  },
+  {
+    "id": 299534,
+    "title": "Avengers: Endgame",
+    "release_date": "2019-04-24",
+    "poster_path": "/ulzhLuWrPK07P1YkdWQLZnQh1JL.jpg",
+    "genre_ids": [
+      12,
+      878,
+      28
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/299534/watch"
   },
   {
     "id": 447362,
@@ -1066,18 +1079,6 @@
     "watch_link": "https://www.themoviedb.org/movie/299536/watch"
   },
   {
-    "id": 299534,
-    "title": "Avengers: Endgame",
-    "release_date": "2019-04-24",
-    "poster_path": "/ulzhLuWrPK07P1YkdWQLZnQh1JL.jpg",
-    "genre_ids": [
-      12,
-      878,
-      28
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/299534/watch"
-  },
-  {
     "id": 1186532,
     "title": "The Forge",
     "release_date": "2024-08-22",
@@ -1092,7 +1093,7 @@
     "id": 98,
     "title": "Gladiator",
     "release_date": "2000-05-04",
-    "poster_path": "/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg",
+    "poster_path": "/wN2xWp1eIwCKOD0BHTcErTBv1Uq.jpg",
     "genre_ids": [
       28,
       18,
@@ -1108,9 +1109,9 @@
     "genre_ids": [
       16,
       10751,
-      12,
+      14,
       35,
-      14
+      18
     ],
     "watch_link": "https://www.themoviedb.org/movie/508965/watch"
   },
@@ -1127,18 +1128,6 @@
     "watch_link": "https://www.themoviedb.org/movie/490132/watch"
   },
   {
-    "id": 857,
-    "title": "Saving Private Ryan",
-    "release_date": "1998-07-24",
-    "poster_path": "/uqx37cS8cpHg8U35f9U5IBlrCV3.jpg",
-    "genre_ids": [
-      10752,
-      18,
-      36
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/857/watch"
-  },
-  {
     "id": 504253,
     "title": "I Want to Eat Your Pancreas",
     "release_date": "2018-09-01",
@@ -1149,6 +1138,18 @@
       10749
     ],
     "watch_link": "https://www.themoviedb.org/movie/504253/watch"
+  },
+  {
+    "id": 857,
+    "title": "Saving Private Ryan",
+    "release_date": "1998-07-24",
+    "poster_path": "/uqx37cS8cpHg8U35f9U5IBlrCV3.jpg",
+    "genre_ids": [
+      10752,
+      18,
+      36
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/857/watch"
   },
   {
     "id": 110420,
@@ -1171,8 +1172,8 @@
     "genre_ids": [
       16,
       10751,
-      12,
-      18
+      18,
+      12
     ],
     "watch_link": "https://www.themoviedb.org/movie/995133/watch"
   },
@@ -1255,6 +1256,19 @@
     "watch_link": "https://www.themoviedb.org/movie/265177/watch"
   },
   {
+    "id": 283566,
+    "title": "Evangelion: 3.0+1.0 Thrice Upon a Time",
+    "release_date": "2021-03-08",
+    "poster_path": "/md5wZRRj8biHrGtyitgBZo7674t.jpg",
+    "genre_ids": [
+      16,
+      28,
+      878,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/283566/watch"
+  },
+  {
     "id": 16672,
     "title": "Woman in the Dunes",
     "release_date": "1964-02-15",
@@ -1298,19 +1312,6 @@
       878
     ],
     "watch_link": "https://www.themoviedb.org/movie/1124/watch"
-  },
-  {
-    "id": 283566,
-    "title": "Evangelion: 3.0+1.0 Thrice Upon a Time",
-    "release_date": "2021-03-08",
-    "poster_path": "/md5wZRRj8biHrGtyitgBZo7674t.jpg",
-    "genre_ids": [
-      16,
-      28,
-      878,
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/283566/watch"
   },
   {
     "id": 694,
@@ -1423,17 +1424,6 @@
     "watch_link": "https://www.themoviedb.org/movie/354912/watch"
   },
   {
-    "id": 68718,
-    "title": "Django Unchained",
-    "release_date": "2012-12-25",
-    "poster_path": "/7oWY8VDWW7thTzWh3OKYRkWUlD5.jpg",
-    "genre_ids": [
-      18,
-      37
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/68718/watch"
-  },
-  {
     "id": 324786,
     "title": "Hacksaw Ridge",
     "release_date": "2016-10-07",
@@ -1444,6 +1434,17 @@
       10752
     ],
     "watch_link": "https://www.themoviedb.org/movie/324786/watch"
+  },
+  {
+    "id": 68718,
+    "title": "Django Unchained",
+    "release_date": "2012-12-25",
+    "poster_path": "/7oWY8VDWW7thTzWh3OKYRkWUlD5.jpg",
+    "genre_ids": [
+      18,
+      37
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/68718/watch"
   },
   {
     "id": 313106,
@@ -1813,6 +1814,16 @@
     "watch_link": "https://www.themoviedb.org/movie/9702/watch"
   },
   {
+    "id": 666,
+    "title": "Central Station",
+    "release_date": "1998-04-03",
+    "poster_path": "/zJvp7XjQ2LhPbDVYhFXyucs40vR.jpg",
+    "genre_ids": [
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/666/watch"
+  },
+  {
     "id": 872,
     "title": "Singin' in the Rain",
     "release_date": "1952-04-10",
@@ -1824,20 +1835,10 @@
     "watch_link": "https://www.themoviedb.org/movie/872/watch"
   },
   {
-    "id": 666,
-    "title": "Central Station",
-    "release_date": "1998-04-03",
-    "poster_path": "/zJvp7XjQ2LhPbDVYhFXyucs40vR.jpg",
-    "genre_ids": [
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/666/watch"
-  },
-  {
     "id": 693134,
     "title": "Dune: Part Two",
     "release_date": "2024-02-27",
-    "poster_path": "/6izwz7rsy95ARzTR3poZ8H6c5pp.jpg",
+    "poster_path": "/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
     "genre_ids": [
       878,
       12
@@ -2083,6 +2084,16 @@
     "watch_link": "https://www.themoviedb.org/movie/812225/watch"
   },
   {
+    "id": 655,
+    "title": "Paris, Texas",
+    "release_date": "1984-07-16",
+    "poster_path": "/sP27Qm4THyRZyHjHYMfIDtJP6YE.jpg",
+    "genre_ids": [
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/655/watch"
+  },
+  {
     "id": 600354,
     "title": "The Father",
     "release_date": "2020-12-23",
@@ -2093,14 +2104,14 @@
     "watch_link": "https://www.themoviedb.org/movie/600354/watch"
   },
   {
-    "id": 655,
-    "title": "Paris, Texas",
-    "release_date": "1984-07-16",
-    "poster_path": "/sP27Qm4THyRZyHjHYMfIDtJP6YE.jpg",
+    "id": 103663,
+    "title": "The Hunt",
+    "release_date": "2012-10-25",
+    "poster_path": "/jkixsXzRh28q3PCqFoWcf7unghT.jpg",
     "genre_ids": [
       18
     ],
-    "watch_link": "https://www.themoviedb.org/movie/655/watch"
+    "watch_link": "https://www.themoviedb.org/movie/103663/watch"
   },
   {
     "id": 1398,
@@ -2123,29 +2134,6 @@
       80
     ],
     "watch_link": "https://www.themoviedb.org/movie/100/watch"
-  },
-  {
-    "id": 103663,
-    "title": "The Hunt",
-    "release_date": "2012-10-25",
-    "poster_path": "/jkixsXzRh28q3PCqFoWcf7unghT.jpg",
-    "genre_ids": [
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/103663/watch"
-  },
-  {
-    "id": 829402,
-    "title": "Ultraman: Rising",
-    "release_date": "2024-06-14",
-    "poster_path": "/j886YEkIUsiImY53px5VHKD4lRa.jpg",
-    "genre_ids": [
-      16,
-      878,
-      10751,
-      28
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/829402/watch"
   },
   {
     "id": 149871,
@@ -2179,10 +2167,9 @@
     "genre_ids": [
       16,
       10751,
-      35,
-      14,
       18,
-      10402
+      10402,
+      14
     ],
     "watch_link": "https://www.themoviedb.org/movie/508442/watch"
   },
@@ -2222,6 +2209,18 @@
     "watch_link": "https://www.themoviedb.org/movie/823219/watch"
   },
   {
+    "id": 38,
+    "title": "Eternal Sunshine of the Spotless Mind",
+    "release_date": "2004-03-19",
+    "poster_path": "/5MwkWH9tYHv3mV9OdYTMR5qreIz.jpg",
+    "genre_ids": [
+      878,
+      18,
+      10749
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/38/watch"
+  },
+  {
     "id": 19,
     "title": "Metropolis",
     "release_date": "1927-01-10",
@@ -2233,16 +2232,17 @@
     "watch_link": "https://www.themoviedb.org/movie/19/watch"
   },
   {
-    "id": 38,
-    "title": "Eternal Sunshine of the Spotless Mind",
-    "release_date": "2004-03-19",
-    "poster_path": "/5MwkWH9tYHv3mV9OdYTMR5qreIz.jpg",
+    "id": 829402,
+    "title": "Ultraman: Rising",
+    "release_date": "2024-06-14",
+    "poster_path": "/j886YEkIUsiImY53px5VHKD4lRa.jpg",
     "genre_ids": [
+      16,
       878,
-      18,
-      10749
+      10751,
+      28
     ],
-    "watch_link": "https://www.themoviedb.org/movie/38/watch"
+    "watch_link": "https://www.themoviedb.org/movie/829402/watch"
   },
   {
     "id": 755812,
@@ -2271,6 +2271,19 @@
     "watch_link": "https://www.themoviedb.org/movie/664767/watch"
   },
   {
+    "id": 795607,
+    "title": "Green Snake",
+    "release_date": "2021-07-23",
+    "poster_path": "/1zs5zsQDP5KuWwxIg9EUULLFEV.jpg",
+    "genre_ids": [
+      16,
+      14,
+      28,
+      12
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/795607/watch"
+  },
+  {
     "id": 843,
     "title": "In the Mood for Love",
     "release_date": "2000-09-29",
@@ -2280,17 +2293,6 @@
       10749
     ],
     "watch_link": "https://www.themoviedb.org/movie/843/watch"
-  },
-  {
-    "id": 24382,
-    "title": "Big Deal on Madonna Street",
-    "release_date": "1958-07-26",
-    "poster_path": "/f5OxD8Nl0pR3DcYHtYhHRfpsmjl.jpg",
-    "genre_ids": [
-      35,
-      80
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/24382/watch"
   },
   {
     "id": 387,
@@ -2303,6 +2305,17 @@
       10752
     ],
     "watch_link": "https://www.themoviedb.org/movie/387/watch"
+  },
+  {
+    "id": 24382,
+    "title": "Big Deal on Madonna Street",
+    "release_date": "1958-07-26",
+    "poster_path": "/f5OxD8Nl0pR3DcYHtYhHRfpsmjl.jpg",
+    "genre_ids": [
+      35,
+      80
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/24382/watch"
   },
   {
     "id": 406,
@@ -2325,19 +2338,6 @@
       80
     ],
     "watch_link": "https://www.themoviedb.org/movie/239/watch"
-  },
-  {
-    "id": 795607,
-    "title": "Green Snake",
-    "release_date": "2021-07-23",
-    "poster_path": "/1zs5zsQDP5KuWwxIg9EUULLFEV.jpg",
-    "genre_ids": [
-      16,
-      14,
-      28,
-      12
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/795607/watch"
   },
   {
     "id": 470044,
@@ -2407,17 +2407,6 @@
     "watch_link": "https://www.themoviedb.org/movie/12445/watch"
   },
   {
-    "id": 1244492,
-    "title": "Look Back",
-    "release_date": "2024-06-28",
-    "poster_path": "/4f2EcNkp1Mvp9wE5w7HKxcmACWg.jpg",
-    "genre_ids": [
-      16,
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/1244492/watch"
-  },
-  {
     "id": 831827,
     "title": "Far from the Tree",
     "release_date": "2021-11-24",
@@ -2439,6 +2428,16 @@
     "watch_link": "https://www.themoviedb.org/movie/705/watch"
   },
   {
+    "id": 7345,
+    "title": "There Will Be Blood",
+    "release_date": "2007-12-26",
+    "poster_path": "/fa0RDkAlCec0STeMNAhPaF89q6U.jpg",
+    "genre_ids": [
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/7345/watch"
+  },
+  {
     "id": 20334,
     "title": "The Shop Around the Corner",
     "release_date": "1940-01-12",
@@ -2451,14 +2450,15 @@
     "watch_link": "https://www.themoviedb.org/movie/20334/watch"
   },
   {
-    "id": 7345,
-    "title": "There Will Be Blood",
-    "release_date": "2007-12-26",
-    "poster_path": "/fa0RDkAlCec0STeMNAhPaF89q6U.jpg",
+    "id": 1244492,
+    "title": "Look Back",
+    "release_date": "2024-06-28",
+    "poster_path": "/4f2EcNkp1Mvp9wE5w7HKxcmACWg.jpg",
     "genre_ids": [
+      16,
       18
     ],
-    "watch_link": "https://www.themoviedb.org/movie/7345/watch"
+    "watch_link": "https://www.themoviedb.org/movie/1244492/watch"
   },
   {
     "id": 55823,
@@ -2624,18 +2624,6 @@
     "watch_link": "https://www.themoviedb.org/movie/11423/watch"
   },
   {
-    "id": 62,
-    "title": "2001: A Space Odyssey",
-    "release_date": "1968-04-02",
-    "poster_path": "/ve72VxNqjGM69Uky4WTo2bK6rfq.jpg",
-    "genre_ids": [
-      878,
-      9648,
-      12
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/62/watch"
-  },
-  {
     "id": 663558,
     "title": "New Gods: Nezha Reborn",
     "release_date": "2021-02-06",
@@ -2646,6 +2634,18 @@
       28
     ],
     "watch_link": "https://www.themoviedb.org/movie/663558/watch"
+  },
+  {
+    "id": 62,
+    "title": "2001: A Space Odyssey",
+    "release_date": "1968-04-02",
+    "poster_path": "/ve72VxNqjGM69Uky4WTo2bK6rfq.jpg",
+    "genre_ids": [
+      878,
+      9648,
+      12
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/62/watch"
   },
   {
     "id": 522518,
@@ -2765,6 +2765,17 @@
     "watch_link": "https://www.themoviedb.org/movie/42229/watch"
   },
   {
+    "id": 414419,
+    "title": "Kill Bill: The Whole Bloody Affair",
+    "release_date": "2011-03-27",
+    "poster_path": "/nSOJfWJCdVFZQwXQA7RXn7FIIiY.jpg",
+    "genre_ids": [
+      28,
+      80
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/414419/watch"
+  },
+  {
     "id": 548,
     "title": "Rashomon",
     "release_date": "1950-08-26",
@@ -2777,15 +2788,16 @@
     "watch_link": "https://www.themoviedb.org/movie/548/watch"
   },
   {
-    "id": 414419,
-    "title": "Kill Bill: The Whole Bloody Affair",
-    "release_date": "2011-03-27",
-    "poster_path": "/nSOJfWJCdVFZQwXQA7RXn7FIIiY.jpg",
+    "id": 992,
+    "title": "Sherlock Jr.",
+    "release_date": "1924-04-17",
+    "poster_path": "/1G9r3rqtbFAQuyWKOZm4Y5J5s7Q.jpg",
     "genre_ids": [
       28,
-      80
+      35,
+      9648
     ],
-    "watch_link": "https://www.themoviedb.org/movie/414419/watch"
+    "watch_link": "https://www.themoviedb.org/movie/992/watch"
   },
   {
     "id": 638507,
@@ -2799,18 +2811,6 @@
       10751
     ],
     "watch_link": "https://www.themoviedb.org/movie/638507/watch"
-  },
-  {
-    "id": 992,
-    "title": "Sherlock Jr.",
-    "release_date": "1924-04-17",
-    "poster_path": "/1G9r3rqtbFAQuyWKOZm4Y5J5s7Q.jpg",
-    "genre_ids": [
-      28,
-      35,
-      9648
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/992/watch"
   },
   {
     "id": 381284,
@@ -2962,17 +2962,6 @@
     "watch_link": "https://www.themoviedb.org/movie/106646/watch"
   },
   {
-    "id": 26022,
-    "title": "My Name Is Khan",
-    "release_date": "2010-02-10",
-    "poster_path": "/5Y36lCiNyyV71mjq6LavgiggbhT.jpg",
-    "genre_ids": [
-      18,
-      10749
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/26022/watch"
-  },
-  {
     "id": 279,
     "title": "Amadeus",
     "release_date": "1984-09-19",
@@ -2983,6 +2972,17 @@
       18
     ],
     "watch_link": "https://www.themoviedb.org/movie/279/watch"
+  },
+  {
+    "id": 26022,
+    "title": "My Name Is Khan",
+    "release_date": "2010-02-10",
+    "poster_path": "/5Y36lCiNyyV71mjq6LavgiggbhT.jpg",
+    "genre_ids": [
+      18,
+      10749
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/26022/watch"
   },
   {
     "id": 550776,
@@ -3442,6 +3442,18 @@
     "watch_link": "https://www.themoviedb.org/movie/13223/watch"
   },
   {
+    "id": 24428,
+    "title": "The Avengers",
+    "release_date": "2012-04-25",
+    "poster_path": "/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg",
+    "genre_ids": [
+      878,
+      28,
+      12
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/24428/watch"
+  },
+  {
     "id": 785534,
     "title": "Paper Lives",
     "release_date": "2021-03-12",
@@ -3458,8 +3470,7 @@
     "poster_path": "/iZf0KyrE25z1sage4SYFLCCrMi9.jpg",
     "genre_ids": [
       10752,
-      36,
-      18
+      36
     ],
     "watch_link": "https://www.themoviedb.org/movie/530915/watch"
   },
@@ -3503,18 +3514,6 @@
     "watch_link": "https://www.themoviedb.org/movie/205596/watch"
   },
   {
-    "id": 24428,
-    "title": "The Avengers",
-    "release_date": "2012-04-25",
-    "poster_path": "/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg",
-    "genre_ids": [
-      878,
-      28,
-      12
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/24428/watch"
-  },
-  {
     "id": 780,
     "title": "The Passion of Joan of Arc",
     "release_date": "1928-04-21",
@@ -3524,19 +3523,6 @@
       36
     ],
     "watch_link": "https://www.themoviedb.org/movie/780/watch"
-  },
-  {
-    "id": 698687,
-    "title": "Transformers One",
-    "release_date": "2024-09-11",
-    "poster_path": "/iRCgqpdVE4wyLQvGYU3ZP7pAtUc.jpg",
-    "genre_ids": [
-      16,
-      878,
-      12,
-      10751
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/698687/watch"
   },
   {
     "id": 568160,
@@ -3560,6 +3546,19 @@
       18
     ],
     "watch_link": "https://www.themoviedb.org/movie/2517/watch"
+  },
+  {
+    "id": 698687,
+    "title": "Transformers One",
+    "release_date": "2024-09-11",
+    "poster_path": "/iRCgqpdVE4wyLQvGYU3ZP7pAtUc.jpg",
+    "genre_ids": [
+      16,
+      878,
+      12,
+      10751
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/698687/watch"
   },
   {
     "id": 1059,
@@ -3621,6 +3620,17 @@
     "watch_link": "https://www.themoviedb.org/movie/449176/watch"
   },
   {
+    "id": 11778,
+    "title": "The Deer Hunter",
+    "release_date": "1978-12-08",
+    "poster_path": "/bbGtogDZOg09bm42KIpCXUXICkh.jpg",
+    "genre_ids": [
+      18,
+      10752
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/11778/watch"
+  },
+  {
     "id": 640,
     "title": "Catch Me If You Can",
     "release_date": "2002-12-16",
@@ -3643,17 +3653,6 @@
     "watch_link": "https://www.themoviedb.org/movie/906126/watch"
   },
   {
-    "id": 11778,
-    "title": "The Deer Hunter",
-    "release_date": "1978-12-08",
-    "poster_path": "/bbGtogDZOg09bm42KIpCXUXICkh.jpg",
-    "genre_ids": [
-      18,
-      10752
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/11778/watch"
-  },
-  {
     "id": 962,
     "title": "The Gold Rush",
     "release_date": "1925-07-13",
@@ -3666,17 +3665,6 @@
     "watch_link": "https://www.themoviedb.org/movie/962/watch"
   },
   {
-    "id": 76,
-    "title": "Before Sunrise",
-    "release_date": "1995-01-27",
-    "poster_path": "/kf1Jb1c2JAOqjuzA3H4oDM263uB.jpg",
-    "genre_ids": [
-      18,
-      10749
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/76/watch"
-  },
-  {
     "id": 337404,
     "title": "Cruella",
     "release_date": "2021-05-26",
@@ -3687,6 +3675,17 @@
       12
     ],
     "watch_link": "https://www.themoviedb.org/movie/337404/watch"
+  },
+  {
+    "id": 76,
+    "title": "Before Sunrise",
+    "release_date": "1995-01-27",
+    "poster_path": "/kf1Jb1c2JAOqjuzA3H4oDM263uB.jpg",
+    "genre_ids": [
+      18,
+      10749
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/76/watch"
   },
   {
     "id": 24,
@@ -3733,8 +3732,8 @@
     "poster_path": "/wJUJROdLOtOzMixkjkx1aaZGSLl.jpg",
     "genre_ids": [
       16,
-      10749,
-      35
+      35,
+      10749
     ],
     "watch_link": "https://www.themoviedb.org/movie/455661/watch"
   },
@@ -3818,19 +3817,6 @@
     "watch_link": "https://www.themoviedb.org/movie/679/watch"
   },
   {
-    "id": 14160,
-    "title": "Up",
-    "release_date": "2009-05-28",
-    "poster_path": "/mFvoEwSfLqbcWwFsDjQebn9bzFe.jpg",
-    "genre_ids": [
-      16,
-      35,
-      10751,
-      12
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/14160/watch"
-  },
-  {
     "id": 895,
     "title": "Andrei Rublev",
     "release_date": "1966-12-16",
@@ -3848,9 +3834,23 @@
     "poster_path": "/lHu1wtNaczFPGFDTrjCSzeLPTKN.jpg",
     "genre_ids": [
       10402,
+      36,
       18
     ],
     "watch_link": "https://www.themoviedb.org/movie/424694/watch"
+  },
+  {
+    "id": 14160,
+    "title": "Up",
+    "release_date": "2009-05-28",
+    "poster_path": "/mFvoEwSfLqbcWwFsDjQebn9bzFe.jpg",
+    "genre_ids": [
+      16,
+      35,
+      10751,
+      12
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/14160/watch"
   },
   {
     "id": 627,
@@ -4013,18 +4013,6 @@
     "watch_link": "https://www.themoviedb.org/movie/745/watch"
   },
   {
-    "id": 81,
-    "title": "Nausicaä of the Valley of the Wind",
-    "release_date": "1984-03-11",
-    "poster_path": "/tcrkfB8SRPQCgwI88hQScua6nxh.jpg",
-    "genre_ids": [
-      12,
-      16,
-      14
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/81/watch"
-  },
-  {
     "id": 37797,
     "title": "Whisper of the Heart",
     "release_date": "1995-07-15",
@@ -4035,6 +4023,18 @@
       10751
     ],
     "watch_link": "https://www.themoviedb.org/movie/37797/watch"
+  },
+  {
+    "id": 81,
+    "title": "Nausicaä of the Valley of the Wind",
+    "release_date": "1984-03-11",
+    "poster_path": "/tcrkfB8SRPQCgwI88hQScua6nxh.jpg",
+    "genre_ids": [
+      12,
+      16,
+      14
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/81/watch"
   },
   {
     "id": 149,
@@ -4072,17 +4072,6 @@
     "watch_link": "https://www.themoviedb.org/movie/197/watch"
   },
   {
-    "id": 237791,
-    "title": "The Way He Looks",
-    "release_date": "2014-04-10",
-    "poster_path": "/2BhhlAYwKvONGW7tr16ZhnD0sym.jpg",
-    "genre_ids": [
-      18,
-      10749
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/237791/watch"
-  },
-  {
     "id": 78,
     "title": "Blade Runner",
     "release_date": "1982-06-25",
@@ -4114,6 +4103,17 @@
       10749
     ],
     "watch_link": "https://www.themoviedb.org/movie/41050/watch"
+  },
+  {
+    "id": 237791,
+    "title": "The Way He Looks",
+    "release_date": "2014-04-10",
+    "poster_path": "/2BhhlAYwKvONGW7tr16ZhnD0sym.jpg",
+    "genre_ids": [
+      18,
+      10749
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/237791/watch"
   },
   {
     "id": 30017,
@@ -4151,6 +4151,17 @@
     "watch_link": "https://www.themoviedb.org/movie/12104/watch"
   },
   {
+    "id": 930094,
+    "title": "Red, White & Royal Blue",
+    "release_date": "2023-07-27",
+    "poster_path": "/ta3ReqbdEcLJM3mcHMzbYFZI8v7.jpg",
+    "genre_ids": [
+      35,
+      10749
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/930094/watch"
+  },
+  {
     "id": 489412,
     "title": "It's Such a Beautiful Day",
     "release_date": "2012-08-24",
@@ -4186,17 +4197,6 @@
     "watch_link": "https://www.themoviedb.org/movie/962232/watch"
   },
   {
-    "id": 930094,
-    "title": "Red, White & Royal Blue",
-    "release_date": "2023-07-27",
-    "poster_path": "/ta3ReqbdEcLJM3mcHMzbYFZI8v7.jpg",
-    "genre_ids": [
-      35,
-      10749
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/930094/watch"
-  },
-  {
     "id": 634649,
     "title": "Spider-Man: No Way Home",
     "release_date": "2021-12-15",
@@ -4209,6 +4209,17 @@
     "watch_link": "https://www.themoviedb.org/movie/634649/watch"
   },
   {
+    "id": 76203,
+    "title": "12 Years a Slave",
+    "release_date": "2013-10-18",
+    "poster_path": "/xdANQijuNrJaw1HA61rDccME4Tm.jpg",
+    "genre_ids": [
+      18,
+      36
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/76203/watch"
+  },
+  {
     "id": 29264,
     "title": "The Exterminating Angel",
     "release_date": "1962-05-16",
@@ -4219,17 +4230,6 @@
       14
     ],
     "watch_link": "https://www.themoviedb.org/movie/29264/watch"
-  },
-  {
-    "id": 76203,
-    "title": "12 Years a Slave",
-    "release_date": "2013-10-18",
-    "poster_path": "/xdANQijuNrJaw1HA61rDccME4Tm.jpg",
-    "genre_ids": [
-      18,
-      36
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/76203/watch"
   },
   {
     "id": 15244,
@@ -4370,6 +4370,16 @@
     "watch_link": "https://www.themoviedb.org/movie/9323/watch"
   },
   {
+    "id": 160885,
+    "title": "Tel chi el telùn",
+    "release_date": "1999-05-12",
+    "poster_path": "/428vjrQpsNWSutMkB9Zndp6nIBq.jpg",
+    "genre_ids": [
+      35
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/160885/watch"
+  },
+  {
     "id": 142061,
     "title": "Batman: The Dark Knight Returns, Part 2",
     "release_date": "2013-01-03",
@@ -4381,16 +4391,6 @@
       9648
     ],
     "watch_link": "https://www.themoviedb.org/movie/142061/watch"
-  },
-  {
-    "id": 160885,
-    "title": "Tel chi el telùn",
-    "release_date": "1999-05-12",
-    "poster_path": "/428vjrQpsNWSutMkB9Zndp6nIBq.jpg",
-    "genre_ids": [
-      35
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/160885/watch"
   },
   {
     "id": 13398,
@@ -4405,18 +4405,6 @@
     "watch_link": "https://www.themoviedb.org/movie/13398/watch"
   },
   {
-    "id": 447365,
-    "title": "Guardians of the Galaxy Vol. 3",
-    "release_date": "2023-05-03",
-    "poster_path": "/r2J02Z2OpNTctfOSN1Ydgii51I3.jpg",
-    "genre_ids": [
-      878,
-      12,
-      28
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/447365/watch"
-  },
-  {
     "id": 1087192,
     "title": "How to Train Your Dragon",
     "release_date": "2025-06-06",
@@ -4428,6 +4416,18 @@
       12
     ],
     "watch_link": "https://www.themoviedb.org/movie/1087192/watch"
+  },
+  {
+    "id": 447365,
+    "title": "Guardians of the Galaxy Vol. 3",
+    "release_date": "2023-05-03",
+    "poster_path": "/r2J02Z2OpNTctfOSN1Ydgii51I3.jpg",
+    "genre_ids": [
+      878,
+      12,
+      28
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/447365/watch"
   },
   {
     "id": 315465,
@@ -4698,9 +4698,9 @@
     "release_date": "1902-06-15",
     "poster_path": "/9o0v5LLFk51nyTBHZSre6OB37n2.jpg",
     "genre_ids": [
+      36,
       12,
-      878,
-      36
+      878
     ],
     "watch_link": "https://www.themoviedb.org/movie/775/watch"
   },
@@ -4747,6 +4747,17 @@
       16
     ],
     "watch_link": "https://www.themoviedb.org/movie/20722/watch"
+  },
+  {
+    "id": 1000837,
+    "title": "I'm Still Here",
+    "release_date": "2024-09-19",
+    "poster_path": "/gZnsMbhCvhzAQlKaVpeFRHYjGyb.jpg",
+    "genre_ids": [
+      18,
+      36
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/1000837/watch"
   },
   {
     "id": 530254,
@@ -4806,17 +4817,6 @@
       36
     ],
     "watch_link": "https://www.themoviedb.org/movie/1578/watch"
-  },
-  {
-    "id": 1000837,
-    "title": "I'm Still Here",
-    "release_date": "2024-09-19",
-    "poster_path": "/gZnsMbhCvhzAQlKaVpeFRHYjGyb.jpg",
-    "genre_ids": [
-      18,
-      36
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/1000837/watch"
   },
   {
     "id": 1162,
@@ -4898,18 +4898,6 @@
     "watch_link": "https://www.themoviedb.org/movie/28971/watch"
   },
   {
-    "id": 10674,
-    "title": "Mulan",
-    "release_date": "1998-06-18",
-    "poster_path": "/jAbexAtB0aSfP5Ay4TpWHARyVnG.jpg",
-    "genre_ids": [
-      16,
-      10751,
-      12
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/10674/watch"
-  },
-  {
     "id": 14836,
     "title": "Coraline",
     "release_date": "2009-02-05",
@@ -4920,6 +4908,18 @@
       14
     ],
     "watch_link": "https://www.themoviedb.org/movie/14836/watch"
+  },
+  {
+    "id": 10674,
+    "title": "Mulan",
+    "release_date": "1998-06-18",
+    "poster_path": "/jAbexAtB0aSfP5Ay4TpWHARyVnG.jpg",
+    "genre_ids": [
+      16,
+      10751,
+      12
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/10674/watch"
   },
   {
     "id": 752,
@@ -4957,17 +4957,6 @@
     "watch_link": "https://www.themoviedb.org/movie/827/watch"
   },
   {
-    "id": 21334,
-    "title": "Children of Heaven",
-    "release_date": "1997-08-01",
-    "poster_path": "/jWqh1CJWAEcxckMRrf6ARhIEh0R.jpg",
-    "genre_ids": [
-      18,
-      10751
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/21334/watch"
-  },
-  {
     "id": 671,
     "title": "Harry Potter and the Philosopher's Stone",
     "release_date": "2001-11-16",
@@ -4977,6 +4966,17 @@
       14
     ],
     "watch_link": "https://www.themoviedb.org/movie/671/watch"
+  },
+  {
+    "id": 21334,
+    "title": "Children of Heaven",
+    "release_date": "1997-08-01",
+    "poster_path": "/jWqh1CJWAEcxckMRrf6ARhIEh0R.jpg",
+    "genre_ids": [
+      18,
+      10751
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/21334/watch"
   },
   {
     "id": 29455,
@@ -4992,7 +4992,7 @@
     "id": 10997,
     "title": "Farewell My Concubine",
     "release_date": "1993-01-01",
-    "poster_path": "/iJ99VEPZ8aZTGm18DN6RfZCxYwk.jpg",
+    "poster_path": "/f54hNIiHNINw3JiUJB2XaQl5wCN.jpg",
     "genre_ids": [
       18
     ],
@@ -5105,18 +5105,6 @@
     "watch_link": "https://www.themoviedb.org/movie/776503/watch"
   },
   {
-    "id": 210577,
-    "title": "Gone Girl",
-    "release_date": "2014-10-01",
-    "poster_path": "/ts996lKsxvjkO2yiYG0ht4qAicO.jpg",
-    "genre_ids": [
-      9648,
-      53,
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/210577/watch"
-  },
-  {
     "id": 7984,
     "title": "In the Name of the Father",
     "release_date": "1993-12-27",
@@ -5152,6 +5140,18 @@
     "watch_link": "https://www.themoviedb.org/movie/615453/watch"
   },
   {
+    "id": 210577,
+    "title": "Gone Girl",
+    "release_date": "2014-10-01",
+    "poster_path": "/ts996lKsxvjkO2yiYG0ht4qAicO.jpg",
+    "genre_ids": [
+      9648,
+      53,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/210577/watch"
+  },
+  {
     "id": 15383,
     "title": "Army of Shadows",
     "release_date": "1969-09-10",
@@ -5163,6 +5163,18 @@
       36
     ],
     "watch_link": "https://www.themoviedb.org/movie/15383/watch"
+  },
+  {
+    "id": 488623,
+    "title": "Forgotten",
+    "release_date": "2017-11-29",
+    "poster_path": "/cBgj41y1RvmW1zJCEX0uNWL0UjW.jpg",
+    "genre_ids": [
+      53,
+      9648,
+      80
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/488623/watch"
   },
   {
     "id": 404378,
@@ -5185,18 +5197,6 @@
       18
     ],
     "watch_link": "https://www.themoviedb.org/movie/334533/watch"
-  },
-  {
-    "id": 488623,
-    "title": "Forgotten",
-    "release_date": "2017-11-29",
-    "poster_path": "/cBgj41y1RvmW1zJCEX0uNWL0UjW.jpg",
-    "genre_ids": [
-      53,
-      9648,
-      80
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/488623/watch"
   },
   {
     "id": 11036,
@@ -5395,6 +5395,19 @@
     "watch_link": "https://www.themoviedb.org/movie/393/watch"
   },
   {
+    "id": 505262,
+    "title": "My Hero Academia: Two Heroes",
+    "release_date": "2018-08-03",
+    "poster_path": "/hC4nTxdhXqFWzgqynGvvXVMiMNp.jpg",
+    "genre_ids": [
+      16,
+      28,
+      12,
+      14
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/505262/watch"
+  },
+  {
     "id": 158445,
     "title": "Miracle in Cell No. 7",
     "release_date": "2013-01-23",
@@ -5404,6 +5417,18 @@
       35
     ],
     "watch_link": "https://www.themoviedb.org/movie/158445/watch"
+  },
+  {
+    "id": 1297842,
+    "title": "GOAT",
+    "release_date": "2026-02-11",
+    "poster_path": "/wfuqMlaExcoYiUEvKfVpUTt1v4u.jpg",
+    "genre_ids": [
+      16,
+      35,
+      10751
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/1297842/watch"
   },
   {
     "id": 582927,
@@ -5440,19 +5465,6 @@
     "watch_link": "https://www.themoviedb.org/movie/667520/watch"
   },
   {
-    "id": 505262,
-    "title": "My Hero Academia: Two Heroes",
-    "release_date": "2018-08-03",
-    "poster_path": "/hC4nTxdhXqFWzgqynGvvXVMiMNp.jpg",
-    "genre_ids": [
-      16,
-      28,
-      12,
-      14
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/505262/watch"
-  },
-  {
     "id": 47796,
     "title": "Mamma Roma",
     "release_date": "1962-09-22",
@@ -5473,18 +5485,6 @@
       18
     ],
     "watch_link": "https://www.themoviedb.org/movie/24238/watch"
-  },
-  {
-    "id": 1297842,
-    "title": "GOAT",
-    "release_date": "2026-02-11",
-    "poster_path": "/wfuqMlaExcoYiUEvKfVpUTt1v4u.jpg",
-    "genre_ids": [
-      16,
-      35,
-      10751
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/1297842/watch"
   },
   {
     "id": 458302,
@@ -5642,18 +5642,6 @@
     "watch_link": "https://www.themoviedb.org/movie/613/watch"
   },
   {
-    "id": 944401,
-    "title": "Dogman",
-    "release_date": "2023-09-27",
-    "poster_path": "/5RuUD7J4vO0El7TRL9guZIik0I0.jpg",
-    "genre_ids": [
-      28,
-      18,
-      80
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/944401/watch"
-  },
-  {
     "id": 777,
     "title": "Grand Illusion",
     "release_date": "1937-06-04",
@@ -5728,6 +5716,18 @@
     "watch_link": "https://www.themoviedb.org/movie/32085/watch"
   },
   {
+    "id": 944401,
+    "title": "Dogman",
+    "release_date": "2023-09-27",
+    "poster_path": "/5RuUD7J4vO0El7TRL9guZIik0I0.jpg",
+    "genre_ids": [
+      28,
+      18,
+      80
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/944401/watch"
+  },
+  {
     "id": 10191,
     "title": "How to Train Your Dragon",
     "release_date": "2010-03-18",
@@ -5750,18 +5750,6 @@
       10749
     ],
     "watch_link": "https://www.themoviedb.org/movie/1081676/watch"
-  },
-  {
-    "id": 522212,
-    "title": "Just Mercy",
-    "release_date": "2019-12-25",
-    "poster_path": "/2bDZl3PzFLFWe4gaFUQnnaslqT3.jpg",
-    "genre_ids": [
-      18,
-      80,
-      36
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/522212/watch"
   },
   {
     "id": 381341,
@@ -5794,6 +5782,18 @@
       10749
     ],
     "watch_link": "https://www.themoviedb.org/movie/453/watch"
+  },
+  {
+    "id": 522212,
+    "title": "Just Mercy",
+    "release_date": "2019-12-25",
+    "poster_path": "/2bDZl3PzFLFWe4gaFUQnnaslqT3.jpg",
+    "genre_ids": [
+      18,
+      80,
+      36
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/522212/watch"
   },
   {
     "id": 3034,
@@ -5908,18 +5908,6 @@
     "watch_link": "https://www.themoviedb.org/movie/11656/watch"
   },
   {
-    "id": 501929,
-    "title": "The Mitchells vs. the Machines",
-    "release_date": "2021-04-22",
-    "poster_path": "/mI2Di7HmskQQ34kz0iau6J1vr70.jpg",
-    "genre_ids": [
-      16,
-      12,
-      35
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/501929/watch"
-  },
-  {
     "id": 399174,
     "title": "Isle of Dogs",
     "release_date": "2018-03-23",
@@ -5930,6 +5918,18 @@
       16
     ],
     "watch_link": "https://www.themoviedb.org/movie/399174/watch"
+  },
+  {
+    "id": 501929,
+    "title": "The Mitchells vs. the Machines",
+    "release_date": "2021-04-22",
+    "poster_path": "/mI2Di7HmskQQ34kz0iau6J1vr70.jpg",
+    "genre_ids": [
+      16,
+      12,
+      35
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/501929/watch"
   },
   {
     "id": 59440,
@@ -5978,18 +5978,6 @@
     "watch_link": "https://www.themoviedb.org/movie/968/watch"
   },
   {
-    "id": 546554,
-    "title": "Knives Out",
-    "release_date": "2019-11-27",
-    "poster_path": "/pThyQovXQrw2m0s9x82twj48Jq4.jpg",
-    "genre_ids": [
-      35,
-      80,
-      9648
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/546554/watch"
-  },
-  {
     "id": 505192,
     "title": "Shoplifters",
     "release_date": "2018-06-02",
@@ -6027,6 +6015,29 @@
     "watch_link": "https://www.themoviedb.org/movie/33320/watch"
   },
   {
+    "id": 235,
+    "title": "Stand by Me",
+    "release_date": "1986-08-08",
+    "poster_path": "/vz0w9BSehcqjDcJOjRaCk7fgJe7.jpg",
+    "genre_ids": [
+      80,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/235/watch"
+  },
+  {
+    "id": 546554,
+    "title": "Knives Out",
+    "release_date": "2019-11-27",
+    "poster_path": "/pThyQovXQrw2m0s9x82twj48Jq4.jpg",
+    "genre_ids": [
+      35,
+      80,
+      9648
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/546554/watch"
+  },
+  {
     "id": 435129,
     "title": "The Breadwinner",
     "release_date": "2017-11-17",
@@ -6038,17 +6049,6 @@
       10751
     ],
     "watch_link": "https://www.themoviedb.org/movie/435129/watch"
-  },
-  {
-    "id": 235,
-    "title": "Stand by Me",
-    "release_date": "1986-08-08",
-    "poster_path": "/vz0w9BSehcqjDcJOjRaCk7fgJe7.jpg",
-    "genre_ids": [
-      80,
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/235/watch"
   },
   {
     "id": 115,
@@ -6101,6 +6101,18 @@
       10751
     ],
     "watch_link": "https://www.themoviedb.org/movie/293299/watch"
+  },
+  {
+    "id": 93,
+    "title": "Anatomy of a Murder",
+    "release_date": "1959-07-01",
+    "poster_path": "/b2G1QSAwtBv9luhEwErIgSRaU92.jpg",
+    "genre_ids": [
+      80,
+      18,
+      9648
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/93/watch"
   },
   {
     "id": 379170,
@@ -6161,18 +6173,6 @@
       37
     ],
     "watch_link": "https://www.themoviedb.org/movie/581/watch"
-  },
-  {
-    "id": 93,
-    "title": "Anatomy of a Murder",
-    "release_date": "1959-07-01",
-    "poster_path": "/b2G1QSAwtBv9luhEwErIgSRaU92.jpg",
-    "genre_ids": [
-      80,
-      18,
-      9648
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/93/watch"
   },
   {
     "id": 406785,
@@ -6240,23 +6240,12 @@
     "release_date": "2021-12-01",
     "poster_path": "/aWeKITRFbbwY8txG5uCj4rMCfSP.jpg",
     "genre_ids": [
-      10751,
-      35,
+      16,
       10402,
-      16
+      35,
+      10751
     ],
     "watch_link": "https://www.themoviedb.org/movie/438695/watch"
-  },
-  {
-    "id": 52345,
-    "title": "Lisbela and the Prisoner",
-    "release_date": "2003-08-22",
-    "poster_path": "/raCdo5Hjpd3uXbpSd1JZ7tEyE31.jpg",
-    "genre_ids": [
-      35,
-      10749
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/52345/watch"
   },
   {
     "id": 698508,
@@ -6269,6 +6258,20 @@
       37
     ],
     "watch_link": "https://www.themoviedb.org/movie/698508/watch"
+  },
+  {
+    "id": 445030,
+    "title": "No Game, No Life: Zero",
+    "release_date": "2017-07-15",
+    "poster_path": "/sfNZ6G7l3cFI57LVfxnNGse7ihA.jpg",
+    "genre_ids": [
+      12,
+      16,
+      18,
+      14,
+      10749
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/445030/watch"
   },
   {
     "id": 9479,
@@ -6339,6 +6342,28 @@
     "watch_link": "https://www.themoviedb.org/movie/6075/watch"
   },
   {
+    "id": 52345,
+    "title": "Lisbela and the Prisoner",
+    "release_date": "2003-08-22",
+    "poster_path": "/raCdo5Hjpd3uXbpSd1JZ7tEyE31.jpg",
+    "genre_ids": [
+      35,
+      10749
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/52345/watch"
+  },
+  {
+    "id": 5924,
+    "title": "Papillon",
+    "release_date": "1973-12-16",
+    "poster_path": "/356oqQpug682OERsWV0bGZ0YxwQ.jpg",
+    "genre_ids": [
+      80,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/5924/watch"
+  },
+  {
     "id": 3083,
     "title": "Mr. Smith Goes to Washington",
     "release_date": "1939-10-19",
@@ -6384,17 +6409,6 @@
     "watch_link": "https://www.themoviedb.org/movie/27064/watch"
   },
   {
-    "id": 5924,
-    "title": "Papillon",
-    "release_date": "1973-12-16",
-    "poster_path": "/356oqQpug682OERsWV0bGZ0YxwQ.jpg",
-    "genre_ids": [
-      80,
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/5924/watch"
-  },
-  {
     "id": 391,
     "title": "A Fistful of Dollars",
     "release_date": "1964-09-12",
@@ -6403,20 +6417,6 @@
       37
     ],
     "watch_link": "https://www.themoviedb.org/movie/391/watch"
-  },
-  {
-    "id": 445030,
-    "title": "No Game, No Life: Zero",
-    "release_date": "2017-07-15",
-    "poster_path": "/sfNZ6G7l3cFI57LVfxnNGse7ihA.jpg",
-    "genre_ids": [
-      12,
-      16,
-      18,
-      14,
-      10749
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/445030/watch"
   },
   {
     "id": 430424,
@@ -6529,7 +6529,7 @@
     "id": 22,
     "title": "Pirates of the Caribbean: The Curse of the Black Pearl",
     "release_date": "2003-07-09",
-    "poster_path": "/poHwCZeWzJCShH7tOjg8RIoyjcw.jpg",
+    "poster_path": "/kvDwL2gTf6yxujbsWbsGQB3Z9Wa.jpg",
     "genre_ids": [
       12,
       14,
@@ -6560,6 +6560,18 @@
     "watch_link": "https://www.themoviedb.org/movie/263115/watch"
   },
   {
+    "id": 83564,
+    "title": "La luna",
+    "release_date": "2012-02-10",
+    "poster_path": "/9euW64JUgFlA7fxN8lAmwK6gUaQ.jpg",
+    "genre_ids": [
+      16,
+      10751,
+      14
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/83564/watch"
+  },
+  {
     "id": 10315,
     "title": "Fantastic Mr. Fox",
     "release_date": "2009-10-14",
@@ -6583,18 +6595,6 @@
       878
     ],
     "watch_link": "https://www.themoviedb.org/movie/303867/watch"
-  },
-  {
-    "id": 83564,
-    "title": "La luna",
-    "release_date": "2012-02-10",
-    "poster_path": "/9euW64JUgFlA7fxN8lAmwK6gUaQ.jpg",
-    "genre_ids": [
-      16,
-      10751,
-      14
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/83564/watch"
   },
   {
     "id": 3078,
@@ -6710,17 +6710,6 @@
     "watch_link": "https://www.themoviedb.org/movie/594634/watch"
   },
   {
-    "id": 31411,
-    "title": "The Cameraman",
-    "release_date": "1928-09-10",
-    "poster_path": "/oz7dVRzxN95IIpa7hsG5XS3nO2L.jpg",
-    "genre_ids": [
-      35,
-      10749
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/31411/watch"
-  },
-  {
     "id": 25606,
     "title": "Fantozzi: White Collar Blues",
     "release_date": "1975-03-27",
@@ -6740,6 +6729,17 @@
       10749
     ],
     "watch_link": "https://www.themoviedb.org/movie/631/watch"
+  },
+  {
+    "id": 31411,
+    "title": "The Cameraman",
+    "release_date": "1928-09-10",
+    "poster_path": "/oz7dVRzxN95IIpa7hsG5XS3nO2L.jpg",
+    "genre_ids": [
+      35,
+      10749
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/31411/watch"
   },
   {
     "id": 5801,
@@ -6879,6 +6879,18 @@
     "watch_link": "https://www.themoviedb.org/movie/301/watch"
   },
   {
+    "id": 522402,
+    "title": "Finch",
+    "release_date": "2021-11-04",
+    "poster_path": "/eEJtzD1F05xDipFEDY98CTH5yZn.jpg",
+    "genre_ids": [
+      878,
+      18,
+      12
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/522402/watch"
+  },
+  {
     "id": 152742,
     "title": "The Best Offer",
     "release_date": "2013-01-01",
@@ -6911,18 +6923,6 @@
       18
     ],
     "watch_link": "https://www.themoviedb.org/movie/552532/watch"
-  },
-  {
-    "id": 522402,
-    "title": "Finch",
-    "release_date": "2021-11-04",
-    "poster_path": "/eEJtzD1F05xDipFEDY98CTH5yZn.jpg",
-    "genre_ids": [
-      878,
-      18,
-      12
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/522402/watch"
   },
   {
     "id": 335578,
@@ -7029,30 +7029,6 @@
     "watch_link": "https://www.themoviedb.org/movie/393559/watch"
   },
   {
-    "id": 1376434,
-    "title": "Predator: Killer of Killers",
-    "release_date": "2025-06-05",
-    "poster_path": "/2XDQa6EmFHSA37j1t0w88vpWqj9.jpg",
-    "genre_ids": [
-      16,
-      28,
-      878,
-      53
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/1376434/watch"
-  },
-  {
-    "id": 5915,
-    "title": "Into the Wild",
-    "release_date": "2007-09-21",
-    "poster_path": "/jnLnLYP5pGDfri04gxtAqAvkHMw.jpg",
-    "genre_ids": [
-      12,
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/5915/watch"
-  },
-  {
     "id": 2118,
     "title": "L.A. Confidential",
     "release_date": "1997-09-19",
@@ -7064,6 +7040,17 @@
       18
     ],
     "watch_link": "https://www.themoviedb.org/movie/2118/watch"
+  },
+  {
+    "id": 5915,
+    "title": "Into the Wild",
+    "release_date": "2007-09-21",
+    "poster_path": "/jnLnLYP5pGDfri04gxtAqAvkHMw.jpg",
+    "genre_ids": [
+      12,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/5915/watch"
   },
   {
     "id": 937746,
@@ -7100,6 +7087,19 @@
       10749
     ],
     "watch_link": "https://www.themoviedb.org/movie/1394/watch"
+  },
+  {
+    "id": 1376434,
+    "title": "Predator: Killer of Killers",
+    "release_date": "2025-06-05",
+    "poster_path": "/2XDQa6EmFHSA37j1t0w88vpWqj9.jpg",
+    "genre_ids": [
+      16,
+      28,
+      878,
+      53
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/1376434/watch"
   },
   {
     "id": 56231,
@@ -7139,10 +7139,10 @@
     "release_date": "2013-07-20",
     "poster_path": "/jfwSexzlIzaOgxP9A8bTA6t8YYb.jpg",
     "genre_ids": [
-      18,
       16,
-      10749,
-      36
+      18,
+      36,
+      10749
     ],
     "watch_link": "https://www.themoviedb.org/movie/149870/watch"
   },
@@ -7157,6 +7157,18 @@
       14
     ],
     "watch_link": "https://www.themoviedb.org/movie/11621/watch"
+  },
+  {
+    "id": 13042,
+    "title": "Presto",
+    "release_date": "2008-06-27",
+    "poster_path": "/1RMMyEkRPHvVxPDvhFmmw6xbcIb.jpg",
+    "genre_ids": [
+      16,
+      10751,
+      35
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/13042/watch"
   },
   {
     "id": 1366,
@@ -7177,18 +7189,6 @@
       18
     ],
     "watch_link": "https://www.themoviedb.org/movie/113/watch"
-  },
-  {
-    "id": 348892,
-    "title": "Bajrangi Bhaijaan",
-    "release_date": "2015-07-17",
-    "poster_path": "/vhlliI7HZZlWfo5d6CiyfBAGLrW.jpg",
-    "genre_ids": [
-      35,
-      18,
-      12
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/348892/watch"
   },
   {
     "id": 49797,
@@ -7213,18 +7213,6 @@
       53
     ],
     "watch_link": "https://www.themoviedb.org/movie/49026/watch"
-  },
-  {
-    "id": 13042,
-    "title": "Presto",
-    "release_date": "2008-06-27",
-    "poster_path": "/1RMMyEkRPHvVxPDvhFmmw6xbcIb.jpg",
-    "genre_ids": [
-      16,
-      10751,
-      35
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/13042/watch"
   },
   {
     "id": 568012,
@@ -7260,6 +7248,18 @@
       36
     ],
     "watch_link": "https://www.themoviedb.org/movie/3870/watch"
+  },
+  {
+    "id": 348892,
+    "title": "Bajrangi Bhaijaan",
+    "release_date": "2015-07-17",
+    "poster_path": "/vhlliI7HZZlWfo5d6CiyfBAGLrW.jpg",
+    "genre_ids": [
+      35,
+      18,
+      12
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/348892/watch"
   },
   {
     "id": 45752,
@@ -7341,17 +7341,6 @@
     "watch_link": "https://www.themoviedb.org/movie/976893/watch"
   },
   {
-    "id": 31056,
-    "title": "A Short Film About Love",
-    "release_date": "1988-08-21",
-    "poster_path": "/kLAMz50Or2So1aEzHYv0R8iXo46.jpg",
-    "genre_ids": [
-      18,
-      10749
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/31056/watch"
-  },
-  {
     "id": 22683,
     "title": "Gifted Hands: The Ben Carson Story",
     "release_date": "2009-02-07",
@@ -7371,16 +7360,6 @@
       10749
     ],
     "watch_link": "https://www.themoviedb.org/movie/142/watch"
-  },
-  {
-    "id": 9475,
-    "title": "Scent of a Woman",
-    "release_date": "1992-12-23",
-    "poster_path": "/4adI7IaveWb7EidYXfLb3MK3CgO.jpg",
-    "genre_ids": [
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/9475/watch"
   },
   {
     "id": 262,
@@ -7406,6 +7385,16 @@
     "watch_link": "https://www.themoviedb.org/movie/783675/watch"
   },
   {
+    "id": 9475,
+    "title": "Scent of a Woman",
+    "release_date": "1992-12-23",
+    "poster_path": "/4adI7IaveWb7EidYXfLb3MK3CgO.jpg",
+    "genre_ids": [
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/9475/watch"
+  },
+  {
     "id": 579245,
     "title": "The Specials",
     "release_date": "2019-10-23",
@@ -7423,12 +7412,23 @@
     "poster_path": "/9x4i9uKGXt8IiiIF5Ey0DIoY738.jpg",
     "genre_ids": [
       16,
-      35,
-      14,
       10751,
+      14,
+      35,
       18
     ],
     "watch_link": "https://www.themoviedb.org/movie/508943/watch"
+  },
+  {
+    "id": 31056,
+    "title": "A Short Film About Love",
+    "release_date": "1988-08-21",
+    "poster_path": "/kLAMz50Or2So1aEzHYv0R8iXo46.jpg",
+    "genre_ids": [
+      18,
+      10749
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/31056/watch"
   },
   {
     "id": 438631,
@@ -7476,19 +7476,6 @@
     "watch_link": "https://www.themoviedb.org/movie/14282/watch"
   },
   {
-    "id": 11049,
-    "title": "Interstella 5555: The 5tory of the 5ecret 5tar 5ystem",
-    "release_date": "2003-05-28",
-    "poster_path": "/n0K6mjU8aVnag2mi93FuvJsjZi.jpg",
-    "genre_ids": [
-      16,
-      878,
-      10402,
-      12
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/11049/watch"
-  },
-  {
     "id": 14069,
     "title": "The Girl Who Leapt Through Time",
     "release_date": "2006-07-15",
@@ -7526,16 +7513,6 @@
     "watch_link": "https://www.themoviedb.org/movie/2721/watch"
   },
   {
-    "id": 901563,
-    "title": "Close",
-    "release_date": "2022-11-01",
-    "poster_path": "/dlMNnWs7Mz8Nk5AC447Ew1tD5pn.jpg",
-    "genre_ids": [
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/901563/watch"
-  },
-  {
     "id": 277216,
     "title": "Straight Outta Compton",
     "release_date": "2015-08-11",
@@ -7548,15 +7525,25 @@
     "watch_link": "https://www.themoviedb.org/movie/277216/watch"
   },
   {
-    "id": 632322,
-    "title": "All My Life",
-    "release_date": "2020-10-23",
-    "poster_path": "/xoKZ4ZkVApcTaTYlGoZ3J8xcIzG.jpg",
+    "id": 1208348,
+    "title": "Rental Family",
+    "release_date": "2025-11-20",
+    "poster_path": "/A5lswNlytTUrnMWsuD0NFfhZlf3.jpg",
     "genre_ids": [
-      10749,
+      18,
+      35
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/1208348/watch"
+  },
+  {
+    "id": 901563,
+    "title": "Close",
+    "release_date": "2022-11-01",
+    "poster_path": "/dlMNnWs7Mz8Nk5AC447Ew1tD5pn.jpg",
+    "genre_ids": [
       18
     ],
-    "watch_link": "https://www.themoviedb.org/movie/632322/watch"
+    "watch_link": "https://www.themoviedb.org/movie/901563/watch"
   },
   {
     "id": 359156,
@@ -7590,15 +7577,17 @@
     "watch_link": "https://www.themoviedb.org/movie/785084/watch"
   },
   {
-    "id": 1208348,
-    "title": "Rental Family",
-    "release_date": "2025-11-20",
-    "poster_path": "/A5lswNlytTUrnMWsuD0NFfhZlf3.jpg",
+    "id": 11049,
+    "title": "Interstella 5555: The 5tory of the 5ecret 5tar 5ystem",
+    "release_date": "2003-05-28",
+    "poster_path": "/n0K6mjU8aVnag2mi93FuvJsjZi.jpg",
     "genre_ids": [
-      18,
-      35
+      16,
+      878,
+      10402,
+      12
     ],
-    "watch_link": "https://www.themoviedb.org/movie/1208348/watch"
+    "watch_link": "https://www.themoviedb.org/movie/11049/watch"
   },
   {
     "id": 11602,
@@ -7669,6 +7658,17 @@
     "watch_link": "https://www.themoviedb.org/movie/712454/watch"
   },
   {
+    "id": 632322,
+    "title": "All My Life",
+    "release_date": "2020-10-23",
+    "poster_path": "/xoKZ4ZkVApcTaTYlGoZ3J8xcIzG.jpg",
+    "genre_ids": [
+      10749,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/632322/watch"
+  },
+  {
     "id": 887,
     "title": "The Best Years of Our Lives",
     "release_date": "1946-12-25",
@@ -7678,28 +7678,6 @@
       10749
     ],
     "watch_link": "https://www.themoviedb.org/movie/887/watch"
-  },
-  {
-    "id": 946,
-    "title": "Letter from an Unknown Woman",
-    "release_date": "1948-04-28",
-    "poster_path": "/gRGRW7DKyK8qBtKJTWguULMGbHG.jpg",
-    "genre_ids": [
-      18,
-      10749
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/946/watch"
-  },
-  {
-    "id": 760774,
-    "title": "One Life",
-    "release_date": "2023-12-21",
-    "poster_path": "/yvnIWt2j8VnDgwKJE2VMiFMa2Qo.jpg",
-    "genre_ids": [
-      36,
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/760774/watch"
   },
   {
     "id": 5511,
@@ -7723,6 +7701,28 @@
       27
     ],
     "watch_link": "https://www.themoviedb.org/movie/136/watch"
+  },
+  {
+    "id": 946,
+    "title": "Letter from an Unknown Woman",
+    "release_date": "1948-04-28",
+    "poster_path": "/gRGRW7DKyK8qBtKJTWguULMGbHG.jpg",
+    "genre_ids": [
+      18,
+      10749
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/946/watch"
+  },
+  {
+    "id": 760774,
+    "title": "One Life",
+    "release_date": "2023-12-21",
+    "poster_path": "/yvnIWt2j8VnDgwKJE2VMiFMa2Qo.jpg",
+    "genre_ids": [
+      36,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/760774/watch"
   },
   {
     "id": 13855,
@@ -7836,6 +7836,18 @@
     "watch_link": "https://www.themoviedb.org/movie/22504/watch"
   },
   {
+    "id": 18079,
+    "title": "Nine Queens",
+    "release_date": "2000-08-31",
+    "poster_path": "/u2L4Foderu7SCPci5c3jsUfEJPP.jpg",
+    "genre_ids": [
+      80,
+      53,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/18079/watch"
+  },
+  {
     "id": 269149,
     "title": "Zootopia",
     "release_date": "2016-02-11",
@@ -7872,6 +7884,20 @@
     "watch_link": "https://www.themoviedb.org/movie/1417/watch"
   },
   {
+    "id": 808,
+    "title": "Shrek",
+    "release_date": "2001-05-18",
+    "poster_path": "/iB64vpL3dIObOtMZgX3RqdVdQDc.jpg",
+    "genre_ids": [
+      16,
+      35,
+      14,
+      12,
+      10751
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/808/watch"
+  },
+  {
     "id": 583,
     "title": "Life of Brian",
     "release_date": "1979-08-17",
@@ -7904,20 +7930,6 @@
       16
     ],
     "watch_link": "https://www.themoviedb.org/movie/40662/watch"
-  },
-  {
-    "id": 808,
-    "title": "Shrek",
-    "release_date": "2001-05-18",
-    "poster_path": "/iB64vpL3dIObOtMZgX3RqdVdQDc.jpg",
-    "genre_ids": [
-      16,
-      35,
-      14,
-      12,
-      10751
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/808/watch"
   },
   {
     "id": 587,
@@ -7953,18 +7965,6 @@
       37
     ],
     "watch_link": "https://www.themoviedb.org/movie/273248/watch"
-  },
-  {
-    "id": 18079,
-    "title": "Nine Queens",
-    "release_date": "2000-08-31",
-    "poster_path": "/u2L4Foderu7SCPci5c3jsUfEJPP.jpg",
-    "genre_ids": [
-      80,
-      53,
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/18079/watch"
   },
   {
     "id": 715931,
@@ -8027,17 +8027,6 @@
     "watch_link": "https://www.themoviedb.org/movie/117/watch"
   },
   {
-    "id": 911430,
-    "title": "F1",
-    "release_date": "2025-06-25",
-    "poster_path": "/vqBmyAj0Xm9LnS1xe1MSlMAJyHq.jpg",
-    "genre_ids": [
-      28,
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/911430/watch"
-  },
-  {
     "id": 652722,
     "title": "In the Arms of an Assassin",
     "release_date": "2019-12-06",
@@ -8081,6 +8070,17 @@
       18
     ],
     "watch_link": "https://www.themoviedb.org/movie/1675/watch"
+  },
+  {
+    "id": 937278,
+    "title": "A Man Called Otto",
+    "release_date": "2022-12-28",
+    "poster_path": "/130H1gap9lFfiTF9iDrqNIkFvC9.jpg",
+    "genre_ids": [
+      35,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/937278/watch"
   },
   {
     "id": 937278,
@@ -8174,17 +8174,6 @@
     "watch_link": "https://www.themoviedb.org/movie/14811/watch"
   },
   {
-    "id": 428493,
-    "title": "God's Own Country",
-    "release_date": "2017-08-31",
-    "poster_path": "/hKJz8Moim43P1f1kGrM9Gh0c0rf.jpg",
-    "genre_ids": [
-      10749,
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/428493/watch"
-  },
-  {
     "id": 396535,
     "title": "Train to Busan",
     "release_date": "2016-07-20",
@@ -8221,6 +8210,17 @@
       36
     ],
     "watch_link": "https://www.themoviedb.org/movie/423612/watch"
+  },
+  {
+    "id": 428493,
+    "title": "God's Own Country",
+    "release_date": "2017-08-31",
+    "poster_path": "/hKJz8Moim43P1f1kGrM9Gh0c0rf.jpg",
+    "genre_ids": [
+      10749,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/428493/watch"
   },
   {
     "id": 359784,
@@ -8383,18 +8383,6 @@
     "watch_link": "https://www.themoviedb.org/movie/5528/watch"
   },
   {
-    "id": 703,
-    "title": "Annie Hall",
-    "release_date": "1977-04-19",
-    "poster_path": "/dEtjPywhDbAXYjoFfhBC4U9unU7.jpg",
-    "genre_ids": [
-      35,
-      18,
-      10749
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/703/watch"
-  },
-  {
     "id": 123025,
     "title": "Batman: The Dark Knight Returns, Part 1",
     "release_date": "2012-09-25",
@@ -8429,6 +8417,18 @@
       28
     ],
     "watch_link": "https://www.themoviedb.org/movie/96721/watch"
+  },
+  {
+    "id": 703,
+    "title": "Annie Hall",
+    "release_date": "1977-04-19",
+    "poster_path": "/dEtjPywhDbAXYjoFfhBC4U9unU7.jpg",
+    "genre_ids": [
+      35,
+      18,
+      10749
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/703/watch"
   },
   {
     "id": 492188,
@@ -8588,6 +8588,17 @@
     "watch_link": "https://www.themoviedb.org/movie/2204/watch"
   },
   {
+    "id": 873,
+    "title": "The Color Purple",
+    "release_date": "1985-12-18",
+    "poster_path": "/6bvxkcTAXyqxGRwo38mxw92D6Xr.jpg",
+    "genre_ids": [
+      18,
+      36
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/873/watch"
+  },
+  {
     "id": 1139817,
     "title": "Officer Black Belt",
     "release_date": "2024-09-12",
@@ -8636,29 +8647,6 @@
     "watch_link": "https://www.themoviedb.org/movie/10020/watch"
   },
   {
-    "id": 873,
-    "title": "The Color Purple",
-    "release_date": "1985-12-18",
-    "poster_path": "/6bvxkcTAXyqxGRwo38mxw92D6Xr.jpg",
-    "genre_ids": [
-      18,
-      36
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/873/watch"
-  },
-  {
-    "id": 858024,
-    "title": "Hamnet",
-    "release_date": "2025-11-26",
-    "poster_path": "/vbeyOZm2bvBXcbgPD3v6o94epPX.jpg",
-    "genre_ids": [
-      18,
-      10749,
-      36
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/858024/watch"
-  },
-  {
     "id": 597316,
     "title": "My Little Pony: A New Generation",
     "release_date": "2021-09-22",
@@ -8671,6 +8659,17 @@
       12
     ],
     "watch_link": "https://www.themoviedb.org/movie/597316/watch"
+  },
+  {
+    "id": 61979,
+    "title": "Three Steps Above Heaven",
+    "release_date": "2010-12-03",
+    "poster_path": "/xeWyY2s13dRlKOLk4E3TkXgM4sS.jpg",
+    "genre_ids": [
+      10749,
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/61979/watch"
   },
   {
     "id": 2108,
@@ -8710,17 +8709,6 @@
     "watch_link": "https://www.themoviedb.org/movie/177572/watch"
   },
   {
-    "id": 61979,
-    "title": "Three Steps Above Heaven",
-    "release_date": "2010-12-03",
-    "poster_path": "/xeWyY2s13dRlKOLk4E3TkXgM4sS.jpg",
-    "genre_ids": [
-      10749,
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/61979/watch"
-  },
-  {
     "id": 20126,
     "title": "Deep Red",
     "release_date": "1975-03-07",
@@ -8757,6 +8745,19 @@
     "watch_link": "https://www.themoviedb.org/movie/545611/watch"
   },
   {
+    "id": 9806,
+    "title": "The Incredibles",
+    "release_date": "2004-11-05",
+    "poster_path": "/2LqaLgk4Z226KkgPJuiOQ58wvrm.jpg",
+    "genre_ids": [
+      28,
+      12,
+      16,
+      10751
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/9806/watch"
+  },
+  {
     "id": 272,
     "title": "Batman Begins",
     "release_date": "2005-06-10",
@@ -8781,19 +8782,6 @@
     "watch_link": "https://www.themoviedb.org/movie/30959/watch"
   },
   {
-    "id": 9806,
-    "title": "The Incredibles",
-    "release_date": "2004-11-05",
-    "poster_path": "/2LqaLgk4Z226KkgPJuiOQ58wvrm.jpg",
-    "genre_ids": [
-      28,
-      12,
-      16,
-      10751
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/9806/watch"
-  },
-  {
     "id": 1040,
     "title": "The Leopard",
     "release_date": "1963-03-27",
@@ -8802,6 +8790,28 @@
       18
     ],
     "watch_link": "https://www.themoviedb.org/movie/1040/watch"
+  },
+  {
+    "id": 858024,
+    "title": "Hamnet",
+    "release_date": "2025-11-26",
+    "poster_path": "/vbeyOZm2bvBXcbgPD3v6o94epPX.jpg",
+    "genre_ids": [
+      18,
+      10749,
+      36
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/858024/watch"
+  },
+  {
+    "id": 32579,
+    "title": "Under the Same Moon",
+    "release_date": "2007-07-27",
+    "poster_path": "/wx9DwdcgvLhoQJP3AOXpvMISgtM.jpg",
+    "genre_ids": [
+      18
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/32579/watch"
   },
   {
     "id": 696,
@@ -8828,26 +8838,16 @@
     "watch_link": "https://www.themoviedb.org/movie/205/watch"
   },
   {
-    "id": 882569,
-    "title": "Guy Ritchie's The Covenant",
-    "release_date": "2023-04-19",
-    "poster_path": "/kVG8zFFYrpyYLoHChuEeOGAd6Ru.jpg",
+    "id": 162,
+    "title": "Edward Scissorhands",
+    "release_date": "1990-12-07",
+    "poster_path": "/e0FqKFvGPdQNWG8tF9cZBtev9Em.jpg",
     "genre_ids": [
-      10752,
-      28,
-      53
+      14,
+      18,
+      10749
     ],
-    "watch_link": "https://www.themoviedb.org/movie/882569/watch"
-  },
-  {
-    "id": 32579,
-    "title": "Under the Same Moon",
-    "release_date": "2007-07-27",
-    "poster_path": "/wx9DwdcgvLhoQJP3AOXpvMISgtM.jpg",
-    "genre_ids": [
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/32579/watch"
+    "watch_link": "https://www.themoviedb.org/movie/162/watch"
   },
   {
     "id": 22596,
@@ -8861,16 +8861,16 @@
     "watch_link": "https://www.themoviedb.org/movie/22596/watch"
   },
   {
-    "id": 162,
-    "title": "Edward Scissorhands",
-    "release_date": "1990-12-07",
-    "poster_path": "/e0FqKFvGPdQNWG8tF9cZBtev9Em.jpg",
+    "id": 882569,
+    "title": "Guy Ritchie's The Covenant",
+    "release_date": "2023-04-19",
+    "poster_path": "/kVG8zFFYrpyYLoHChuEeOGAd6Ru.jpg",
     "genre_ids": [
-      14,
-      18,
-      10749
+      10752,
+      28,
+      53
     ],
-    "watch_link": "https://www.themoviedb.org/movie/162/watch"
+    "watch_link": "https://www.themoviedb.org/movie/882569/watch"
   },
   {
     "id": 369299,
@@ -8950,6 +8950,18 @@
     "watch_link": "https://www.themoviedb.org/movie/9800/watch"
   },
   {
+    "id": 1426776,
+    "title": "STRAW",
+    "release_date": "2025-06-05",
+    "poster_path": "/t3cmnXYtxJb9vVL1ThvT2CWSe1n.jpg",
+    "genre_ids": [
+      53,
+      18,
+      80
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/1426776/watch"
+  },
+  {
     "id": 336804,
     "title": "Mustang",
     "release_date": "2015-06-17",
@@ -8981,18 +8993,6 @@
       35
     ],
     "watch_link": "https://www.themoviedb.org/movie/453191/watch"
-  },
-  {
-    "id": 1426776,
-    "title": "STRAW",
-    "release_date": "2025-06-05",
-    "poster_path": "/t3cmnXYtxJb9vVL1ThvT2CWSe1n.jpg",
-    "genre_ids": [
-      53,
-      18,
-      80
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/1426776/watch"
   },
   {
     "id": 242582,
@@ -9041,6 +9041,18 @@
     "watch_link": "https://www.themoviedb.org/movie/374473/watch"
   },
   {
+    "id": 40619,
+    "title": "Day & Night",
+    "release_date": "2010-06-17",
+    "poster_path": "/hn2tOtidoYZ0D56jR4yknpdP1mU.jpg",
+    "genre_ids": [
+      16,
+      10751,
+      35
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/40619/watch"
+  },
+  {
     "id": 10227,
     "title": "PlayTime",
     "release_date": "1967-12-13",
@@ -9073,16 +9085,14 @@
     "watch_link": "https://www.themoviedb.org/movie/603692/watch"
   },
   {
-    "id": 40619,
-    "title": "Day & Night",
-    "release_date": "2010-06-17",
-    "poster_path": "/hn2tOtidoYZ0D56jR4yknpdP1mU.jpg",
+    "id": 11171,
+    "title": "Mysterious Skin",
+    "release_date": "2005-03-30",
+    "poster_path": "/wgSwDqhl6Rt3cuSCwt5sNpPna3x.jpg",
     "genre_ids": [
-      16,
-      10751,
-      35
+      18
     ],
-    "watch_link": "https://www.themoviedb.org/movie/40619/watch"
+    "watch_link": "https://www.themoviedb.org/movie/11171/watch"
   },
   {
     "id": 309,
@@ -9106,16 +9116,6 @@
     "watch_link": "https://www.themoviedb.org/movie/705861/watch"
   },
   {
-    "id": 11171,
-    "title": "Mysterious Skin",
-    "release_date": "2005-03-30",
-    "poster_path": "/wgSwDqhl6Rt3cuSCwt5sNpPna3x.jpg",
-    "genre_ids": [
-      18
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/11171/watch"
-  },
-  {
     "id": 963,
     "title": "The Maltese Falcon",
     "release_date": "1941-10-18",
@@ -9126,18 +9126,6 @@
       53
     ],
     "watch_link": "https://www.themoviedb.org/movie/963/watch"
-  },
-  {
-    "id": 1242898,
-    "title": "Predator: Badlands",
-    "release_date": "2025-11-05",
-    "poster_path": "/erTRAi241eYF4K8KoGGOI8kFPox.jpg",
-    "genre_ids": [
-      28,
-      878,
-      12
-    ],
-    "watch_link": "https://www.themoviedb.org/movie/1242898/watch"
   },
   {
     "id": 688,
@@ -9207,6 +9195,18 @@
       14
     ],
     "watch_link": "https://www.themoviedb.org/movie/221732/watch"
+  },
+  {
+    "id": 1242898,
+    "title": "Predator: Badlands",
+    "release_date": "2025-11-05",
+    "poster_path": "/erTRAi241eYF4K8KoGGOI8kFPox.jpg",
+    "genre_ids": [
+      28,
+      878,
+      12
+    ],
+    "watch_link": "https://www.themoviedb.org/movie/1242898/watch"
   },
   {
     "id": 843906,
